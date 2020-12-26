@@ -111,6 +111,8 @@ gobject = dependency('gobject-2.0')
 torch_gobject_lib = shared_library(
   'torch-gobject',
   torch_gobject_sources,
+  torch_gobject_aten_generated_source,
+  torch_gobject_enums,
   soversion: api_version,
   install: true,
   include_directories: [ torch_gobject_inc ],
