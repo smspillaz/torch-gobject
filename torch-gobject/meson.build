@@ -124,7 +124,13 @@ torch_gobject_dep = declare_dependency(
   include_directories: [ torch_gobject_inc ],
 )
 
-introspection_sources = [ torch_gobject_introspectable_sources, torch_gobject_headers ]
+introspection_sources = [
+  torch_gobject_introspectable_sources,
+  torch_gobject_enums,
+  torch_gobject_headers,
+  torch_gobject_aten_generated_source,
+  torch_gobject_aten_generated_header
+]
 
 gnome = import('gnome')
 torch_gobject_gir = gnome.generate_gir(
