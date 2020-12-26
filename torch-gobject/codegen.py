@@ -211,6 +211,7 @@ def determine_return_transfer_mode(decl):
 def make_gobject_decl(decl):
     return {
         "name": function_name(decl),
+        "is_method": "namespace" not in decl["method_of"],
         "returns": type_spec_to_gobject_type(dict(
             **decl["returns"][0],
             transfer="self" if decl["schema_order_arguments"] and decl["schema_order_arguments"][0]["annotation"] == "a!" else "full"
