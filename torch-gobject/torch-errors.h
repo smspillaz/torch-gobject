@@ -1,7 +1,7 @@
 /*
- * torch-gobject/torch-tensor-internal.h
+ * torch-gobject/torch-errors.h
  *
- * Tensor abstraction for data to be passed to a tensor, internal funcitons
+ * Error codes and domain for torch-gobject.
  *
  * Copyright (C) 2020 Sam Spilsbury.
  *
@@ -22,10 +22,23 @@
 
 #pragma once
 
-#include <torch-gobject/torch-tensor.h>
+#include <glib.h>
 
-#include <torch/torch.h>
+G_BEGIN_DECLS
 
-at::Tensor & torch_tensor_get_real_tensor (TorchTensor *tensor);
+/**
+ * TorchError
+ * @TORCH_ERROR_INTERNAL: Internal error occurred in torch or PyTorch.
+ * @TORCH_ERROR_INVALID_DATA_TYPE: The data type chosen is not supported.
+ *
+ * Error enumeration for Scorch related errors.
+ */
+typedef enum {
+  TORCH_ERROR_INTERNAL,
+  TORCH_ERROR_INVALID_DATA_TYPE
+} TorchError;
 
-TorchTensor * torch_tensor_new_from_real_tensor (at::Tensor const &tensor);
+#define TORCH_ERROR torch_error_quark ()
+GQuark torch_error_quark (void);
+
+G_END_DECLS

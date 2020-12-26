@@ -1,7 +1,7 @@
 /*
- * torch-gobject/torch-tensor-internal.h
+ * torch-gobject/torch-allocator-internal.h
  *
- * Tensor abstraction for data to be passed to a tensor, internal funcitons
+ * Allocator wrapper, internal functions
  *
  * Copyright (C) 2020 Sam Spilsbury.
  *
@@ -22,10 +22,10 @@
 
 #pragma once
 
-#include <torch-gobject/torch-tensor.h>
+#include <torch-gobject/torch-allocator.h>
 
 #include <torch/torch.h>
 
-at::Tensor & torch_tensor_get_real_tensor (TorchTensor *tensor);
+c10::Allocator & torch_allocator_get_real_allocator (TorchAllocator *allocator);
 
-TorchTensor * torch_tensor_new_from_real_tensor (at::Tensor const &tensor);
+TorchAllocator * torch_allocator_new_from_real_allocator (c10::Allocator const &allocator);

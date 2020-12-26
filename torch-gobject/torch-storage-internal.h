@@ -1,7 +1,7 @@
 /*
- * torch-gobject/torch-tensor-internal.h
+ * torch-gobject/torch-storage-internal.h
  *
- * Tensor abstraction for data to be passed to a tensor, internal funcitons
+ * Storage abstraction, internal functions
  *
  * Copyright (C) 2020 Sam Spilsbury.
  *
@@ -22,10 +22,10 @@
 
 #pragma once
 
-#include <torch-gobject/torch-tensor.h>
+#include <torch-gobject/torch-storage.h>
 
 #include <torch/torch.h>
 
-at::Tensor & torch_tensor_get_real_tensor (TorchTensor *tensor);
+c10::Storage & torch_storage_get_real_storage (TorchStorage *storage);
 
-TorchTensor * torch_tensor_new_from_real_tensor (at::Tensor const &tensor);
+TorchStorage * torch_storage_new_from_real_storage (c10::Storage const &storage);

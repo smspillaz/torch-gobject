@@ -1,7 +1,7 @@
 /*
- * torch-gobject/torch-tensor-internal.h
+ * torch-gobject/torch-device-type.h
  *
- * Tensor abstraction for data to be passed to a tensor, internal funcitons
+ * Device type specifiers.
  *
  * Copyright (C) 2020 Sam Spilsbury.
  *
@@ -22,10 +22,22 @@
 
 #pragma once
 
-#include <torch-gobject/torch-tensor.h>
+#include <glib.h>
 
-#include <torch/torch.h>
+G_BEGIN_DECLS
 
-at::Tensor & torch_tensor_get_real_tensor (TorchTensor *tensor);
+/**
+ * TorchDeviceType
+ * @TORCH_DEVICE_TYPE_CPU: CPU-device bound tensor, operations in software
+ * @TORCH_DEVICE_TYPE_VULKAN: GPU-device tensor, operations in Vulkan
+ * @TORCH_DEVICE_TYPE_CUDA: GPU-device tensor, operations in CUDA
+ *
+ * Error enumeration for Scorch related errors.
+ */
+typedef enum {
+  TORCH_DEVICE_TYPE_CPU,
+  TORCH_DEVICE_TYPE_VULKAN,
+  TORCH_DEVICE_TYPE_CUDA
+} TorchDeviceType;
 
-TorchTensor * torch_tensor_new_from_real_tensor (at::Tensor const &tensor);
+G_END_DECLS

@@ -1,7 +1,7 @@
 /*
- * torch-gobject/torch-tensor-internal.h
+ * torch-gobject/torch-device-type-internal.h
  *
- * Tensor abstraction for data to be passed to a tensor, internal funcitons
+ * Device type specifiers, internal functions.
  *
  * Copyright (C) 2020 Sam Spilsbury.
  *
@@ -22,10 +22,10 @@
 
 #pragma once
 
-#include <torch-gobject/torch-tensor.h>
+#include <torch-gobject/torch-device-type.h>
 
 #include <torch/torch.h>
 
-at::Tensor & torch_tensor_get_real_tensor (TorchTensor *tensor);
+c10::DeviceType torch_device_type_get_real_device_type (TorchDeviceType device_type);
 
-TorchTensor * torch_tensor_new_from_real_tensor (at::Tensor const &tensor);
+TorchDeviceType torch_device_type_from_real_device_type (c10::DeviceType device_type);

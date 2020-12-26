@@ -1,7 +1,7 @@
 /*
- * torch-gobject/torch-tensor-internal.h
+ * torch-gobject/torch-layout-type.h
  *
- * Tensor abstraction for data to be passed to a tensor, internal funcitons
+ * Layout type specifiers.
  *
  * Copyright (C) 2020 Sam Spilsbury.
  *
@@ -22,10 +22,22 @@
 
 #pragma once
 
-#include <torch-gobject/torch-tensor.h>
+#include <glib.h>
 
-#include <torch/torch.h>
+G_BEGIN_DECLS
 
-at::Tensor & torch_tensor_get_real_tensor (TorchTensor *tensor);
+/**
+ * TorchLayout:
+ * @TORCH_LAYOUT_STRIDED: Strided layout
+ * @TORCH_LAYOUT_SPARSE: Sparse layout
+ * @TORCH_LAYOUT_MKLDNN: MKLDNN specific layout
+ *
+ * Error enumeration for Scorch related errors.
+ */
+typedef enum {
+  TORCH_LAYOUT_STRIDED,
+  TORCH_LAYOUT_SPARSE,
+  TORCH_LAYOUT_MKLDNN
+} TorchLayout;
 
-TorchTensor * torch_tensor_new_from_real_tensor (at::Tensor const &tensor);
+G_END_DECLS

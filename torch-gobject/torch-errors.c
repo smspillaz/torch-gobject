@@ -1,7 +1,7 @@
 /*
- * torch-gobject/torch-tensor-internal.h
+ * /torch/torch-errors.c
  *
- * Tensor abstraction for data to be passed to a tensor, internal funcitons
+ * Error codes and domain for torch.
  *
  * Copyright (C) 2020 Sam Spilsbury.
  *
@@ -20,12 +20,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#pragma once
+#include <torch-gobject/torch-errors.h>
 
-#include <torch-gobject/torch-tensor.h>
-
-#include <torch/torch.h>
-
-at::Tensor & torch_tensor_get_real_tensor (TorchTensor *tensor);
-
-TorchTensor * torch_tensor_new_from_real_tensor (at::Tensor const &tensor);
+GQuark torch_error_quark (void)
+{
+  return g_quark_from_static_string ("torch-error-quark");
+}

@@ -1,7 +1,7 @@
 /*
- * torch-gobject/torch-tensor-internal.h
+ * torch-gobject/torch-layout-internal.h
  *
- * Tensor abstraction for data to be passed to a tensor, internal funcitons
+ * Layout type specifiers, internal functions.
  *
  * Copyright (C) 2020 Sam Spilsbury.
  *
@@ -22,10 +22,10 @@
 
 #pragma once
 
-#include <torch-gobject/torch-tensor.h>
+#include <torch-gobject/torch-layout.h>
 
 #include <torch/torch.h>
 
-at::Tensor & torch_tensor_get_real_tensor (TorchTensor *tensor);
+c10::Layout torch_layout_get_real_layout (TorchLayout layout);
 
-TorchTensor * torch_tensor_new_from_real_tensor (at::Tensor const &tensor);
+TorchLayout torch_layout_from_real_layout (c10::Layout layout);

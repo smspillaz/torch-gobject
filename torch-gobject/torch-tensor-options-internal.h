@@ -1,7 +1,7 @@
 /*
- * torch-gobject/torch-tensor-internal.h
+ * torch-gobject/torch-tensor-options-internal.h
  *
- * Tensor abstraction for data to be passed to a tensor, internal funcitons
+ * Helper class to store options for tensor creation, internal functions.
  *
  * Copyright (C) 2020 Sam Spilsbury.
  *
@@ -22,10 +22,10 @@
 
 #pragma once
 
-#include <torch-gobject/torch-tensor.h>
+#include <torch-gobject/torch-tensor-options.h>
 
 #include <torch/torch.h>
 
-at::Tensor & torch_tensor_get_real_tensor (TorchTensor *tensor);
+c10::TensorOptions & torch_tensor_options_get_real_tensor_options (TorchTensorOptions *tensor_options);
 
-TorchTensor * torch_tensor_new_from_real_tensor (at::Tensor const &tensor);
+TorchTensorOptions * torch_tensor_options_new_from_real_tensor_options (c10::TensorOptions const &tensor_options);
