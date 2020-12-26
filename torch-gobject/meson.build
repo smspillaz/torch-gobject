@@ -53,25 +53,42 @@ torch_gobject_enums = gnome.mkenums_simple(
 )
 
 torch_gobject_toplevel_headers = files([
+  'torch-allocator.h',
+  'torch-device.h',
+  'torch-storage.h',
   'torch-tensor.h',
-  'torch-tensor-generated.h'
-])
+  'torch-tensor-options.h'
+]) + torch_gobject_toplevel_enums_headers
 torch_gobject_toplevel_introspectable_sources = files([
+  'torch-allocator.cpp',
+  'torch-device.cpp',
+  'torch-device-type.cpp',
+  'torch-errors.c',
+  'torch-layout.cpp',
+  'torch-memory-format.cpp',
+  'torch-storage.cpp',
   'torch-tensor.cpp',
-  'torch-tensor-generated.cpp'
+  'torch-tensor-options.cpp'
 ])
 torch_gobject_toplevel_private_headers = files([
+  'torch-device-internal.h',
+  'torch-device-type-internal.h',
+  'torch-layout-internal.h',
+  'torch-memory-format-internal.h',
+  'torch-storage-internal.h',
   'torch-tensor-internal.h',
+  'torch-tensor-options-internal.h',
+  'torch-util.h'
 ])
 torch_gobject_toplevel_private_sources = files([
-  'torch-tensor-internal.cpp'
+  'torch-util.cpp'
 ])
 
 torch_gobject_introspectable_sources = files([])
 torch_gobject_private_headers = files([])
 torch_gobject_private_sources = files([])
 torch_gobject_headers = files([])
-torch_gobject_headers_subdir = 'torch-gobject'
+
 
 torch_gobject_introspectable_sources += torch_gobject_toplevel_introspectable_sources
 torch_gobject_private_sources += torch_gobject_toplevel_private_sources
