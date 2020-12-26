@@ -384,12 +384,22 @@ def make_argument_marshallers(arguments, gobject_arguments):
 
 
 def make_function_call(decl, gobject_decl):
-    call = "at::{name}({args});".format(
-        name=decl["name"],
-        args=", ".join([
-            "real_" + a["name"] for a in decl["arguments"]
-        ])
-    )
+    if "namespace" in decl["method_of"]:
+        call = "at::{name} ({args});".format(
+            name=decl["name"],
+            args=", ".join([
+                "real_" + a["name"] for a in decl["arguments"]
+            ])
+        )
+    else:
+        # It is a method, use the method-call syntax
+        call = "{obj}.{name} ({args});".format(
+            obj="real_" + decl["arguments"][0]["name"],
+            name=decl["name"],
+            args=", ".join([
+                "real_" + a["name"] for a in decl["arguments"][1:]
+            ])
+        )
 
     if decl["returns"]:
         return_type = decl["returns"][0]["dynamic_type"]
