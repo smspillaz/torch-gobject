@@ -199,6 +199,15 @@ def type_spec_to_gobject_type(type_spec):
     }
 
 
+def determine_return_transfer_mode(decl):
+    if (decl["schema_order_arguments"] and decl["schema_order_arguments"][0]["annotation"] == "a!"):
+        return "self"
+    elif "*" not in map_type_name(decl["returns"][0]):
+        return "none"
+
+    return "full"
+
+
 def make_gobject_decl(decl):
     return {
         "name": function_name(decl),
