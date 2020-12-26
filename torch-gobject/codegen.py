@@ -424,7 +424,7 @@ def make_function_call(decl, gobject_decl):
             ])
 
             if gobject_decl["returns"]["transfer"] == "none":
-                return_statement = "return gobject_rv";
+                return_statement = "return gobject_rv;";
             elif gobject_decl["returns"]["transfer"] == "full":
                 return_statement = "return g_steal_pointer(&gobject_rv);"
     else:
