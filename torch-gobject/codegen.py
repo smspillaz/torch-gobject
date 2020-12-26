@@ -272,9 +272,8 @@ def fmt_annotations(a):
 
 def make_gobject_decl_header(decl):
     return "\n".join([
-        "/*",
+        "/**",
         " * " + decl["name"] + ":",
-        " *",
     ] + [" * @{a[name]}{annotations}: A #{a[type]}".format(
         a=a,
         annotations=fmt_annotations(a)
