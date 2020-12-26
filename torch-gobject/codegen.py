@@ -339,7 +339,6 @@ def rewrite_decl_for_scalar(decl, scalar_type):
         if a["dynamic_type"] == "Scalar":
             a["dynamic_type"] = scalar_type
 
-    d["name"] = non_namespaced_function_name(d)
     d["overload"] = scalar_type
 
     return d
