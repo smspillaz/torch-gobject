@@ -459,6 +459,7 @@ def print_function_body(decl):
             print_function_body(d)
 
     gobject_decl = make_gobject_decl(decl)
+    str_list.append(make_gobject_decl_header(gobject_decl))
     str_list.append(make_gobject_decl_fwd_decl(gobject_decl))
     str_list.append("{")
     str_list.append(indent(make_argument_marshallers(decl["arguments"], gobject_decl["arguments"]), 4))
