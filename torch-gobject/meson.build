@@ -102,6 +102,8 @@ install_headers(
 
 torch_gobject_sources = torch_gobject_introspectable_sources + torch_gobject_private_sources
 
+c10 = cpp.find_library('c10')
+torch_cpu = cpp.find_library('torch_cpu')
 glib = dependency('glib-2.0')
 gobject = dependency('gobject-2.0')
 
