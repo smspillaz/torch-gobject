@@ -128,9 +128,14 @@ TYPE_MAPPING = {
     }
 }
 
+RENAME_LIST = {
+    "set_data": "set_data_from_tensor"
+}
+
 def non_namespaced_function_name(decl):
     inplace = ""
     overload = ""
+    overload_name = ""
 
     if decl["name"].endswith("_"):
         inplace = "inplace"
@@ -139,8 +144,12 @@ def non_namespaced_function_name(decl):
     if "overload" in decl:
         overload = decl["overload"].lower()
 
+    if "overload_name" in decl:
+        overload_name = decl["overload_name"].lower()
+
     return "_".join([x for x in [
-        decl["name"].rstrip("_"),
+        RENAME_LIST.get(decl["name"], decl["name"]).rstrip("_"),
+        overload_name,
         overload,
         inplace
     ] if x])
