@@ -237,7 +237,7 @@ def make_gobject_decl_fwd_decl(decl):
     return "".join([
         decl["returns"]["type"] + " ",
         decl["name"],
-        "(",
+        " (",
         ", ".join(arg_str_list),
         ")"
     ])
