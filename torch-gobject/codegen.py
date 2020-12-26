@@ -248,7 +248,7 @@ def fmt_transfer(a):
 
 
 def fmt_element_type(a):
-    return "(element-type {a[element-type]})".format(a=a) if a["element-type"] else ""
+    return "(element-type {a})".format(a=a["element-type"].strip(" *")) if a["element-type"] else ""
 
 
 def fmt_array_fixed_size(a):
