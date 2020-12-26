@@ -177,7 +177,7 @@ def map_type_name(type_spec):
 
 def map_type_native_conv(type_spec):
     if type_spec["dynamic_type"] == "IntArrayRef" and type_spec.get("size", None):
-        return lambda a: "array_ref_from_fixed_array({a}, {s})".format(a=a, s=type_spec["size"])
+        return lambda a: "torch_array_ref_from_fixed_array({a}, {s})".format(a=a, s=type_spec["size"])
 
     return TYPE_MAPPING[type_spec["dynamic_type"]]["convert_native_func"]
 
