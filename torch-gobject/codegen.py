@@ -519,8 +519,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("yaml", help="Path to Declarations.yaml")
     parser.add_argument("--header", action="store_true", help="Generating header")
+    parser.add_argument("--output", help="File to write to")
     args = parser.parse_args()
-    
+
+    if args.output:
+        sys.stdout = open(args.output, "wt")
+
     with open(args.yaml) as f:
         declarations = yaml.load(f, Loader=Loader)
  
