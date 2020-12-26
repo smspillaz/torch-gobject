@@ -170,7 +170,7 @@ def function_name(decl):
 
 def map_type_name(type_spec):
     if type_spec["dynamic_type"] == "IntArrayRef" and type_spec.get("size", None):
-        return "const int *"
+        return "const long *"
 
     return TYPE_MAPPING[type_spec["dynamic_type"]]["name"]
 
