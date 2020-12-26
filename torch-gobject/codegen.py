@@ -244,7 +244,7 @@ def make_gobject_decl_fwd_decl(decl):
 
 
 def fmt_transfer(a):
-    return "(transfer {a[transfer]})".format(a=a) if a["transfer"] and a["type"].endswith("*") else ""
+    return "(transfer {a})".format(a="none" if a["transfer"] == "self" else a["transfer"]) if a["transfer"] and a["type"].endswith("*") else ""
 
 
 def fmt_element_type(a):
