@@ -286,7 +286,20 @@ def make_gobject_decl_header(decl):
     ) + [" */"])
 
 
+FUNCTION_BLACKLIST = (
+    "data",
+)
+
+
 def is_skipped(decl):
+    if decl["name"] in FUNCTION_BLACKLIST:
+        print("Skipped {decl[name]} - in blacklist".format(decl=decl), file=sys.stderr)
+        return True
+
+    if decl["name"] == "count_nonzero" and decl["overload_name"] == "":
+        print("Skipped count_nonzero - is ambiguous", file=sys.stderr)
+        return True
+
     # Skip internal funcs
     if decl["name"].startswith("_"):
         print("Skipped", decl["name"], " - is internal", file=sys.stderr)
