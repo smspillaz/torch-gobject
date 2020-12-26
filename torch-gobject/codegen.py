@@ -405,17 +405,17 @@ def make_function_call(decl, gobject_decl):
         return_type = decl["returns"][0]["dynamic_type"]
         gobject_return_type = TYPE_MAPPING[decl["returns"][0]["dynamic_type"]]["name"]
 
-        call = " ".join([
-            decl["returns"][0]["type"],
-            "real_rv",
-            "=",
-            call
-        ])
-
         if gobject_decl["returns"]["transfer"] == "self":
             convert_statement = ""
             return_statement = "return {};".format(gobject_decl["arguments"][0]["name"])
         else:
+            call = " ".join([
+                decl["returns"][0]["type"],
+                "real_rv",
+                "=",
+                call
+            ])
+
             convert_statement = " ".join([
                 TYPE_MAPPING[return_type]["convert_gobject_prefix"](gobject_decl["returns"]["type"]),
                 "gobject_rv",
