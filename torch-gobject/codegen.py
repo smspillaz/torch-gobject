@@ -358,10 +358,9 @@ def print_function_decl(decl):
 
     gobject_decl = make_gobject_decl(decl)
 
-    str_list.append(make_gobject_decl_header(gobject_decl))
     str_list.append(make_gobject_decl_fwd_decl(gobject_decl) + ";")
 
-    print("\n")
+    print("")
     print("\n".join(str_list))
 
 
