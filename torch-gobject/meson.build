@@ -116,7 +116,7 @@ torch_gobject_lib = shared_library(
   soversion: api_version,
   install: true,
   include_directories: [ torch_gobject_inc ],
-  dependencies: [ glib, gobject, torch_dep ]
+  dependencies: [ c10, gio, glib, gobject, torch_cpu, torch_dep ]
 )
 
 torch_gobject_dep = declare_dependency(
