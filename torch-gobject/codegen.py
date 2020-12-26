@@ -423,10 +423,11 @@ def make_function_call(decl, gobject_decl):
                 TYPE_MAPPING[return_type]["convert_gobject_func"]("real_rv") + ";"
             ])
 
+            # Cannot be "self", was checked earlier
             if gobject_decl["returns"]["transfer"] == "none":
                 return_statement = "return gobject_rv;";
             elif gobject_decl["returns"]["transfer"] == "full":
-                return_statement = "return g_steal_pointer(&gobject_rv);"
+                return_statement = "return static_cast <{}> (g_steal_pointer (&gobject_rv));".format(gobject_decl["returns"]["type"])
     else:
         convert_statement = ""
         return_statement = "return;"
