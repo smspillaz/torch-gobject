@@ -1,4 +1,5 @@
 import argparse
+from collections import defaultdict
 from copy import deepcopy
 import os
 import yaml
