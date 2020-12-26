@@ -132,7 +132,6 @@ introspection_sources = [
   torch_gobject_aten_generated_header
 ]
 
-gnome = import('gnome')
 torch_gobject_gir = gnome.generate_gir(
   torch_gobject_lib,
   extra_args: ['--warn-all'],
