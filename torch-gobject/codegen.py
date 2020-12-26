@@ -214,7 +214,7 @@ def make_gobject_decl(decl):
         "is_method": "namespace" not in decl["method_of"],
         "returns": type_spec_to_gobject_type(dict(
             **decl["returns"][0],
-            transfer="self" if decl["schema_order_arguments"] and decl["schema_order_arguments"][0]["annotation"] == "a!" else "full"
+            transfer=determine_return_transfer_mode(decl),
         )) if decl["returns"] else {
             "name": "",
             "type": "void",
