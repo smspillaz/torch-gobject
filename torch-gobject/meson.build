@@ -18,6 +18,10 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+python = import('python')
+gnome = import('gnome')
+cpp = meson.get_compiler('cpp')
+
 api_version = '0'
 
 torch_gobject_toplevel_headers = files([
