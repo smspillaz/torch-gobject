@@ -95,7 +95,10 @@ torch_gobject_private_sources += torch_gobject_toplevel_private_sources
 torch_gobject_headers += torch_gobject_toplevel_headers
 torch_gobject_private_headers += torch_gobject_toplevel_private_headers
 
-install_headers(torch_gobject_toplevel_headers, subdir: torch_gobject_headers_subdir)
+install_headers(
+  torch_gobject_toplevel_headers,
+  subdir: torch_gobject_headers_subdir
+)
 
 torch_gobject_sources = torch_gobject_introspectable_sources + torch_gobject_private_sources
 
