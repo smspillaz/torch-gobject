@@ -23,6 +23,34 @@ gnome = import('gnome')
 cpp = meson.get_compiler('cpp')
 
 api_version = '0'
+torch_gobject_headers_subdir = 'torch-gobject'
+
+python_installation = python.find_installation(required: true, modules: ['yaml'])
+torch_gobject_aten_generated_source = custom_target('gen-torch-aten-src',
+                                                    input : ['codegen.py'],
+                                                    output : ['torch-tensor-generated.cpp'],
+                                                    command : [python_installation.path(), '@INPUT@', '--output', '@OUTPUT0@', '/usr/local/share/ATen/Declarations.yaml'])
+torch_gobject_aten_generated_header = custom_target('gen-torch-aten-header',
+                                                    input : ['codegen.py'],
+                                                    output : ['torch-tensor-generated.h'],
+                                                    command : [python_installation.path(), '@INPUT@', '--header', '--output', '@OUTPUT0@', '/usr/local/share/ATen/Declarations.yaml'],
+                                                    install: true,
+                                                    install_dir: get_option('includedir') / torch_gobject_headers_subdir)
+
+
+torch_gobject_toplevel_enums_headers = files([
+  'torch-device-type.h',
+  'torch-layout.h',
+  'torch-errors.h',
+  'torch-memory-format.h',
+])
+
+torch_gobject_enums = gnome.mkenums_simple(
+  'torch-enums',
+  sources: torch_gobject_toplevel_enums_headers,
+  install_header: true,
+  install_dir: get_option('includedir') / torch_gobject_headers_subdir
+)
 
 torch_gobject_toplevel_headers = files([
   'torch-tensor.h',
