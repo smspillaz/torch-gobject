@@ -42,3 +42,4 @@ torch_gobject_inc = include_directories('.')
 tests_inc = include_directories('tests')
 
 subdir('torch-gobject')
+subdir('tests')
