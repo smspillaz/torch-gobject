@@ -42,4 +42,9 @@ gboolean torch_tensor_set_data (TorchTensor  *tensor,
                                 GVariant            *data,
                                 GError            **error);
 
+void torch_tensor_set_dims (TorchTensor *tensor,
+                            GList       *dims);
+
+GList * torch_tensor_get_dims (TorchTensor *tensor);
+
 G_END_DECLS
