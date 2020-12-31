@@ -376,7 +376,7 @@ torch_tensor_get_real_tensor (TorchTensor *tensor)
  * elements in the array. For instance, a Tensor with dimension
  * [3, 4, 5] has 3 rows, 4 columns and 5 stacks.
  *
- * Returns: (element-type guint64) (transfer full): A #GArray of integer
+ * Returns: (element-type guint) (transfer full): A #GArray of integer
  *          values representing the dimensionality of the array.
  */
 GArray *
@@ -396,8 +396,8 @@ torch_tensor_get_dims (TorchTensor *tensor)
 /**
  * torch_tensor_set_dims:
  * @tensor: A #TorchTensor
- * @dims: (element-type int): A #GArray of integer values
- *                            representing the dimensionality of the array.
+ * @dims: (element-type guint): A #GArray of integer values
+ *                              representing the dimensionality of the array.
  *
  * Set the dimensionality of the tensor in the form of an array
  * of integer values. If the change in dimensionality results
