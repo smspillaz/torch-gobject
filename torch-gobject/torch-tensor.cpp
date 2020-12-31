@@ -77,11 +77,12 @@ namespace
    *      because at::List doesn't make a copy of the underlying
    *      memory, and the constructor does not take an rvalue
    *      reference, so the move never happens. */
+  template <typename Source>
   std::vector<int64_t> int_list_from_g_array (GArray *array)
   {
     std::vector <int64_t> vec;
     size_t n_elements = array != NULL ? array->len : 0;
-    const int64_t *array_data = array != NULL ? reinterpret_cast <int64_t *> (array->data) : NULL;
+    const Source *array_data = array != NULL ? reinterpret_cast <Source *> (array->data) : NULL;
     vec.reserve (n_elements);
 
     for (size_t i = 0; i < n_elements; ++i)
@@ -89,15 +90,19 @@ namespace
 
     return vec;
   }
-  
+
+  template <typename Target>
   GArray * g_array_from_int_list (torch::IntArrayRef const &list)
   {
-    g_autoptr (GArray) array = g_array_sized_new (FALSE, FALSE, sizeof (int64_t), list.size ());
-    int64_t           *array_data = reinterpret_cast <int64_t *> (array->data);
+    g_autoptr (GArray) array = g_array_sized_new (FALSE, FALSE, sizeof (Target), list.size ());
+    Target            *array_data = reinterpret_cast <Target *> (array->data);
     const int64_t     *array_ref_data = list.data ();
 
+    // Because some language bindings rely on types being
+    // big enough to fit in GIArgument and we can't break ABI,
+    // downcasting may be necessary in some cases
     for (size_t i = 0; i < array->len; ++i)
-      array_data[i] = array_ref_data[i];
+      array_data[i] = (Target) (array_ref_data[i]);
 
     return static_cast <GArray *> (g_steal_pointer (&array));
   }
