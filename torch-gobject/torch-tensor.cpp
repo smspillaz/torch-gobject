@@ -44,7 +44,7 @@ typedef struct _TorchTensorPrivate
   at::Tensor *internal;
 
   GVariant    *construction_data;
-  GArray      *construction_dims;
+  GList       *construction_dims;
 } TorchTensorPrivate;
 
 static void initable_iface_init (GInitableIface *iface);
@@ -105,6 +105,33 @@ namespace
       array_data[i] = (Target) (array_ref_data[i]);
 
     return static_cast <GArray *> (g_steal_pointer (&array));
+  }
+
+  template <typename Source>
+  std::vector<int64_t> int_list_from_g_list (GList *list)
+  {
+    std::vector <int64_t> vec;
+
+    for (GList *link = list; link != NULL; link = link->next)
+      vec.push_back (GPOINTER_TO_INT (link->data));
+
+    return vec;
+  }
+
+  template <typename Target>
+  GList * g_list_from_int_list (torch::IntArrayRef const &array_ref)
+  {
+    g_autoptr (GList) list = NULL;
+    const int64_t     *array_ref_data = array_ref.data ();
+
+    // Because some language bindings rely on types being
+    // big enough to fit in GIArgument and we can't break ABI,
+    // downcasting may be necessary in some cases
+    for (size_t i = 0; i < array_ref.size(); ++i)
+      list = g_list_prepend (list, GINT_TO_POINTER (array_ref_data[i]));
+
+    list = g_list_reverse (list);
+    return static_cast <GList *> (g_steal_pointer (&list));
   }
 
   class InvalidVariantTypeError : public std::logic_error
@@ -376,10 +403,10 @@ torch_tensor_get_real_tensor (TorchTensor *tensor)
  * elements in the array. For instance, a Tensor with dimension
  * [3, 4, 5] has 3 rows, 4 columns and 5 stacks.
  *
- * Returns: (element-type guint) (transfer full): A #GArray of integer
+ * Returns: (element-type guint) (transfer full): A #GList of integer
  *          values representing the dimensionality of the array.
  */
-GArray *
+GList *
 torch_tensor_get_dims (TorchTensor *tensor)
 {
   TorchTensorPrivate *priv =
@@ -387,16 +414,16 @@ torch_tensor_get_dims (TorchTensor *tensor)
 
   if (priv->internal)
     {
-      return g_array_from_int_list (priv->internal->sizes ());
+      return g_list_from_int_list <unsigned int> (priv->internal->sizes ());
     }
 
-  return priv->construction_dims;
+  return g_list_copy (priv->construction_dims);
 }
 
 /**
  * torch_tensor_set_dims:
  * @tensor: A #TorchTensor
- * @dims: (element-type guint): A #GArray of integer values
+ * @dims: (element-type guint): A #GList of integer values
  *                              representing the dimensionality of the array.
  *
  * Set the dimensionality of the tensor in the form of an array
@@ -417,7 +444,7 @@ torch_tensor_get_dims (TorchTensor *tensor)
  */
 void
 torch_tensor_set_dims (TorchTensor *tensor,
-                       GArray      *dims)
+                       GList       *dims)
 {
   TorchTensorPrivate *priv =
     static_cast <TorchTensorPrivate *> (torch_tensor_get_instance_private (tensor));
@@ -425,12 +452,12 @@ torch_tensor_set_dims (TorchTensor *tensor,
   /* We can't set the dimensions until the underlying tensor is constructed */
   if (priv->internal != nullptr)
     {
-      priv->internal->resize_ (torch::IntArrayRef (int_list_from_g_array (dims)));
+      priv->internal->resize_ (torch::IntArrayRef (int_list_from_g_list <unsigned int> (dims)));
     }
   else
     {
-      g_clear_pointer (&priv->construction_dims, g_array_unref);
-      priv->construction_dims = dims != NULL ? g_array_ref (dims) : NULL;
+      g_clear_pointer (&priv->construction_dims, g_list_free);
+      priv->construction_dims = dims != NULL ? g_list_copy (dims) : NULL;
     }
 }
 
@@ -577,7 +604,7 @@ torch_tensor_initable_init (GInitable     *initable,
       /* Once we've constructed the internal, everything gets moved to
        * the internal tensor (one canonical copy), so we can clear the construct
        * properties that we had in the meantime */
-      g_clear_pointer (&priv->construction_dims, g_array_unref);
+      g_clear_pointer (&priv->construction_dims, g_list_free);
       g_clear_pointer (&priv->construction_data, g_variant_unref);
     }
   catch (const std::exception &exp)
@@ -616,7 +643,7 @@ torch_tensor_finalize (GObject *object)
       priv->internal = nullptr;
     }
 
-  g_clear_pointer (&priv->construction_dims, g_array_unref);
+  g_clear_pointer (&priv->construction_dims, g_list_free);
   g_clear_pointer (&priv->construction_data, g_variant_unref);
 }
 
@@ -664,7 +691,7 @@ torch_tensor_set_property (GObject      *object,
     {
       case PROP_DIMS:
         torch_tensor_set_dims (tensor,
-                               static_cast <GArray *> (g_value_get_boxed (value)));
+                               static_cast <GList *> (g_value_get_boxed (value)));
         break;
       case PROP_DATA:
         call_and_warn_about_gerror ("set 'data' property",
@@ -684,6 +711,23 @@ torch_tensor_set_property (GObject      *object,
     }
 }
 
+/* XXX: There is still no G_TYPE_LIST? */
+#define G_TYPE_LIST (g_list_get_type())
+static GType
+g_list_get_type (void)
+{
+  static GType type = 0;
+
+  if (type == 0)
+    {
+      type = g_boxed_type_register_static ("GList",
+                                           (GBoxedCopyFunc) g_list_copy, (GBoxedFreeFunc) g_list_free);
+    }
+
+  return type;
+}
+
+
 static void
 torch_tensor_class_init (TorchTensorClass *klass)
 {
@@ -694,7 +738,7 @@ torch_tensor_class_init (TorchTensorClass *klass)
   object_class->finalize = torch_tensor_finalize;
 
   /**
-   * TorchTensor:dims: (type GArray(gint64))
+   * TorchTensor:dimensions: (type GLib.List(guint)) (transfer container)
    *
    * The dimensions of the tensor.
    *
@@ -705,7 +749,7 @@ torch_tensor_class_init (TorchTensorClass *klass)
   torch_tensor_props[PROP_DIMS] = g_param_spec_boxed ("dimensions",
                                                       "Dimensions",
                                                       "Dimensions of the Tensor",
-                                                      G_TYPE_ARRAY,
+                                                      G_TYPE_LIST,
                                                       static_cast <GParamFlags> (G_PARAM_READWRITE |
                                                                                  G_PARAM_CONSTRUCT));
 
