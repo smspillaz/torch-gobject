@@ -66,7 +66,11 @@ static GParamSpec *torch_storage_props [NPROPS] = { NULL, };
 c10::Storage &
 torch_storage_get_real_storage (TorchStorage *storage)
 {
-  TorchStoragePrivate *priv = TORCH_STORAGE_GET_PRIVATE (storage);
+  TorchStoragePrivate  *priv = TORCH_STORAGE_GET_PRIVATE (storage);
+  g_autoptr (GError)    error = NULL;
+
+  if (!torch_storage_init_internal (storage, static_cast <GError **> (&error)))
+    torch_throw_error (error);
 
   return *priv->internal;
 }
