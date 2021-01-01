@@ -3,7 +3,7 @@
  *
  * Tests for the JavaScript Binding to the Device Object.
  *
- * Copyright (C) 2018 Sam Spilsbury.
+ * Copyright (C) 2020 Sam Spilsbury.
  *
  * torch-gobject is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
