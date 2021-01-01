@@ -557,9 +557,12 @@ torch_tensor_set_data (TorchTensor  *tensor,
                                                        error));
         }
     }
-  else
+  catch (std::exception const &e)
     {
-      priv->construction_data = g_variant_ref_sink (data);
+      return (gboolean) (set_error_from_exception (e,
+                                                   G_IO_ERROR,
+                                                   G_IO_ERROR_FAILED,
+                                                   error));
     }
 
   return TRUE;
