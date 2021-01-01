@@ -209,22 +209,74 @@ def determine_return_transfer_mode(decl):
 
 
 def make_gobject_decl(decl):
+    is_method = "namespace" not in decl["method_of"]
+    out_return_parameter = None
+    return_gobject = type_spec_to_gobject_type(dict(
+        **decl["returns"][0],
+        transfer=determine_return_transfer_mode(decl),
+    )) if decl["returns"] else {
+        "name": "",
+        # If the function doesn't return anything,
+        # it can still fail, so we need to return gboolean
+        # here
+        "type": "gboolean",
+        "transfer": "none",
+        "element-type": None,
+        "size": None,
+        "nullable": False
+    }
+
+    gobject_arguments = [
+        type_spec_to_gobject_type(dict(**a, transfer="none"))
+        for a in decl["arguments"]
+    ]
+
+    # We return a non-pointer type. Since calls into
+    # C++ methods can throw exceptions, we need to convert
+    # the return value into an outparam and make
+    # the return value a gboolean indicating success
+    # or failure
+    if decl["returns"] and "*" not in return_gobject["type"]:
+        return_gobject["name"] = return_gobject["name"] or "out_rv"
+        out_return_parameter = return_gobject["name"]
+
+        # The return value is now a pointer that gets passed in and set
+        return_gobject["type"] = "{} *".format(return_gobject["type"])
+
+        out_argument = dict(
+            **return_gobject,
+            out=True
+        )
+        out_argument["transfer"] = ""
+        out_argument["element-type"] = ""
+
+        gobject_arguments.append(out_argument)
+        return_gobject = {
+            "name": "",
+            "type": "gboolean",
+            "size": None,
+            "transfer": "none",
+            "element-type": None,
+            "nullable": False
+        }
+
+    # Append an error argument to the parameters
+    gobject_arguments.append({
+        "type": "GError **",
+        "name": "error",
+        "nullable": True,
+        "transfer": "full",
+        "element-type": None,
+        "out": True,
+        "size": None
+    })
+
     return {
         "name": function_name(decl),
-        "is_method": "namespace" not in decl["method_of"],
-        "returns": type_spec_to_gobject_type(dict(
-            **decl["returns"][0],
-            transfer=determine_return_transfer_mode(decl),
-        )) if decl["returns"] else {
-            "name": "",
-            "type": "void",
-            "size": None,
-            "nullable": False
-        },
-        "arguments": [
-            type_spec_to_gobject_type(dict(**a, transfer="none"))
-            for a in decl["arguments"]
-        ]
+        "is_method": is_method,
+        "out_return_parameter": out_return_parameter,
+        "returns": return_gobject,
+        "arguments": gobject_arguments
     }
 
 
@@ -241,6 +293,10 @@ def make_gobject_decl_fwd_decl(decl):
         ", ".join(arg_str_list),
         ")"
     ])
+
+
+def fmt_out(a):
+    return "(out)" if a.get("out", False) else ""
 
 
 def fmt_transfer(a):
@@ -261,6 +317,7 @@ def fmt_nullable(a):
 
 def fmt_annotations(a):
     annotations_str = " ".join([x for x in [
+        fmt_out(a),
         fmt_transfer(a),
         fmt_element_type(a),
         fmt_array_fixed_size(a),
@@ -385,6 +442,11 @@ def make_argument_marshallers(arguments, gobject_arguments):
 
 
 def make_function_call(decl, gobject_decl):
+    out_return_parameter = [
+        a for a in
+        gobject_decl["arguments"]
+        if a["name"] == gobject_decl["out_return_parameter"]
+    ][0] if gobject_decl["out_return_parameter"] else None
     before_block = ""
 
     if "namespace" in decl["method_of"]:
@@ -406,7 +468,7 @@ def make_function_call(decl, gobject_decl):
 
     if decl["returns"]:
         return_type = decl["returns"][0]["dynamic_type"]
-        gobject_return_type = TYPE_MAPPING[decl["returns"][0]["dynamic_type"]]["name"]
+        gobject_return_type = out_return_parameter["type"].strip(" *") if out_return_parameter else gobject_decl["returns"]["type"]
 
         # Need to init the tensor first
         if "Tensor" in decl["method_of"]:
@@ -415,7 +477,7 @@ def make_function_call(decl, gobject_decl):
                     gobject_decl["arguments"][0]["name"]
                 ),
                 "  {",
-                "    {} rv = 0;".format(gobject_return_type),
+                "    {} rv = 0;".format(gobject_decl["returns"]["type"]),
                 "    return rv;",
                 "  }",
             ])
@@ -432,7 +494,7 @@ def make_function_call(decl, gobject_decl):
             ])
 
             convert_statement = " ".join([
-                TYPE_MAPPING[return_type]["convert_gobject_prefix"](gobject_decl["returns"]["type"]),
+                TYPE_MAPPING[return_type]["convert_gobject_prefix"](gobject_return_type),
                 "gobject_rv",
                 "=",
                 TYPE_MAPPING[return_type]["convert_gobject_func"]("real_rv") + ";"
@@ -440,12 +502,23 @@ def make_function_call(decl, gobject_decl):
 
             # Cannot be "self", was checked earlier
             if gobject_decl["returns"]["transfer"] == "none":
-                return_statement = "return gobject_rv;";
+                return_statement_operand = "gobject_rv;";
             elif gobject_decl["returns"]["transfer"] == "full":
-                return_statement = "return static_cast <{}> (g_steal_pointer (&gobject_rv));".format(gobject_decl["returns"]["type"])
+                return_statement_operand = "static_cast <{}> (g_steal_pointer (&gobject_rv));".format(gobject_return_type)
+            else:
+                assert "Section not reachable" and False
+
+            if out_return_parameter is not None:
+                return_statement = "\n".join([
+                    "*{} = {}".format(out_return_parameter["name"],
+                                      return_statement_operand),
+                    "return TRUE;"
+                ])
+            else:
+                return_statement = "return {}".format(return_statement_operand)
     else:
         convert_statement = ""
-        return_statement = "return;"
+        return_statement = "return TRUE;"
 
     return "\n".join([
         before_block,
