@@ -412,7 +412,10 @@ torch_storage_init_internal (TorchStorage  *storage,
 {
   g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
-  return g_initable_init (G_INITABLE (storage), NULL, error);
+  /* Even though we have a check in torch_storage_initable_init,
+   * check again here to avoid the vfunc calls */
+  if (!priv->internal)
+    return g_initable_init (G_INITABLE (storage), NULL, error);
 }
 
 TorchStorage *
