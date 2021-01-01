@@ -533,8 +533,8 @@ torch_tensor_get_tensor_data (TorchTensor  *tensor,
  */
 gboolean
 torch_tensor_set_data (TorchTensor  *tensor,
-                       GVariant            *data,
-                       GError            **error)
+                       GVariant     *data,
+                       GError      **error)
 {
   TorchTensorPrivate *priv =
     static_cast <TorchTensorPrivate *> (torch_tensor_get_instance_private (tensor));
