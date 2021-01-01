@@ -37,6 +37,12 @@ describe('TorchDevice', function() {
     expect(device.type).toEqual(Torch.DeviceType.CPU);
   });
 
+  it('constructing with invalid string throws', function() {
+    expect(() => {
+      let device = Torch.Device.new_from_string("something-youve-never-heard-of");
+    }).toThrow();
+  });
+
   it('can be constructed with torch_device_new_from_string on vulkan', function() {
     let device = Torch.Device.new_from_string("vulkan");
     expect(device.type).toEqual(Torch.DeviceType.VULKAN);
