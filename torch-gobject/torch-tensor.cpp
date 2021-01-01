@@ -485,7 +485,8 @@ torch_tensor_set_dims (TorchTensor *tensor,
  * sparingly.
  *
  * Returns: (transfer full): A floating reference to a new
- *          #GVariant containing the tensor data.
+ *          #GVariant containing the tensor data
+ *          or %NULL with @error set on failure.
  */
 GVariant *
 torch_tensor_get_tensor_data (TorchTensor  *tensor,
