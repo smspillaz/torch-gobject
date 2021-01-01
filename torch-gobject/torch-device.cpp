@@ -454,7 +454,7 @@ torch_device_new_from_type_index (TorchDeviceType   type,
                                                      NULL,
                                                      error,
                                                      "type", type,
-                                                     "index", index,
+                                                     "index", static_cast <int> (index),
                                                      NULL));
 }
 
