@@ -528,6 +528,8 @@ torch_tensor_get_tensor_data (TorchTensor  *tensor,
  * PyTorch will likely copy the contents of the array
  * either into CPU memory or GPU memory as a result of
  * calling this function, so it should be used seldomly.
+ *
+ * Returns: %TRUE on success or %FALSE with @error set on failure.
  */
 gboolean
 torch_tensor_set_data (TorchTensor  *tensor,
