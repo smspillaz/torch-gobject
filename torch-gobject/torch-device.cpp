@@ -322,7 +322,7 @@ torch_device_set_property (GObject      *object,
         priv->construction_device_type = static_cast <TorchDeviceType> (g_value_get_enum (value));
         break;
       case PROP_DEVICE_INDEX:
-        priv->construction_device_index = g_value_get_uint64 (value);
+        priv->construction_device_index = g_value_get_int (value);
         break;
       case PROP_STRING:
         priv->construction_string = g_value_dup_string (value);
