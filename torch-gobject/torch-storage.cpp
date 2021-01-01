@@ -71,6 +71,17 @@ torch_storage_get_real_storage (TorchStorage *storage)
   return *priv->internal;
 }
 
+/**
+ * torch_storage_get_resizable:
+ * @storage: A #TorchStorage
+ * @out_resizable: (out): Whether this storage can be resized
+ * @error: A #GError
+ *
+ * Whether this storage can be resized
+ *
+ * Returns: %TRUE with @out_resizable set to the number of bytes in the
+ *          storage on success, %FALSE with @error set on failure.
+ */
 gboolean
 torch_storage_get_resizable (TorchStorage  *storage,
                              gboolean      *out_resizable,
@@ -99,6 +110,17 @@ torch_storage_get_resizable (TorchStorage  *storage,
   return FALSE;
 }
 
+/**
+ * torch_storage_get_n_bytes:
+ * @storage: A #TorchStorage
+ * @out_n_bytes: (out): The number of bytes in the storage
+ * @error: A #GError
+ *
+ * The number of bytes in the storage
+ *
+ * Returns: %TRUE with @out_n_bytes set to the number of bytes in the
+ *          storage on success, %FALSE with @error set on failure.
+ */
 gboolean
 torch_storage_get_n_bytes (TorchStorage  *storage,
                            size_t        *out_n_bytes,
@@ -127,6 +149,17 @@ torch_storage_get_n_bytes (TorchStorage  *storage,
   return FALSE;
 }
 
+
+/**
+ * torch_storage_get_data: (skip)
+ * @storage: A #TorchStorage
+ * @error: A #GError
+ *
+ * Get the data pointer for this #TorchStorage
+ *
+ * Returns: (transfer none): A gpointer to the data in this storage
+ *                           or %NULL with @error set on failure.
+ */
 const gpointer
 torch_storage_get_data (TorchStorage  *storage,
                         GError       **error)
@@ -151,6 +184,17 @@ torch_storage_get_data (TorchStorage  *storage,
   return NULL;
 }
 
+/**
+ * torch_storage_get_bytes:
+ * @storage: A #TorchStorage
+ * @error: A #GError
+ *
+ * Get the bytes stored by this #TorchStorage
+ *
+ * Returns: (transfer full): A #GBytes with the data set to the data
+ *                           contained in this #TorchStorage or %NULL
+ *                           with @error set on failure.
+ */
 GBytes *
 torch_storage_get_bytes (TorchStorage  *storage,
                          GError       **error)
