@@ -385,6 +385,8 @@ def make_argument_marshallers(arguments, gobject_arguments):
 
 
 def make_function_call(decl, gobject_decl):
+    before_block = ""
+
     if "namespace" in decl["method_of"]:
         call = "at::{name} ({args});".format(
             name=decl["name"],
@@ -405,6 +407,18 @@ def make_function_call(decl, gobject_decl):
     if decl["returns"]:
         return_type = decl["returns"][0]["dynamic_type"]
         gobject_return_type = TYPE_MAPPING[decl["returns"][0]["dynamic_type"]]["name"]
+
+        # Need to init the tensor first
+        if "Tensor" in decl["method_of"]:
+            before_block = "\n".join([
+                "if (!torch_tensor_init_internal ({}, NULL))".format(
+                    gobject_decl["arguments"][0]["name"]
+                ),
+                "  {",
+                "    {} rv = 0;".format(gobject_return_type),
+                "    return rv;",
+                "  }",
+            ])
 
         if gobject_decl["returns"]["transfer"] == "self":
             convert_statement = ""
@@ -434,6 +448,7 @@ def make_function_call(decl, gobject_decl):
         return_statement = "return;"
 
     return "\n".join([
+        before_block,
         call,
         convert_statement,
         return_statement
