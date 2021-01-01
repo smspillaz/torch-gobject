@@ -383,7 +383,7 @@ torch_device_class_init (TorchDeviceClass *klass)
     g_param_spec_string ("string",
                          "String",
                          "String describing the device",
-                         "cpu",
+                         NULL,
                          static_cast <GParamFlags> (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
 
