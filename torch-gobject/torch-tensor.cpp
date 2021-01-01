@@ -230,9 +230,10 @@ namespace
                                               static_cast <int64_t> (g_variant_n_children (array_variant))));
   }
 
+  template <typename ErrorEnum>
   unsigned int set_error_from_exception (std::exception const  &exception,
                                          GQuark                 domain,
-                                         TorchError             code,
+                                         ErrorEnum              code,
                                          GError               **error)
   {
     g_set_error (error,
