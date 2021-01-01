@@ -25,6 +25,8 @@
 #include <torch-gobject/torch-allocator.h>
 #include <torch-gobject/torch-allocator-internal.h>
 #include <torch-gobject/torch-storage.h>
+#include <torch-gobject/torch-storage-internal.h>
+#include <torch-gobject/torch-util.h>
 
 #include <c10/core/Storage.h>
 
@@ -70,40 +72,114 @@ torch_storage_get_real_storage (TorchStorage *storage)
 }
 
 gboolean
-torch_storage_get_resizable (TorchStorage *storage)
+torch_storage_get_resizable (TorchStorage  *storage,
+                             gboolean      *out_resizable,
+                             GError       **error)
 {
   TorchStoragePrivate *priv = TORCH_STORAGE_GET_PRIVATE (storage);
 
-  return priv->internal->resizable();
+  g_return_val_if_fail (out_resizable != NULL, FALSE);
+
+  if (!torch_storage_init_internal (storage, error))
+    return FALSE;
+
+  try
+    {
+      *out_resizable = priv->internal->resizable ();
+      return TRUE;
+    }
+  catch (const std::exception &e)
+    {
+      g_set_error (error,
+                   G_IO_ERROR,
+                   G_IO_ERROR_FAILED,
+                   e.what ());
+    }
+
+  return FALSE;
 }
 
-size_t
-torch_storage_get_n_bytes (TorchStorage *storage)
+gboolean
+torch_storage_get_n_bytes (TorchStorage  *storage,
+                           size_t        *out_n_bytes,
+                           GError       **error)
 {
   TorchStoragePrivate *priv = TORCH_STORAGE_GET_PRIVATE (storage);
 
-  return priv->internal->nbytes();
+  g_return_val_if_fail (out_n_bytes != NULL, FALSE);
+
+  if (!torch_storage_init_internal (storage, error))
+    return FALSE;
+
+  try
+    {
+      *out_n_bytes = priv->internal->nbytes ();
+      return TRUE;
+    }
+  catch (const std::exception &e)
+    {
+      g_set_error (error,
+                   G_IO_ERROR,
+                   G_IO_ERROR_FAILED,
+                   e.what ());
+    }
+
+  return FALSE;
 }
 
 const gpointer
-torch_storage_get_data (TorchStorage *storage)
+torch_storage_get_data (TorchStorage  *storage,
+                        GError       **error)
 {
   TorchStoragePrivate *priv = TORCH_STORAGE_GET_PRIVATE (storage);
-  return static_cast <gpointer> (priv->internal->data <char *> ());
+
+  if (!torch_storage_init_internal (storage, error))
+    return NULL;
+
+  try
+    {
+      return static_cast <gpointer> (priv->internal->data <char *> ());
+    }
+  catch (const std::exception &e)
+    {
+      g_set_error (error,
+                   G_IO_ERROR,
+                   G_IO_ERROR_FAILED,
+                   e.what ());
+    }
+
+  return NULL;
 }
 
 GBytes *
-torch_storage_get_bytes (TorchStorage *storage)
+torch_storage_get_bytes (TorchStorage  *storage,
+                         GError       **error)
 {
   TorchStoragePrivate *priv = TORCH_STORAGE_GET_PRIVATE (storage);
-  const size_t n_bytes = priv->internal->nbytes();
-  g_autofree char *data = static_cast <char *> (g_malloc (sizeof (char) * n_bytes));
 
-  // XXX: This assumes that memcpy is even possible on the pointer,
-  //      it may very well not be
-  memcpy (static_cast <gpointer> (data), priv->internal->data <char *> (), n_bytes * sizeof (char));
+  if (!torch_storage_init_internal (storage, error))
+    return NULL;
 
-  return g_bytes_new_with_free_func (g_steal_pointer (&data), n_bytes, g_free, NULL);
+  try
+    {
+      const size_t n_bytes = priv->internal->nbytes();
+      g_autofree char *data = static_cast <char *> (g_malloc (sizeof (char) * n_bytes));
+
+      // XXX: This assumes that memcpy is even possible on the pointer,
+      //      it may very well not be
+      memcpy (static_cast <gpointer> (data), priv->internal->data <char *> (), n_bytes * sizeof (char));
+
+      return g_bytes_new_with_free_func (g_steal_pointer (&data), n_bytes, g_free, NULL);
+    }
+  catch (const std::exception &e)
+    {
+      g_set_error (error,
+                   G_IO_ERROR,
+                   G_IO_ERROR_FAILED,
+                   e.what ());
+    }
+
+  return NULL;
 }
 
 /**
@@ -146,6 +222,9 @@ torch_storage_initable_init (GInitable     *initable,
 {
   TorchStorage        *storage = TORCH_STORAGE (initable);
   TorchStoragePrivate *priv = TORCH_STORAGE_GET_PRIVATE (storage);
+
+  if (priv->internal)
+    return TRUE;
 
   try
     {
@@ -213,10 +292,30 @@ torch_storage_get_property (GObject      *object,
   switch (prop_id)
     {
       case PROP_RESIZABLE:
-        g_value_set_boolean (value, torch_storage_get_resizable (storage));
+        g_value_set_boolean (value,
+                             call_and_warn_about_gerror ("get prop 'resizable'",
+                                                         [](TorchStorage  *storage,
+                                                            GError       **error) -> gboolean {
+                                                           gboolean resizable = FALSE;
+                                                           torch_storage_get_resizable (storage,
+                                                                                        &resizable,
+                                                                                        error);
+                                                           return resizable;
+                                                         },
+                                                         storage));
         break;
       case PROP_N_BYTES:
-        g_value_set_uint64 (value, torch_storage_get_n_bytes (storage));
+        g_value_set_uint64 (value,
+                            call_and_warn_about_gerror ("get prop 'n-bytes'",
+                                                        [](TorchStorage  *storage,
+                                                           GError       **error) -> gboolean {
+                                                          size_t n_bytes = 0;
+                                                          torch_storage_get_n_bytes (storage,
+                                                                                     &n_bytes,
+                                                                                     error);
+                                                          return n_bytes;
+                                                        },
+                                                        storage));
         break;
       case PROP_ALLOCATOR:
         g_value_set_object (value, torch_storage_get_allocator (storage));
@@ -313,6 +412,15 @@ torch_storage_class_init (TorchStorageClass *klass)
   g_object_class_install_properties (object_class,
                                      NPROPS,
                                      torch_storage_props);
+}
+
+gboolean
+torch_storage_init_internal (TorchStorage  *storage,
+                             GError       **error)
+{
+  g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+  return g_initable_init (G_INITABLE (storage), NULL, error);
 }
 
 TorchStorage *

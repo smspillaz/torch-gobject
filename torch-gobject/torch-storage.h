@@ -42,13 +42,19 @@ TorchStorage * torch_storage_new_with_reallocatable_data (size_t          size_b
 
 TorchStorage * torch_storage_new_with_fixed_data (GBytes *data);
 
-gboolean torch_storage_get_resizable (TorchStorage *storage);
+gboolean torch_storage_get_resizable (TorchStorage  *storage,
+                                      gboolean      *out_resizable,
+                                      GError       **error);
 
-size_t torch_storage_get_n_bytes (TorchStorage *storage);
+gboolean torch_storage_get_n_bytes (TorchStorage  *storage,
+                                    size_t        *out_n_bytes,
+                                    GError       **error);
 
-const gpointer torch_storage_get_data (TorchStorage *storage);
+const gpointer torch_storage_get_data (TorchStorage  *storage,
+                                       GError       **error);
 
-GBytes * torch_storage_get_bytes (TorchStorage *storage);
+GBytes * torch_storage_get_bytes (TorchStorage  *storage,
+                                  GError       **error);
 
 TorchAllocator * torch_storage_get_allocator (TorchStorage *storage);
 

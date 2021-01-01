@@ -29,3 +29,5 @@
 c10::Storage & torch_storage_get_real_storage (TorchStorage *storage);
 
 TorchStorage * torch_storage_new_from_real_storage (c10::Storage const &storage);
+
+gboolean torch_storage_init_internal (TorchStorage *storage, GError **error);
