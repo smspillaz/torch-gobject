@@ -20,7 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-const { GLib, Torch } = imports.gi;
+const { GLib, GObject, Torch } = imports.gi;
 
 describe('TorchTensor', function() {
   it('can be constructed', function() {
@@ -42,6 +42,44 @@ describe('TorchTensor', function() {
     let tensor = Torch.zeros([1], opts);
 
     expect(tensor.get_tensor_data().deep_unpack()).toEqual([0]);
+  });
+
+  it('can do matrix multiplication', function() {
+    let opts = new Torch.TensorOptions({});
+    let matrix = Torch.eye([10], opts);
+    let matrix2 = Torch.eye([10], opts);
+
+    let result = matrix.mm(matrix2);
+    let diag = matrix.diag(0);
+
+    expect(diag.get_tensor_data().deep_unpack()).toEqual([1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+  });
+
+  it('can add scalars', function() {
+    let opts = new Torch.TensorOptions({ dtype: GObject.TYPE_DOUBLE });
+    let tensor = Torch.ones([2], opts);
+
+    tensor.add_scalar_double_inplace(1.0, 1.0);
+
+    expect(tensor.get_tensor_data().deep_unpack()).toEqual([2, 2]);
+  });
+
+  it('can check equality', function() {
+    let opts = new Torch.TensorOptions({ dtype: GObject.TYPE_DOUBLE });
+    let tensor = Torch.ones([2], opts);
+    let tensor2 = Torch.ones([2], opts);
+
+    let [status, equal] = tensor.equal(tensor2);
+
+    expect(equal).toEqual(true);
+  });
+
+  it('can reshape', function() {
+    let opts = new Torch.TensorOptions({ dtype: GObject.TYPE_DOUBLE });
+    let tensor = Torch.linspace_double(0.0, 0.75, 4, opts);
+    let tensor_reshaped = tensor.reshape([2, 2]);
+
+    expect(tensor_reshaped.get_tensor_data().deep_unpack().map(v => v.deep_unpack())).toEqual([[0.0, 0.25], [0.5, 0.75]]);
   });
 
   /* Skipped, handling of array-like properties is currently
