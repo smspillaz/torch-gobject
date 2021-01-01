@@ -288,6 +288,7 @@ def make_gobject_decl_header(decl):
 
 FUNCTION_BLACKLIST = (
     "data",
+    "polygamma",  # declaration in Declarations.yaml is broken
 )
 
 
