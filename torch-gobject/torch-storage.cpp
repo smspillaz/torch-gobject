@@ -410,6 +410,8 @@ gboolean
 torch_storage_init_internal (TorchStorage  *storage,
                              GError       **error)
 {
+  TorchStoragePrivate *priv = TORCH_STORAGE_GET_PRIVATE (storage);
+
   g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
   /* Even though we have a check in torch_storage_initable_init,
