@@ -473,7 +473,7 @@ def make_function_call(decl, gobject_decl):
         # Need to init the tensor first
         if "Tensor" in decl["method_of"]:
             before_block = "\n".join([
-                "if (!torch_tensor_init_internal ({}, NULL))".format(
+                "if (!torch_tensor_init_internal ({}, error))".format(
                     gobject_decl["arguments"][0]["name"]
                 ),
                 "  {",
@@ -520,11 +520,28 @@ def make_function_call(decl, gobject_decl):
         convert_statement = ""
         return_statement = "return TRUE;"
 
+    call_and_return_try_catch_statement = "\n".join([
+        "try",
+        "  {",
+        indent("\n".join([
+            call,
+            convert_statement,
+            return_statement
+        ]), 4),
+        "  }",
+        "catch (const std::exception &e)",
+        "  {",
+        indent("\n".join([
+            "g_set_error (error, G_IO_ERROR, G_IO_ERROR_FAILED, e.what ());",
+            "{} rv = 0;".format(gobject_decl["returns"]["type"]),
+            "return rv;",
+        ]), 4),
+        "  }",
+    ])
+
     return "\n".join([
         before_block,
-        call,
-        convert_statement,
-        return_statement
+        call_and_return_try_catch_statement
     ])
 
 
@@ -577,6 +594,7 @@ def print_header(declarations):
 
 def print_source(declarations):
     print("#include <torch/torch.h>")
+    print("#include <gio/gio.h>")
     print("#include <torch-gobject/torch-allocator-internal.h>")
     print("#include <torch-gobject/torch-device-internal.h>")
     print("#include <torch-gobject/torch-device-type-internal.h>")
