@@ -375,6 +375,8 @@ torch_tensor_init_internal (TorchTensor  *tensor,
    * check again here to avoid the vfunc calls */
   if (!priv->internal)
     return g_initable_init (G_INITABLE (tensor), NULL, error);
+
+  return TRUE;
 }
 
 /**
@@ -468,6 +470,8 @@ torch_tensor_set_dims (TorchTensor  *tensor,
                                                    G_IO_ERROR_FAILED,
                                                    error));
     }
+
+  return TRUE;
 }
 
 /**
