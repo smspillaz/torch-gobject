@@ -359,6 +359,10 @@ torch::Tensor &
 torch_tensor_get_real_tensor (TorchTensor *tensor)
 {
   TorchTensorPrivate *priv = TORCH_TENSOR_GET_PRIVATE (tensor);
+  g_autoptr (GError)  error = NULL;
+
+  if (!torch_tensor_init_internal (tensor, static_cast <GError **> (&error)))
+    torch_throw_error (error);
 
   return *priv->internal;
 }
