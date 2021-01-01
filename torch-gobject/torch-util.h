@@ -59,6 +59,38 @@ namespace
 
     return static_cast <GArray *> (g_steal_pointer (&array));
   }
+
+  template <typename ErrorEnum>
+  unsigned int set_error_from_exception (std::exception const  &exception,
+                                         GQuark                 domain,
+                                         ErrorEnum              code,
+                                         GError               **error)
+  {
+    g_set_error (error,
+                 domain,
+                 code,
+                 "%s",
+                 exception.what ());
+    return 0;
+  }
+
+  template <typename Func, typename... Args>
+  typename std::result_of <Func(Args..., GError **)>::type
+  call_and_warn_about_gerror(const char *operation, Func &&f, Args&& ...args)
+  {
+    GError *error = nullptr;
+
+    auto result = f(args..., &error);
+
+    if (error != nullptr)
+      {
+        g_warning ("Could not %s: %s", operation, error->message);
+        decltype(result) rv = 0;
+        return rv;
+      }
+
+    return result;
+  }
 }
 
 

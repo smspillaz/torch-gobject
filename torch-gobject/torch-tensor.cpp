@@ -231,20 +231,6 @@ namespace
                                               static_cast <int64_t> (g_variant_n_children (array_variant))));
   }
 
-  template <typename ErrorEnum>
-  unsigned int set_error_from_exception (std::exception const  &exception,
-                                         GQuark                 domain,
-                                         ErrorEnum              code,
-                                         GError               **error)
-  {
-    g_set_error (error,
-                 domain,
-                 code,
-                 "%s",
-                 exception.what ());
-    return 0;
-  }
-
   template <typename T>
   void iterate_and_assign_to_tensor (torch::Tensor &tensor,
                                      const char    *type_string,
@@ -366,24 +352,6 @@ namespace
       }
 
     return g_variant_builder_end (&builder);
-  }
-
-  template <typename Func, typename... Args>
-  typename std::result_of <Func(Args..., GError **)>::type
-  call_and_warn_about_gerror(const char *operation, Func &&f, Args&& ...args)
-  {
-    GError *error = nullptr;
-
-    auto result = f(args..., &error);
-
-    if (error != nullptr)
-      {
-        g_warning ("Could not %s: %s", operation, error->message);
-        decltype(result) rv = 0;
-        return rv;
-      }
-
-    return result;
   }
 }
 
