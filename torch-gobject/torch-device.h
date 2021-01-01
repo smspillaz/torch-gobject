@@ -23,12 +23,31 @@
 #pragma once
 
 #include <glib-object.h>
+#include <torch-gobject/torch-device-type.h>
 
 G_BEGIN_DECLS
 
 #define TORCH_TYPE_DEVICE torch_device_get_type ()
 G_DECLARE_FINAL_TYPE (TorchDevice, torch_device, TORCH, DEVICE, GObject)
 
-TorchDevice * torch_device_new (void);
+TorchDevice * torch_device_new (GError **error);
+
+TorchDevice * torch_device_new_from_string (const char  *string,
+                                            GError     **error);
+
+TorchDevice * torch_device_new_from_type_index (TorchDeviceType   type,
+                                                short             index,
+                                                GError          **error);
+
+gboolean torch_device_get_index (TorchDevice  *device,
+                                 short        *out_index,
+                                 GError      **error);
+
+gboolean torch_device_get_device_type (TorchDevice      *device,
+                                       TorchDeviceType  *out_device_type,
+                                       GError          **error);
+
+char * torch_device_get_string (TorchDevice  *device,
+                                GError      **error);
 
 G_END_DECLS

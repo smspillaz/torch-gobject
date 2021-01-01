@@ -805,7 +805,7 @@ torch_tensor_class_init (TorchTensorClass *klass)
                                                                                  G_PARAM_CONSTRUCT));
 
   /**
-   * TorchTensor:data:
+   * TorchTensor:data: (transfer full)
    *
    * The data of the tensor as a nested array of arrays of variants,
    * with the leaf variants being arrays of concrete types.

@@ -29,3 +29,6 @@
 c10::Device & torch_device_get_real_device (TorchDevice *device);
 
 TorchDevice * torch_device_new_from_real_device (c10::Device const &device);
+
+gboolean torch_device_init_internal (TorchDevice  *device,
+                                     GError      **error);
