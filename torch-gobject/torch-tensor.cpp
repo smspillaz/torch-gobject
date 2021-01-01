@@ -737,7 +737,7 @@ torch_tensor_class_init (TorchTensorClass *klass)
   object_class->finalize = torch_tensor_finalize;
 
   /**
-   * TorchTensor:dimensions: (type GLib.List(guint)) (transfer container)
+   * TorchTensor:dimensions: (type GLib.List(guint)) (transfer full)
    *
    * The dimensions of the tensor.
    *
