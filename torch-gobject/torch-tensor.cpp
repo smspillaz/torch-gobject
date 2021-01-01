@@ -778,8 +778,7 @@ torch_tensor_class_init (TorchTensorClass *klass)
                                                         "Data of the Tensor",
                                                         G_VARIANT_TYPE ("av"),
                                                         nullptr,
-                                                        static_cast <GParamFlags> (G_PARAM_READWRITE |
-                                                                                   G_PARAM_CONSTRUCT));
+                                                        static_cast <GParamFlags> (G_PARAM_READWRITE));
 
   /**
    * TorchTensor:dtype:
