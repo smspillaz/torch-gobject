@@ -93,6 +93,7 @@ namespace
   }
 }
 
+void torch_throw_error (GError *error);
 
 GValue * torch_gvalue_from_scalar (const c10::Scalar &scalar);
 

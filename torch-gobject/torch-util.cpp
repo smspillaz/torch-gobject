@@ -26,6 +26,12 @@
 #include <torch-gobject/torch-tensor-internal.h>
 #include <torch-gobject/torch-util.h>
 
+void torch_throw_error (GError *error)
+{
+  if (error != NULL)
+    throw std::runtime_error (error->message);
+}
+
 GValue *
 torch_gvalue_from_scalar (c10::Scalar const &scalar)
 {
