@@ -132,7 +132,9 @@ torch_device_get_device_type (TorchDevice      *device,
 
   try
     {
-      *out_device_type = static_cast <TorchDeviceType> (priv->internal->type ());
+      *out_device_type = static_cast <TorchDeviceType> (
+        torch_device_type_from_real_device_type (priv->internal->type ()
+      ));
       return TRUE;
     }
   catch (const std::exception &e)
