@@ -26,4 +26,26 @@ describe('TorchDevice', function() {
   it('can be default-constructed', function() {
     let device = new Torch.Device({});
   });
+
+  it('can be default-constructed and lazy-initialized', function() {
+    let device = new Torch.Device({});
+    expect(device.type).toEqual(Torch.DeviceType.CPU);
+  });
+
+  it('can be constructed with torch_device_new_from_string', function() {
+    let device = Torch.Device.new_from_string("cpu");
+    expect(device.type).toEqual(Torch.DeviceType.CPU);
+  });
+
+  it('can be constructed with torch_device_new_from_string on vulkan', function() {
+    let device = Torch.Device.new_from_string("vulkan");
+    expect(device.type).toEqual(Torch.DeviceType.VULKAN);
+    expect(device.index).toEqual(-1);
+  });
+
+  it('can be constructed with torch_device_new_type_index', function() {
+    let device = Torch.Device.new_from_type_index(Torch.DeviceType.CPU, 0);
+    expect(device.type).toEqual(Torch.DeviceType.CPU);
+    expect(device.index).toEqual(0);
+  });
 });
