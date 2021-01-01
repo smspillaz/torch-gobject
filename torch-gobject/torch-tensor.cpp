@@ -41,7 +41,7 @@ struct _TorchTensor
 
 typedef struct _TorchTensorPrivate
 {
-  at::Tensor *internal;
+  torch::Tensor *internal;
 
   GVariant    *construction_data;
   GList       *construction_dims;
@@ -307,7 +307,7 @@ namespace
     return tensor;
   }
 
-  GVariant * serialize_tensor_data_to_nested_gvariants (at::Tensor const &tensor)
+  GVariant * serialize_tensor_data_to_nested_gvariants (torch::Tensor const &tensor)
   {
     /* Base case, only a single dimension left */
     if (tensor.dim () == 1)
@@ -355,7 +355,7 @@ namespace
   }
 }
 
-at::Tensor &
+torch::Tensor &
 torch_tensor_get_real_tensor (TorchTensor *tensor)
 {
   TorchTensorPrivate *priv = TORCH_TENSOR_GET_PRIVATE (tensor);
@@ -853,7 +853,7 @@ torch_tensor_new_from_data (GVariant *data)
 }
 
 TorchTensor *
-torch_tensor_new_from_real_tensor (at::Tensor const &real_tensor)
+torch_tensor_new_from_real_tensor (torch::Tensor const &real_tensor)
 {
   g_autoptr (TorchTensor) tensor = static_cast <TorchTensor *> (g_object_new (TORCH_TYPE_TENSOR, NULL));
   TorchTensorPrivate *priv = TORCH_TENSOR_GET_PRIVATE (tensor);

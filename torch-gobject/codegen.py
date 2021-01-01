@@ -450,7 +450,7 @@ def make_function_call(decl, gobject_decl):
     before_block = ""
 
     if "namespace" in decl["method_of"]:
-        call = "at::{name} ({args});".format(
+        call = "torch::{name} ({args});".format(
             name=decl["name"],
             args=", ".join([
                 "real_" + a["name"] for a in decl["arguments"]
@@ -615,7 +615,7 @@ def print_source(declarations):
     print("using Scalar = c10::Scalar;")
     print("using ScalarType = c10::ScalarType;")
     print("using Storage = c10::Storage;")
-    print("using Tensor = at::Tensor;")
+    print("using Tensor = torch::Tensor;")
     print("using TensorList = at::TensorList;")
     print("using TensorOptions = c10::TensorOptions;")
 
