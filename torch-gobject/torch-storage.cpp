@@ -418,6 +418,8 @@ torch_storage_init_internal (TorchStorage  *storage,
    * check again here to avoid the vfunc calls */
   if (!priv->internal)
     return g_initable_init (G_INITABLE (storage), NULL, error);
+
+  return TRUE;
 }
 
 TorchStorage *
