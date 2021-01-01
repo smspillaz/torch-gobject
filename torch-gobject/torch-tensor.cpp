@@ -45,6 +45,7 @@ typedef struct _TorchTensorPrivate
 
   GVariant    *construction_data;
   GList       *construction_dims;
+  gboolean     is_constructed : 1;
 } TorchTensorPrivate;
 
 static void initable_iface_init (GInitableIface *iface);
@@ -394,9 +395,24 @@ torch_tensor_get_real_tensor (TorchTensor *tensor)
   return *priv->internal;
 }
 
+gboolean
+torch_tensor_init_internal (TorchTensor  *tensor,
+                            GError      **error)
+{
+  g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+  TorchTensorPrivate *priv = TORCH_TENSOR_GET_PRIVATE (tensor);
+
+  /* Even though we have a check in torch_tensor_initable_init,
+   * check again here to avoid the vfunc calls */
+  if (!priv->internal)
+    return g_initable_init (G_INITABLE (tensor), NULL, error);
+}
+
 /**
  * torch_tensor_get_dims:
  * @tensor: A #TorchTensor
+ * @error: A #GError
  *
  * Get the dimensionality of the tensor in the form of an array
  * of integer values.
@@ -406,17 +422,26 @@ torch_tensor_get_real_tensor (TorchTensor *tensor)
  * [3, 4, 5] has 3 rows, 4 columns and 5 stacks.
  *
  * Returns: (element-type guint) (transfer full): A #GList of integer
- *          values representing the dimensionality of the array.
+ *          values representing the dimensionality of the array,
+ *          or %NULL with @error set on failure.
  */
 GList *
-torch_tensor_get_dims (TorchTensor *tensor)
+torch_tensor_get_dims (TorchTensor  *tensor,
+                       GError      **error)
 {
   TorchTensorPrivate *priv =
     static_cast <TorchTensorPrivate *> (torch_tensor_get_instance_private (tensor));
 
-  if (priv->internal)
+  try
     {
       return g_list_from_int_list <unsigned int> (priv->internal->sizes ());
+    }
+  catch (std::exception const &e)
+    {
+      return reinterpret_cast <GList *> (set_error_from_exception (e,
+                                                                   G_IO_ERROR,
+                                                                   G_IO_ERROR_FAILED,
+                                                                   error));
     }
 
   return g_list_copy (priv->construction_dims);
@@ -443,29 +468,44 @@ torch_tensor_get_dims (TorchTensor *tensor)
  * in-place and will throw away gradients, so is most likely
  * not what you want in normal operation. Instead consider
  * using %torch_tensor_reshape.
+ *
+ * Returns: %TRUE on success, %FALSE with @error set on failure.
  */
-void
-torch_tensor_set_dims (TorchTensor *tensor,
-                       GList       *dims)
+gboolean
+torch_tensor_set_dims (TorchTensor  *tensor,
+                       GList        *dims,
+                       GError      **error)
 {
   TorchTensorPrivate *priv =
     static_cast <TorchTensorPrivate *> (torch_tensor_get_instance_private (tensor));
 
-  /* We can't set the dimensions until the underlying tensor is constructed */
-  if (priv->internal != nullptr)
-    {
-      priv->internal->resize_ (torch::IntArrayRef (int_list_from_g_list <unsigned int> (dims)));
-    }
-  else
+  if (!priv->is_constructed)
     {
       g_clear_pointer (&priv->construction_dims, g_list_free);
       priv->construction_dims = dims != NULL ? g_list_copy (dims) : NULL;
+      return TRUE;
+    }
+
+  if (!torch_tensor_init_internal (tensor, error))
+    return FALSE;
+
+  try
+    {
+      priv->internal->resize_ (torch::IntArrayRef (int_list_from_g_list <unsigned int> (dims)));
+    }
+  catch (std::exception const &e)
+    {
+      return (gboolean) (set_error_from_exception (e,
+                                                   G_IO_ERROR,
+                                                   G_IO_ERROR_FAILED,
+                                                   error));
     }
 }
 
 /**
  * torch_tensor_get_tensor_data:
  * @tensor: A tensor to get the data for.
+ * @error: A #GError
  *
  * Return the underlying data for a tensor as an array of variants
  * (av), where each variant in the array is itself an array
@@ -495,8 +535,8 @@ torch_tensor_get_tensor_data (TorchTensor  *tensor,
   TorchTensorPrivate *priv =
     static_cast <TorchTensorPrivate *> (torch_tensor_get_instance_private (tensor));
 
-  if (priv->internal == nullptr)
-    return g_variant_ref (priv->construction_data);
+  if (!torch_tensor_init_internal (tensor, error))
+    return NULL;
 
   try
     {
@@ -543,19 +583,25 @@ torch_tensor_set_data (TorchTensor  *tensor,
   if (data == nullptr)
     return TRUE;
 
-  if (priv->internal != nullptr)
+  if (!priv->is_constructed)
     {
-      try
-        {
-          priv->internal->set_data (new_tensor_from_nested_gvariants (data));
-        }
-      catch (InvalidVariantTypeError &e)
-        {
-          return (gboolean) (set_error_from_exception (e,
-                                                       TORCH_ERROR,
-                                                       TORCH_ERROR_INVALID_DATA_TYPE,
-                                                       error));
-        }
+      g_clear_pointer (&priv->construction_data, g_variant_unref);
+      priv->construction_data = g_variant_ref (data);
+    }
+
+  if (!torch_tensor_init_internal (tensor, error))
+    return FALSE;
+
+  try
+    {
+      priv->internal->set_data (new_tensor_from_nested_gvariants (data));
+    }
+  catch (InvalidVariantTypeError &e)
+    {
+      return (gboolean) (set_error_from_exception (e,
+                                                   TORCH_ERROR,
+                                                   TORCH_ERROR_INVALID_DATA_TYPE,
+                                                   error));
     }
   catch (std::exception const &e)
     {
@@ -571,15 +617,21 @@ torch_tensor_set_data (TorchTensor  *tensor,
 /**
  * torch_tensor_get_dtype:
  * @tensor: (transfer none): A #TorchTensor
+ * @error: A #GError
  *
  * Get the data type of a TorchTensor
  *
- * Returns: A #GType with the internal data type of this tensor.
+ * Returns: A #GType with the internal data type of this tensor,
+ *          0 on failure with @error set.
  */
 GType
-torch_tensor_get_dtype (TorchTensor *tensor)
+torch_tensor_get_dtype (TorchTensor  *tensor,
+                        GError      **error)
 {
   TorchTensorPrivate *priv = TORCH_TENSOR_GET_PRIVATE (tensor);
+
+  if (!torch_tensor_init_internal (tensor, error))
+    return static_cast <GType> (0);
 
   return torch_gtype_from_scalar_type (priv->internal->scalar_type ());
 }
@@ -592,6 +644,10 @@ torch_tensor_initable_init (GInitable     *initable,
   TorchTensor        *tensor = reinterpret_cast <TorchTensor *> (initable);
   TorchTensorPrivate *priv = TORCH_TENSOR_GET_PRIVATE (tensor);
 
+  /* Already initialized, skip */
+  if (priv->internal)
+    return TRUE;
+
   try
     {
       if (priv->construction_data)
@@ -600,7 +656,7 @@ torch_tensor_initable_init (GInitable     *initable,
 
           if (priv->construction_dims)
             {
-              torch_tensor_set_dims (tensor, priv->construction_dims);
+              torch_tensor_set_dims (tensor, priv->construction_dims, error);
             }
 
         }
@@ -614,6 +670,7 @@ torch_tensor_initable_init (GInitable     *initable,
        * properties that we had in the meantime */
       g_clear_pointer (&priv->construction_dims, g_list_free);
       g_clear_pointer (&priv->construction_data, g_variant_unref);
+      priv->is_constructed = TRUE;
     }
   catch (const std::exception &exp)
     {
@@ -656,6 +713,15 @@ torch_tensor_finalize (GObject *object)
 }
 
 static void
+torch_tensor_constructed (GObject *object)
+{
+  TorchTensor        *tensor = TORCH_TENSOR (object);
+  TorchTensorPrivate *priv = TORCH_TENSOR_GET_PRIVATE (tensor);
+
+  priv->is_constructed = TRUE;
+}
+
+static void
 torch_tensor_get_property (GObject      *object,
                            unsigned int  prop_id,
                            GValue       *value,
@@ -674,11 +740,15 @@ torch_tensor_get_property (GObject      *object,
         break;
       case PROP_DIMS:
         g_value_set_boxed (value,
-                           torch_tensor_get_dims (tensor));
+                           call_and_warn_about_gerror ("get property 'dimensions'",
+                                                       torch_tensor_get_dims,
+                                                       tensor));
         break;
       case PROP_DTYPE:
         g_value_set_gtype (value,
-                           torch_tensor_get_dtype (tensor));
+                           call_and_warn_about_gerror ("get property 'dtype'",
+                                                       torch_tensor_get_dtype,
+                                                       tensor));
         break;
       default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -698,8 +768,10 @@ torch_tensor_set_property (GObject      *object,
   switch (prop_id)
     {
       case PROP_DIMS:
-        torch_tensor_set_dims (tensor,
-                               static_cast <GList *> (g_value_get_boxed (value)));
+        call_and_warn_about_gerror ("set property 'dimensions'",
+                                    torch_tensor_set_dims,
+                                    tensor,
+                                    static_cast <GList *> (g_value_get_boxed (value)));
         break;
       case PROP_DATA:
         call_and_warn_about_gerror ("set 'data' property",
@@ -735,6 +807,7 @@ torch_tensor_class_init (TorchTensorClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
+  object_class->constructed = torch_tensor_constructed;
   object_class->get_property = torch_tensor_get_property;
   object_class->set_property = torch_tensor_set_property;
   object_class->finalize = torch_tensor_finalize;

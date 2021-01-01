@@ -34,18 +34,21 @@ TorchTensor * torch_tensor_new (void);
 
 TorchTensor * torch_tensor_new_from_data (GVariant *data);
 
-GType torch_tensor_get_dtype (TorchTensor *tensor);
+GType torch_tensor_get_dtype (TorchTensor  *tensor,
+                              GError      **error);
 
 GVariant * torch_tensor_get_tensor_data (TorchTensor  *tensor,
                                          GError      **error);
 
 gboolean torch_tensor_set_data (TorchTensor  *tensor,
-                                GVariant            *data,
-                                GError            **error);
+                                GVariant     *data,
+                                GError      **error);
 
-void torch_tensor_set_dims (TorchTensor *tensor,
-                            GList       *dims);
+gboolean torch_tensor_set_dims (TorchTensor  *tensor,
+                                GList        *dims,
+                                GError      **error);
 
-GList * torch_tensor_get_dims (TorchTensor *tensor);
+GList * torch_tensor_get_dims (TorchTensor  *tensor,
+                               GError      **error);
 
 G_END_DECLS

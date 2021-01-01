@@ -29,3 +29,6 @@
 at::Tensor & torch_tensor_get_real_tensor (TorchTensor *tensor);
 
 TorchTensor * torch_tensor_new_from_real_tensor (at::Tensor const &tensor);
+
+gboolean torch_tensor_init_internal (TorchTensor  *tensor,
+                                     GError      **error);
