@@ -523,6 +523,8 @@ def make_function_call(decl, gobject_decl):
     call_and_return_try_catch_statement = "\n".join([
         "try",
         "  {",
+        indent(make_argument_marshallers(decl["arguments"], gobject_decl["arguments"]), 4),
+        "",
         indent("\n".join([
             call,
             convert_statement,
@@ -539,10 +541,10 @@ def make_function_call(decl, gobject_decl):
         "  }",
     ])
 
-    return "\n".join([
+    return "\n".join([s for s in [
         before_block,
         call_and_return_try_catch_statement
-    ])
+    ] if s])
 
 
 def indent(text, indent):
@@ -568,8 +570,6 @@ def print_function_body(decl):
     str_list.append(make_gobject_decl_header(gobject_decl))
     str_list.append(make_gobject_decl_fwd_decl(gobject_decl))
     str_list.append("{")
-    str_list.append(indent(make_argument_marshallers(decl["arguments"], gobject_decl["arguments"]), 4))
-    str_list.append("");
     str_list.append(indent(make_function_call(decl, gobject_decl), 4));
     str_list.append("}")
 
