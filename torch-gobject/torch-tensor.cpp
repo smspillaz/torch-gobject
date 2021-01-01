@@ -378,7 +378,8 @@ namespace
     if (error != nullptr)
       {
         g_warning ("Could not %s: %s", operation, error->message);
-        return reinterpret_cast <decltype(result)> (0);
+        decltype(result) rv = 0;
+        return rv;
       }
 
     return result;
