@@ -197,14 +197,6 @@ torch_storage_get_allocator (TorchStorage *storage)
   return priv->allocator;
 }
 
-c10::Storage &
-torch_storage_get_internal (TorchStorage *storage)
-{
-  TorchStoragePrivate *priv = TORCH_STORAGE_GET_PRIVATE (storage);
-
-  return *priv->internal;
-}
-
 namespace {
 c10::DataPtr
 data_ptr_from_data (gpointer data_ptr,
