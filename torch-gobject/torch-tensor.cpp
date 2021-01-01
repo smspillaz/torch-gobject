@@ -700,13 +700,7 @@ torch_tensor_set_property (GObject      *object,
         break;
       case PROP_DATA:
         call_and_warn_about_gerror ("set 'data' property",
-                                    [](TorchTensor  *tensor,
-                                       GVariant     *data,
-                                       GError      **error) -> decltype(auto) {
-                                      return torch_tensor_set_data (tensor,
-                                                                    data,
-                                                                    error);
-                                    },
+                                    torch_tensor_set_data,
                                     tensor,
                                     g_value_get_variant (value));
         break;
