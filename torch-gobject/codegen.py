@@ -534,7 +534,7 @@ def make_function_call(decl, gobject_decl):
         "catch (const std::exception &e)",
         "  {",
         indent("\n".join([
-            "g_set_error (error, G_IO_ERROR, G_IO_ERROR_FAILED, e.what ());",
+            "g_set_error (error, G_IO_ERROR, G_IO_ERROR_FAILED, \"%s\", e.what ());",
             "{} rv = 0;".format(gobject_decl["returns"]["type"]),
             "return rv;",
         ]), 4),
