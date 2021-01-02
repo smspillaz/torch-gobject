@@ -104,6 +104,7 @@ torch_device_get_index (TorchDevice  *device,
       g_set_error (error,
                    G_IO_ERROR,
                    G_IO_ERROR_FAILED,
+                   "%s",
                    e.what ());
     }
 
@@ -142,6 +143,7 @@ torch_device_get_device_type (TorchDevice      *device,
       g_set_error (error,
                    G_IO_ERROR,
                    G_IO_ERROR_FAILED,
+                   "%s",
                    e.what ());
     }
 
@@ -179,6 +181,7 @@ torch_device_get_string (TorchDevice  *device,
       g_set_error (error,
                    G_IO_ERROR,
                    G_IO_ERROR_FAILED,
+                   "%s",
                    e.what ());
     }
 
