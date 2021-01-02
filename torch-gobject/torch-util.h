@@ -91,6 +91,26 @@ namespace
 
     return result;
   }
+
+  template <typename Func, typename ErrorEnum, typename... Args>
+  typename std::result_of <Func(Args...)>::type
+  call_set_error_on_exception (GError                                         **error,
+                               GQuark                                           domain,
+                               ErrorEnum                                        code,
+                               typename std::result_of <Func(Args...)>::type    error_return,
+                               Func                                            &&func,
+                               Args&&                                         ...args)
+  {
+    try
+      {
+        return func (args...);
+      }
+    catch (const std::exception &e)
+      {
+        set_error_from_exception (e, domain, code, error);
+        return error_return;
+      }
+  }
 }
 
 void torch_throw_error (GError *error);
