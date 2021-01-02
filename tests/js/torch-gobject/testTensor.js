@@ -82,6 +82,40 @@ describe('TorchTensor', function() {
     expect(tensor_reshaped.get_tensor_data().deep_unpack().map(v => v.deep_unpack())).toEqual([[0.0, 0.25], [0.5, 0.75]]);
   });
 
+  it('can be indexed by ints', function() {
+    let opts = new Torch.TensorOptions({ dtype: GObject.TYPE_DOUBLE });
+    let tensor = Torch.linspace_double(1.0, 8.0, 8, opts);
+    let tensor_reshaped = tensor.reshape([2, 2, 2]);
+    let indices = [Torch.Index.new_int (1), Torch.Index.new_int (1)];
+
+    let tensor_indexed = tensor_reshaped.index_list(indices);
+
+    expect(tensor_indexed.get_tensor_data().deep_unpack()).toEqual([7.0, 8.0]);
+  });
+
+  it('can be indexed by a slice', function() {
+    let opts = new Torch.TensorOptions({ dtype: GObject.TYPE_DOUBLE });
+    let tensor = Torch.linspace_double(1.0, 10.0, 10, opts);
+    let tensor_reshaped = tensor.reshape([2, 5]);
+    let indices = [Torch.Index.new_int (1), Torch.Index.new_range (1, 4, 1)];
+
+    let tensor_indexed = tensor_reshaped.index_list(indices);
+
+    expect(tensor_indexed.get_tensor_data().deep_unpack()).toEqual([7, 8, 9]);
+  });
+
+  /* Skipped, handling of GPtrArray broken on gjs */
+  xit('can be array-indexed by ints', function() {
+    let opts = new Torch.TensorOptions({ dtype: GObject.TYPE_DOUBLE });
+    let tensor = Torch.linspace_double(1.0, 8.0, 8, opts);
+    let tensor_reshaped = tensor.reshape([2, 2, 2]);
+    let indices = [Torch.Index.new_int (1), Torch.Index.new_int (1)];
+
+    let tensor_indexed = tensor_reshaped.index_array(indices);
+
+    expect(tensor_indexed.get_tensor_data().deep_unpack()).toEqual([7.0, 8.0]);
+  });
+
   /* Skipped, handling of array-like properties is currently
    * broken in gjs and pygi */
   xit('has default dimension prop of 0', function() {
