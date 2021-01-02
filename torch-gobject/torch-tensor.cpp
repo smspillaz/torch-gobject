@@ -500,7 +500,7 @@ torch_tensor_set_dims (TorchTensor  *tensor,
  * expensive as copying from GPU to CPU, so it should be used
  * sparingly.
  *
- * Returns: (transfer full): A floating reference to a new
+ * Returns: (transfer none): A floating reference to a new
  *          #GVariant containing the tensor data
  *          or %NULL with @error set on failure.
  */
@@ -516,7 +516,7 @@ torch_tensor_get_tensor_data (TorchTensor  *tensor,
 
   try
     {
-      return g_variant_ref_sink (serialize_tensor_data_to_nested_gvariants (*priv->internal));
+      return serialize_tensor_data_to_nested_gvariants (*priv->internal);
     }
   catch (InvalidScalarTypeError const &e)
     {
