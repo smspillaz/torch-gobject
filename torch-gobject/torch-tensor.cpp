@@ -1025,8 +1025,8 @@ torch_tensor_new_from_real_tensor (torch::Tensor const &real_tensor)
   g_autoptr (TorchTensor) tensor = static_cast <TorchTensor *> (g_object_new (TORCH_TYPE_TENSOR, NULL));
   TorchTensorPrivate *priv = TORCH_TENSOR_GET_PRIVATE (tensor);
 
-  delete priv->internal;
   priv->internal = new torch::Tensor (real_tensor);
+  priv->is_constructed = TRUE;
 
   return static_cast <TorchTensor *> (g_steal_pointer (&tensor));
 }
