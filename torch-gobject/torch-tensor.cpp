@@ -210,6 +210,8 @@ namespace
   {
     if (scalar_type == torch::kFloat64) {
       return sizeof (double);
+    } else if (scalar_type == torch::kFloat) {
+      return sizeof (double);
     } else if (scalar_type == torch::kInt64) {
       return sizeof (int64_t);
     } else {

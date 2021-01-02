@@ -40,6 +40,10 @@ torch_gvalue_from_scalar (c10::Scalar const &scalar)
 
   switch (scalar.type ())
     {
+      case c10::ScalarType::Float:
+        g_value_init (value, G_TYPE_DOUBLE);
+        g_value_set_float (value, scalar.to <float> ());
+        return static_cast <GValue *> g_steal_pointer (&value);
       case c10::ScalarType::Double:
         g_value_init (value, G_TYPE_DOUBLE);
         g_value_set_double (value, scalar.to <double> ());
@@ -86,6 +90,8 @@ GType torch_gtype_from_scalar_type (c10::ScalarType const &scalar_type)
 {
   switch (scalar_type)
     {
+      case c10::ScalarType::Float:
+        return G_TYPE_FLOAT;
       case c10::ScalarType::Double:
         return G_TYPE_DOUBLE;
       case c10::ScalarType::Long:
@@ -102,6 +108,7 @@ c10::ScalarType torch_scalar_type_from_gtype (GType type)
   switch (type)
     {
       case G_TYPE_FLOAT:
+        return c10::ScalarType::Float;
       case G_TYPE_DOUBLE:
         return c10::ScalarType::Double;
       case G_TYPE_INT:
