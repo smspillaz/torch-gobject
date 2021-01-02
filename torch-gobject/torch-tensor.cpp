@@ -31,6 +31,9 @@
 #include <torch-gobject/torch-device-internal.h>
 #include <torch-gobject/torch-errors.h>
 #include <torch-gobject/torch-tensor.h>
+#include <torch-gobject/torch-tensor-index.h>
+#include <torch-gobject/torch-tensor-index-array.h>
+#include <torch-gobject/torch-tensor-index-internal.h>
 #include <torch-gobject/torch-tensor-internal.h>
 #include <torch-gobject/torch-util.h>
 
@@ -117,6 +120,22 @@ namespace
       vec.push_back (GPOINTER_TO_INT (link->data));
 
     return vec;
+  }
+
+  std::vector <torch::indexing::TensorIndex>
+  torch_index_g_ptr_array_to_tensor_indices (GPtrArray *array)
+  {
+    std::vector <torch::indexing::TensorIndex> indices;
+    indices.reserve (array->len);
+
+    for (size_t i = 0; i < array->len; ++i)
+      indices.emplace_back (
+        torch_index_get_real_index (
+          static_cast <TorchIndex *> (array->pdata[i])
+        )
+      );
+
+    return indices;
   }
 
   template <typename Target>
@@ -381,6 +400,155 @@ torch_tensor_init_internal (TorchTensor  *tensor,
     return g_initable_init (G_INITABLE (tensor), NULL, error);
 
   return TRUE;
+}
+
+/**
+ * torch_tensor_index_array:
+ * @tensor: A #TorchTensor
+ * @indices: (element-type TorchIndex) (transfer none): A #GPtrArray of #TorchIndex to index the tensor with.
+ * @error: A #GError
+ *
+ * Index the tensor into a new tensor using @indices. Each array
+ * element of @indices specifies how a particular "axis" of a tensor
+ * should be indexed. There much more comprehensive documentation
+ * on this provided by the PyTorch community, but for a general idea
+ * of how it works:
+ *
+ * %TORCH_TENSOR_INDEX_TYPE_NONE: Copies an entire axis and leaves it in place.
+ *                                This is useful if you want to index along some
+ *                                column.
+ * %TORCH_TENSOR_INDEX_TYPE_ELLIPSES: Copies all remaining axes until the last one
+ *                                    which is useful if you don't know the
+ *                                    number of dimensions and just want to
+ *                                    pick one channel, for example.
+ * %TORCH_TENSOR_INDEX_TYPE_INTEGER: Pick one set of sub-tensors along this
+ *                                   axis, reduces the dimensionality of
+ *                                   the result by one.
+ * %TORCH_TENSOR_INDEX_TYPE_BOOLEAN: Used to mask tensors.
+ * %TORCH_TENSOR_INDEX_TYPE_SLICE: Used to pick some range along a given axis.
+ *                                 For example torch_tensor_index_range_new (0, 10, 2)
+ *                                 picks every second sub-tensor from 0 to 10 (exclusive).
+ * %TORCH_TENSOR_INDEX_TYPE_TENSOR: Used to pick specific indices or mask
+ *                                  the tensor along this dimension (or other
+ *                                  following dimensions, if the picking tensor
+ *                                  is multidimensional)
+ *
+ * Returns: (transfer full): A new #TorchTensor with the indexing operation applied,
+ *                           or %NULL with @error set on failure.
+ */
+TorchTensor *
+torch_tensor_index_array (TorchTensor  *tensor,
+                          GPtrArray    *indices,
+                          GError      **error)
+{
+  TorchTensorPrivate *priv = TORCH_TENSOR_GET_PRIVATE (tensor);
+
+  if (!torch_tensor_init_internal (tensor, error))
+    return NULL;
+
+  return call_set_error_on_exception (error, G_IO_ERROR, G_IO_ERROR_FAILED, NULL, [&]() -> TorchTensor * {
+    torch::Tensor &internal = *priv->internal;
+    auto tensor_indices = torch_index_g_ptr_array_to_tensor_indices (indices);
+
+    return torch_tensor_new_from_real_tensor (internal.index (tensor_indices));
+  });
+}
+
+/**
+ * torch_tensor_index_list:
+ * @tensor: A #TorchTensor
+ * @indices: (element-type TorchIndex) (transfer none): A #GList of #TorchIndex to index the tensor with.
+ * @error: A #GError
+ *
+ * Like %torch_tensor_index_array but takes a #GList
+ *
+ * Returns: (transfer full): A new #TorchTensor with the indexing operation applied,
+ *                           or %NULL with @error set on failure.
+ */
+TorchTensor *
+torch_tensor_index_list (TorchTensor  *tensor,
+                         GList        *indices,
+                         GError      **error)
+{
+  g_autoptr (GPtrArray)  ptr_array = g_ptr_array_new ();
+
+  for (GList *p = indices; p != NULL; p = p->next)
+    g_ptr_array_add (ptr_array, p->data);
+
+  return torch_tensor_index_array (tensor, ptr_array, error);
+}
+
+/**
+ * torch_tensor_index_array_steal:
+ * @tensor: A #TorchTensor
+ * @indices: (element-type TorchIndex) (transfer full): A #GPtrArray of #TorchIndex to index the tensor with.
+ * @error: A #GError
+ *
+ * Like %torch_tensor_index_array but consumes @indices
+ *
+ * Returns: (transfer full): A new #TorchTensor with the indexing operation applied,
+ *                           or %NULL with @error set on failure.
+ */
+TorchTensor *
+torch_tensor_index_array_steal (TorchTensor  *tensor,
+                                GPtrArray    *indices,
+                                GError      **error)
+{
+  g_autoptr (GPtrArray) indices_ref = indices;
+  g_autoptr (TorchTensor) indexed = torch_tensor_index_array (tensor, indices, error);
+
+  return indexed;
+}
+
+/**
+ * torch_tensor_index: (skip)
+ * @tensor: A #TorchTensor
+ * @error: A #GError
+ * @index: (transfer none): The first #TorchIndex
+ *
+ * Index the tensor into a new tensor using @indices. Each array
+ * element of @indices specifies how a particular "axis" of a tensor
+ * should be indexed. There much more comprehensive documentation
+ * on this provided by the PyTorch community, but for a general idea
+ * of how it works:
+ *
+ * %TORCH_TENSOR_INDEX_TYPE_NONE: Copies an entire axis and leaves it in place.
+ *                                This is useful if you want to index along some
+ *                                column.
+ * %TORCH_TENSOR_INDEX_TYPE_ELLIPSIS: Copies all remaining axes until the last one
+ *                                    which is useful if you don't know the
+ *                                    number of dimensions and just want to
+ *                                    pick one channel, for example.
+ * %TORCH_TENSOR_INDEX_TYPE_INTEGER: Pick one set of sub-tensors along this
+ *                                   axis, reduces the dimensionality of
+ *                                   the result by one.
+ * %TORCH_TENSOR_INDEX_TYPE_BOOLEAN: Used to mask tensors.
+ * %TORCH_TENSOR_INDEX_TYPE_SLICE: Used to pick some range along a given axis.
+ *                                 For example torch_tensor_index_range_new (0, 10, 2)
+ *                                 picks every second sub-tensor from 0 to 10 (exclusive).
+ * %TORCH_TENSOR_INDEX_TYPE_TENSOR: Used to pick specific indices or mask
+ *                                  the tensor along this dimension (or other
+ *                                  following dimensions, if the picking tensor
+ *                                  is multidimensional)
+ *
+ * Returns: (transfer full): A new #TorchTensor with the indexing operation applied,
+ *                           or %NULL with @error set on failure.
+ */
+TorchTensor *
+torch_tensor_index (TorchTensor  *tensor,
+                    GError      **error,
+                    TorchIndex   *index,
+                    ...)
+{
+  g_autoptr (GPtrArray) indices = NULL;
+
+  va_list ap;
+
+  va_start (ap, index);
+  indices = torch_tensor_index_array_new_va (index, ap);
+  va_end (ap);
+
+  return torch_tensor_index_array (tensor, indices, error);
 }
 
 /**

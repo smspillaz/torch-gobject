@@ -56,7 +56,11 @@ torch_gobject_toplevel_headers = files([
   'torch-allocator.h',
   'torch-device.h',
   'torch-storage.h',
+  'torch-slice.h',
   'torch-tensor.h',
+  'torch-tensor-index.h',
+  'torch-tensor-index-array.h',
+  'torch-tensor-index-type.h',
   'torch-tensor-options.h'
 ]) + torch_gobject_toplevel_enums_headers
 torch_gobject_toplevel_introspectable_sources = files([
@@ -66,8 +70,12 @@ torch_gobject_toplevel_introspectable_sources = files([
   'torch-errors.c',
   'torch-layout.cpp',
   'torch-memory-format.cpp',
+  'torch-slice.cpp',
   'torch-storage.cpp',
   'torch-tensor.cpp',
+  'torch-tensor-index.cpp',
+  'torch-tensor-index-array.c',
+  'torch-tensor-index-type.cpp',
   'torch-tensor-options.cpp'
 ])
 torch_gobject_toplevel_private_headers = files([
@@ -75,7 +83,10 @@ torch_gobject_toplevel_private_headers = files([
   'torch-device-type-internal.h',
   'torch-layout-internal.h',
   'torch-memory-format-internal.h',
+  'torch-slice-internal.h',
   'torch-storage-internal.h',
+  'torch-tensor-index-internal.h',
+  'torch-tensor-index-type-internal.h',
   'torch-tensor-internal.h',
   'torch-tensor-options-internal.h',
   'torch-util.h'

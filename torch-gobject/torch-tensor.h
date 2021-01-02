@@ -25,6 +25,8 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include <torch-gobject/torch-tensor-index.h>
+
 G_BEGIN_DECLS
 
 #define TORCH_TYPE_TENSOR torch_tensor_get_type ()
@@ -33,6 +35,23 @@ G_DECLARE_FINAL_TYPE (TorchTensor, torch_tensor, TORCH, TENSOR, GObject)
 TorchTensor * torch_tensor_new (void);
 
 TorchTensor * torch_tensor_new_from_data (GVariant *data);
+
+TorchTensor * torch_tensor_index_array (TorchTensor  *tensor,
+                                        GPtrArray    *indices,
+                                        GError      **error);
+
+TorchTensor * torch_tensor_index_list (TorchTensor  *tensor,
+                                       GList        *indices,
+                                       GError      **error);
+
+TorchTensor * torch_tensor_index_array_steal (TorchTensor  *tensor,
+                                              GPtrArray    *indices,
+                                              GError      **error);
+
+TorchTensor * torch_tensor_index (TorchTensor  *tensor,
+                                  GError      **error,
+                                  TorchIndex   *index,
+                                  ...);
 
 GType torch_tensor_get_dtype (TorchTensor  *tensor,
                               GError      **error);
