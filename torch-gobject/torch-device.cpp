@@ -94,21 +94,10 @@ torch_device_get_index (TorchDevice  *device,
   if (!torch_device_init_internal (device, error))
     return FALSE;
 
-  try
-    {
-      *out_index = static_cast <short> (priv->internal->index ());
-      return TRUE;
-    }
-  catch (const std::exception &e)
-    {
-      g_set_error (error,
-                   G_IO_ERROR,
-                   G_IO_ERROR_FAILED,
-                   "%s",
-                   e.what ());
-    }
-
-  return FALSE;
+  return call_set_error_on_exception (error, G_IO_ERROR, G_IO_ERROR_FAILED, FALSE, [&]() -> gboolean {
+    *out_index = static_cast <short> (priv->internal->index ());
+    return TRUE;
+  });
 }
 
 /**
@@ -131,23 +120,12 @@ torch_device_get_device_type (TorchDevice      *device,
   if (!torch_device_init_internal (device, error))
     return FALSE;
 
-  try
-    {
-      *out_device_type = static_cast <TorchDeviceType> (
-        torch_device_type_from_real_device_type (priv->internal->type ()
-      ));
-      return TRUE;
-    }
-  catch (const std::exception &e)
-    {
-      g_set_error (error,
-                   G_IO_ERROR,
-                   G_IO_ERROR_FAILED,
-                   "%s",
-                   e.what ());
-    }
-
-  return FALSE;
+  return call_set_error_on_exception (error, G_IO_ERROR, G_IO_ERROR_FAILED, FALSE, [&]() -> gboolean {
+    *out_device_type = static_cast <TorchDeviceType> (
+      torch_device_type_from_real_device_type (priv->internal->type ()
+    ));
+    return TRUE;
+  });
 
 }
 
@@ -170,22 +148,11 @@ torch_device_get_string (TorchDevice  *device,
   if (!torch_device_init_internal (device, error))
     return NULL;
 
-  try
-    {
-      auto str (priv->internal->str ());
+  return call_set_error_on_exception (error, G_IO_ERROR, G_IO_ERROR_FAILED, NULL, [&]() -> char * {
+    auto str (priv->internal->str ());
 
-      return g_strdup (str.c_str ());
-    }
-  catch (const std::exception &e)
-    {
-      g_set_error (error,
-                   G_IO_ERROR,
-                   G_IO_ERROR_FAILED,
-                   "%s",
-                   e.what ());
-    }
-
-  return NULL;
+    return g_strdup (str.c_str ());
+  });
 }
 
 gboolean
@@ -215,35 +182,23 @@ torch_device_initable_init (GInitable     *initable,
   if (priv->internal)
     return TRUE;
 
-  try
-    {
-      if (priv->construction_string != NULL)
-        {
-          priv->internal = new c10::Device (std::string (priv->construction_string));
-        }
-
-      else
-        {
-          priv->internal = new c10::Device (torch_device_type_get_real_device_type (priv->construction_device_type),
-                                            priv->construction_device_index);
-        }
-
-      /* Once construction is complete, we clear the construction properties */
-      g_clear_pointer (&priv->construction_string, g_free);
-      priv->construction_device_index = -1;
-      priv->construction_device_type = TORCH_DEVICE_TYPE_CPU;
-    }
-  catch (const std::exception &exp)
-    {
-      g_set_error (error,
-                   G_IO_ERROR,
-                   G_IO_ERROR_FAILED,
-                   exp.what(),
-                   nullptr);
-      return FALSE;
+  return call_set_error_on_exception (error, G_IO_ERROR, G_IO_ERROR_FAILED, FALSE, [&]() -> gboolean {
+    if (priv->construction_string != NULL)
+      {
+        priv->internal = new c10::Device (std::string (priv->construction_string));
+      }
+    else
+      {
+        priv->internal = new c10::Device (torch_device_type_get_real_device_type (priv->construction_device_type),
+                                          priv->construction_device_index);
     }
 
-  return TRUE;
+    /* Once construction is complete, we clear the construction properties */
+    g_clear_pointer (&priv->construction_string, g_free);
+    priv->construction_device_index = -1;
+    priv->construction_device_type = TORCH_DEVICE_TYPE_CPU;
+    return TRUE;
+  });
 }
 
 static void
