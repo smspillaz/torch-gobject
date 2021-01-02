@@ -654,6 +654,7 @@ torch_tensor_initable_init (GInitable     *initable,
                    G_IO_ERROR,
                    G_IO_ERROR_FAILED,
                    exp.what(),
+                   "%s",
                    nullptr);
       return FALSE;
     }
