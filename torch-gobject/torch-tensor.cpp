@@ -624,42 +624,30 @@ torch_tensor_initable_init (GInitable     *initable,
   if (priv->internal)
     return TRUE;
 
-  try
-    {
-      if (priv->construction_data)
-        {
-          priv->internal = new torch::Tensor (new_tensor_from_nested_gvariants (priv->construction_data));
+  return call_set_error_on_exception (error, G_IO_ERROR, G_IO_ERROR_FAILED, FALSE, [&]() -> gboolean {
+    if (priv->construction_data)
+      {
+        priv->internal = new torch::Tensor (new_tensor_from_nested_gvariants (priv->construction_data));
 
-          if (priv->construction_dims)
-            {
-              torch_tensor_set_dims (tensor, priv->construction_dims, error);
-            }
+        if (priv->construction_dims)
+          {
+            torch_tensor_set_dims (tensor, priv->construction_dims, error);
+          }
 
-        }
-      else
-        {
-          priv->internal = new torch::Tensor (); 
-        }
+      }
+    else
+      {
+        priv->internal = new torch::Tensor ();
+      }
 
-      /* Once we've constructed the internal, everything gets moved to
-       * the internal tensor (one canonical copy), so we can clear the construct
-       * properties that we had in the meantime */
-      g_clear_pointer (&priv->construction_dims, g_list_free);
-      g_clear_pointer (&priv->construction_data, g_variant_unref);
-      priv->is_constructed = TRUE;
-    }
-  catch (const std::exception &exp)
-    {
-      g_set_error (error,
-                   G_IO_ERROR,
-                   G_IO_ERROR_FAILED,
-                   exp.what(),
-                   "%s",
-                   nullptr);
-      return FALSE;
-    }
-
-  return TRUE;
+    /* Once we've constructed the internal, everything gets moved to
+     * the internal tensor (one canonical copy), so we can clear the construct
+     * properties that we had in the meantime */
+    g_clear_pointer (&priv->construction_dims, g_list_free);
+    g_clear_pointer (&priv->construction_data, g_variant_unref);
+    priv->is_constructed = TRUE;
+    return TRUE;
+  });
 }
 
 static void
