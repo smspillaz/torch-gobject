@@ -98,21 +98,10 @@ torch_storage_get_resizable (TorchStorage  *storage,
   if (!torch_storage_init_internal (storage, error))
     return FALSE;
 
-  try
-    {
-      *out_resizable = priv->internal->resizable ();
-      return TRUE;
-    }
-  catch (const std::exception &e)
-    {
-      g_set_error (error,
-                   G_IO_ERROR,
-                   G_IO_ERROR_FAILED,
-                   "%s",
-                   e.what ());
-    }
-
-  return FALSE;
+  return call_set_error_on_exception (error, G_IO_ERROR, G_IO_ERROR_FAILED, FALSE, [&]() -> gboolean {
+    *out_resizable = priv->internal->resizable ();
+    return TRUE;
+  });
 }
 
 /**
@@ -138,21 +127,10 @@ torch_storage_get_n_bytes (TorchStorage  *storage,
   if (!torch_storage_init_internal (storage, error))
     return FALSE;
 
-  try
-    {
-      *out_n_bytes = priv->internal->nbytes ();
-      return TRUE;
-    }
-  catch (const std::exception &e)
-    {
-      g_set_error (error,
-                   G_IO_ERROR,
-                   G_IO_ERROR_FAILED,
-                   "%s",
-                   e.what ());
-    }
-
-  return FALSE;
+  return call_set_error_on_exception (error, G_IO_ERROR, G_IO_ERROR_FAILED, FALSE, [&]() -> gboolean {
+    *out_n_bytes = priv->internal->nbytes ();
+    return TRUE;
+  });
 }
 
 
@@ -175,20 +153,9 @@ torch_storage_get_data (TorchStorage  *storage,
   if (!torch_storage_init_internal (storage, error))
     return NULL;
 
-  try
-    {
-      return static_cast <gpointer> (priv->internal->data <char *> ());
-    }
-  catch (const std::exception &e)
-    {
-      g_set_error (error,
-                   G_IO_ERROR,
-                   G_IO_ERROR_FAILED,
-                   "%s",
-                   e.what ());
-    }
-
-  return NULL;
+  return call_set_error_on_exception (error, G_IO_ERROR, G_IO_ERROR_FAILED, NULL, [&]() -> gpointer {
+    return static_cast <gpointer> (priv->internal->data <char *> ());
+  });
 }
 
 /**
@@ -211,27 +178,16 @@ torch_storage_get_bytes (TorchStorage  *storage,
   if (!torch_storage_init_internal (storage, error))
     return NULL;
 
-  try
-    {
-      const size_t n_bytes = priv->internal->nbytes();
-      g_autofree char *data = static_cast <char *> (g_malloc (sizeof (char) * n_bytes));
+  return call_set_error_on_exception (error, G_IO_ERROR, G_IO_ERROR_FAILED, NULL, [&]() -> GBytes * {
+    const size_t n_bytes = priv->internal->nbytes();
+    g_autofree char *data = static_cast <char *> (g_malloc (sizeof (char) * n_bytes));
 
-      // XXX: This assumes that memcpy is even possible on the pointer,
-      //      it may very well not be
-      memcpy (static_cast <gpointer> (data), priv->internal->data <char *> (), n_bytes * sizeof (char));
+    // XXX: This assumes that memcpy is even possible on the pointer,
+    //      it may very well not be
+    memcpy (static_cast <gpointer> (data), priv->internal->data <char *> (), n_bytes * sizeof (char));
 
-      return g_bytes_new_with_free_func (g_steal_pointer (&data), n_bytes, g_free, NULL);
-    }
-  catch (const std::exception &e)
-    {
-      g_set_error (error,
-                   G_IO_ERROR,
-                   G_IO_ERROR_FAILED,
-                   "%s",
-                   e.what ());
-    }
-
-  return NULL;
+    return g_bytes_new_with_free_func (g_steal_pointer (&data), n_bytes, g_free, NULL);
+  });
 }
 
 /**
@@ -270,47 +226,36 @@ torch_storage_initable_init (GInitable     *initable,
   if (priv->internal)
     return TRUE;
 
-  try
-    {
-      if (priv->data_ptr)
-        {
-          priv->internal = new c10::Storage (c10::Storage::use_byte_size_t{},
-                                             priv->n_bytes,
-                                             data_ptr_from_data (priv->data_ptr,
-                                                                 priv->destroy_func),
-                                             nullptr,
-                                             priv->resizable);
-        }
-      else if (priv->allocator)
-        {
-          priv->internal = new c10::Storage (c10::Storage::use_byte_size_t{},
-                                             priv->n_bytes,
-                                             &torch_allocator_get_real_allocator (priv->allocator),
-                                             priv->resizable);
-        }
-      else
-        {
-          throw std::logic_error ("Need to provide either a data_ptr or allocator");
-        }
+  return call_set_error_on_exception (error, G_IO_ERROR, G_IO_ERROR_FAILED, FALSE, [&]() -> gboolean {
+    if (priv->data_ptr)
+      {
+        priv->internal = new c10::Storage (c10::Storage::use_byte_size_t{},
+                                           priv->n_bytes,
+                                           data_ptr_from_data (priv->data_ptr,
+                                                               priv->destroy_func),
+                                           nullptr,
+                                           priv->resizable);
+      }
+    else if (priv->allocator)
+      {
+        priv->internal = new c10::Storage (c10::Storage::use_byte_size_t{},
+                                           priv->n_bytes,
+                                           &torch_allocator_get_real_allocator (priv->allocator),
+                                           priv->resizable);
+      }
+    else
+      {
+        throw std::logic_error ("Need to provide either a data_ptr or allocator");
+      }
 
-      /* Once we've constructed the internal, everything gets moved to
-       * the internal storage (one canonical copy), so we can clear the construct
-       * properties that we had in the meantime */
-      g_clear_pointer (&priv->allocator, g_object_unref);
-      priv->n_bytes = 0;
-      priv->resizable = 0;
-    }
-  catch (const std::exception &exp)
-    {
-      g_set_error (error,
-                   G_IO_ERROR,
-                   G_IO_ERROR_FAILED,
-                   exp.what(),
-                   nullptr);
-      return FALSE;
-    }
-
-  return TRUE;
+    /* Once we've constructed the internal, everything gets moved to
+     * the internal storage (one canonical copy), so we can clear the construct
+     * properties that we had in the meantime */
+    g_clear_pointer (&priv->allocator, g_object_unref);
+    priv->n_bytes = 0;
+    priv->resizable = 0;
+    return TRUE;
+  });
 }
 
 static void
