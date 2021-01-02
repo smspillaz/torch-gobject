@@ -108,6 +108,7 @@ torch_storage_get_resizable (TorchStorage  *storage,
       g_set_error (error,
                    G_IO_ERROR,
                    G_IO_ERROR_FAILED,
+                   "%s",
                    e.what ());
     }
 
@@ -147,6 +148,7 @@ torch_storage_get_n_bytes (TorchStorage  *storage,
       g_set_error (error,
                    G_IO_ERROR,
                    G_IO_ERROR_FAILED,
+                   "%s",
                    e.what ());
     }
 
@@ -182,6 +184,7 @@ torch_storage_get_data (TorchStorage  *storage,
       g_set_error (error,
                    G_IO_ERROR,
                    G_IO_ERROR_FAILED,
+                   "%s",
                    e.what ());
     }
 
@@ -224,6 +227,7 @@ torch_storage_get_bytes (TorchStorage  *storage,
       g_set_error (error,
                    G_IO_ERROR,
                    G_IO_ERROR_FAILED,
+                   "%s",
                    e.what ());
     }
 
