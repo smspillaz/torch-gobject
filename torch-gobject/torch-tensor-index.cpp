@@ -57,7 +57,7 @@ torch_index_get_real_index (TorchIndex *index)
   switch (index->index_type)
     {
       case TORCH_TENSOR_INDEX_TYPE_NONE:
-        return torch::indexing::TensorIndex (nullptr);
+        return torch::indexing::TensorIndex (c10::nullopt);
       case TORCH_TENSOR_INDEX_TYPE_ELLIPSIS:
         return torch::indexing::TensorIndex (torch::indexing::Ellipsis);
       case TORCH_TENSOR_INDEX_TYPE_INTEGER:
