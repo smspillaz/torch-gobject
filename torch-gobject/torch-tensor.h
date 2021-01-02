@@ -25,6 +25,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include <torch-gobject/torch-device.h>
 #include <torch-gobject/torch-tensor-index.h>
 
 G_BEGIN_DECLS
@@ -52,6 +53,13 @@ TorchTensor * torch_tensor_index (TorchTensor  *tensor,
                                   GError      **error,
                                   TorchIndex   *index,
                                   ...);
+
+TorchTensor * torch_tensor_copy_to_device (TorchTensor  *tensor,
+                                           TorchDevice  *device,
+                                           GError      **error);
+
+TorchTensor * torch_tensor_copy_to_cpu (TorchTensor  *tensor,
+                                        GError      **error);
 
 GType torch_tensor_get_dtype (TorchTensor  *tensor,
                               GError      **error);

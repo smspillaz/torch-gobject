@@ -554,6 +554,64 @@ torch_tensor_index (TorchTensor  *tensor,
 }
 
 /**
+ * torch_tensor_copy_to_device:
+ * @tensor: (transfer none): A #TorchTensor
+ * @device: (transfer none): A #TorchDevice
+ * @error: A #GError
+ *
+ * Copy @tensor to a new storage on @device. Gradients are
+ * maintained.
+ *
+ * Returns: (transfer full): A new #TorchTensor with the contents of @tensor on @device or
+ *                           %NULL with @error set on failure.
+ */
+TorchTensor *
+torch_tensor_copy_to_device (TorchTensor  *tensor,
+                             TorchDevice  *device,
+                             GError      **error)
+{
+  TorchTensorPrivate *priv =
+    static_cast <TorchTensorPrivate *> (torch_tensor_get_instance_private (tensor));
+
+  if (!torch_tensor_init_internal (tensor, error))
+    return NULL;
+
+  return call_set_error_on_exception (error, G_IO_ERROR, G_IO_ERROR_FAILED, NULL, [&]() -> TorchTensor * {
+    return torch_tensor_new_from_real_tensor (
+      priv->internal->to(torch::TensorOptions {torch::Device {torch::kVulkan}})
+    );
+  });
+}
+
+/**
+ * torch_tensor_copy_to_cpu:
+ * @tensor: (transfer none): A #TorchTensor
+ * @error: A #GError
+ *
+ * Copy @tensor to a new storage on @device. Gradients are
+ * maintained.
+ *
+ * Returns: (transfer full): A new #TorchTensor with the contents of @tensor on @device or
+ *                           %NULL with @error set on failure.
+ */
+TorchTensor *
+torch_tensor_copy_to_cpu (TorchTensor  *tensor,
+                          GError      **error)
+{
+  TorchTensorPrivate *priv =
+    static_cast <TorchTensorPrivate *> (torch_tensor_get_instance_private (tensor));
+
+  if (!torch_tensor_init_internal (tensor, error))
+    return NULL;
+
+  return call_set_error_on_exception (error, G_IO_ERROR, G_IO_ERROR_FAILED, NULL, [&]() -> TorchTensor * {
+    return torch_tensor_new_from_real_tensor (
+      priv->internal->cpu ()
+    );
+  });
+}
+
+/**
  * torch_tensor_get_dims:
  * @tensor: A #TorchTensor
  * @error: A #GError
