@@ -366,7 +366,24 @@ namespace
 
   GVariant * serialize_tensor_data_to_nested_gvariants (torch::Tensor const &tensor)
   {
-    /* Base case, only a single dimension left */
+    /* Special case for single values, only one value to serialize */
+    if (tensor.dim () == 0)
+      {
+        auto scalar_type = tensor.scalar_type ();
+
+        if (scalar_type == torch::kFloat64)
+          return g_variant_new_double (tensor.item ().to <double> ());
+
+        if (scalar_type == torch::kFloat)
+          return g_variant_new_double (tensor.item ().to <double> ());
+
+        if (scalar_type == torch::kInt64)
+          return g_variant_new_int64 (tensor.item ().to <int64_t> ());
+
+        throw InvalidScalarTypeError (scalar_type);
+      }
+
+    /* Base case for arrays, only a single dimension left */
     if (tensor.dim () == 1)
       {
         size_t sz = tensor.sizes ()[0];
