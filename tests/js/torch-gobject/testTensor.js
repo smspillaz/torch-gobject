@@ -111,7 +111,7 @@ describe('TorchTensor', function() {
   });
 
   // Broken: get_tensor_data can't handle single value
-  xit('can be indexed by ints to get a single vlaue', function() {
+  it('can be indexed by ints to get a single vlaue', function() {
     let opts = new Torch.TensorOptions({ dtype: GObject.TYPE_DOUBLE });
     let tensor = Torch.linspace_double(1.0, 8.0, 8, opts);
     let tensor_reshaped = tensor.reshape([2, 2, 2]);
