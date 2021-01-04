@@ -341,18 +341,12 @@ namespace
     else if (g_variant_type_equal (variant_type, G_VARIANT_TYPE ("d")))
       {
         double v = g_variant_get_double (array_variant);
-        torch::Tensor t;
-
-        t.index_put_ ({}, v);
-        return t;
+        return torch::tensor(v, torch::kFloat64);
       }
     else if (g_variant_type_equal (variant_type, G_VARIANT_TYPE ("x")))
       {
         int64_t v = g_variant_get_double (array_variant);
-        torch::Tensor t;
-
-        t.index_put_ ({}, v);
-        return t;
+        return torch::tensor(v, torch::kInt64);
       }
 
     GVariantType const *underlying_type;
