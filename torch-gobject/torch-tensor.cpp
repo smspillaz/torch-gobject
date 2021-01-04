@@ -791,6 +791,7 @@ torch_tensor_set_data (TorchTensor  *tensor,
     {
       g_clear_pointer (&priv->construction_data, g_variant_unref);
       priv->construction_data = g_variant_ref (data);
+      return TRUE;
     }
 
   if (!torch_tensor_init_internal (tensor, error))
