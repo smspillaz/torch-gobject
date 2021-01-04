@@ -206,6 +206,20 @@ namespace
     }
   }
 
+  c10::ScalarType g_variant_type_to_scalar_type (const GVariantType *variant_type)
+  {
+    /* XXX: We do not support float tensors
+     *      at the moment as GVariant doesn't
+     *      support floats. */
+    if (g_variant_type_equal (variant_type, G_VARIANT_TYPE_DOUBLE)) {
+      return torch::kFloat64;
+    } else if (g_variant_type_equal (variant_type, G_VARIANT_TYPE_INT64)) {
+      return torch::kInt64;
+    } else {
+      throw InvalidVariantTypeError (variant_type);
+    }
+  }
+
   size_t scalar_type_to_element_size (c10::ScalarType scalar_type)
   {
     if (scalar_type == torch::kFloat64) {
@@ -316,13 +330,41 @@ namespace
 
   torch::Tensor new_tensor_from_nested_gvariants (GVariant *array_variant)
   {
+    GVariantType const *variant_type = G_VARIANT_TYPE (g_variant_get_type_string (array_variant));
+
+    /* Handle some non-array cases first */
+    if (g_variant_type_equal (variant_type, G_VARIANT_TYPE ("v")))
+      {
+        g_autoptr (GVariant) v = g_variant_ref_sink (g_variant_get_variant (array_variant));
+        return new_tensor_from_nested_gvariants (v);
+      }
+    else if (g_variant_type_equal (variant_type, G_VARIANT_TYPE ("d")))
+      {
+        double v = g_variant_get_double (array_variant);
+        torch::Tensor t;
+
+        t.index_put_ ({}, v);
+        return t;
+      }
+    else if (g_variant_type_equal (variant_type, G_VARIANT_TYPE ("x")))
+      {
+        int64_t v = g_variant_get_double (array_variant);
+        torch::Tensor t;
+
+        t.index_put_ ({}, v);
+        return t;
+      }
+
     GVariantType const *underlying_type;
     std::vector <int64_t> dimensions;
 
     std::tie (underlying_type, dimensions) = ascertain_underlying_type_and_dimensions (array_variant);
     std::reverse (dimensions.begin (), dimensions.end ());
 
-    torch::Tensor tensor = torch::zeros (torch::IntArrayRef (dimensions)).cpu ();
+    torch::Tensor tensor = torch::zeros (
+      torch::IntArrayRef (dimensions),
+      g_variant_type_to_scalar_type (g_variant_type_element (underlying_type))
+    ).cpu ();
     set_tensor_data_from_nested_variant_arrays (tensor, array_variant, underlying_type);
 
     return tensor;
