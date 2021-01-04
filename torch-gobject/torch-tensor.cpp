@@ -48,7 +48,7 @@ typedef struct _TorchTensorPrivate
 
   GVariant    *construction_data;
   GList       *construction_dims;
-  gboolean     is_constructed : 1;
+  gboolean     is_constructed;
 } TorchTensorPrivate;
 
 static void initable_iface_init (GInitableIface *iface);
@@ -887,6 +887,8 @@ initable_iface_init (GInitableIface *iface)
 static void
 torch_tensor_init (TorchTensor *tensor)
 {
+  TorchTensorPrivate *priv = TORCH_TENSOR_GET_PRIVATE (tensor);
+  priv->is_constructed = FALSE;
 }
 
 static void
