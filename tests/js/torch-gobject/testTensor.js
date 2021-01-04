@@ -36,7 +36,7 @@ describe('TorchTensor', function() {
   });
 
   // Broken: Passing empty index to index_put_ is invalid
-  xit('can be constructed with single value', function() {
+  it('can be constructed with single value', function() {
     let tensor = new Torch.Tensor({
       data: new GLib.Variant("v", new GLib.Variant("d", 2.0))
     });
