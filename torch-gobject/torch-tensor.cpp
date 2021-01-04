@@ -522,6 +522,263 @@ torch_tensor_index_list (TorchTensor  *tensor,
   return torch_tensor_index_array (tensor, ptr_array, error);
 }
 
+template <typename Type>
+struct UnwrapType
+{
+    typedef Type Unwrapped;
+
+    static Unwrapped & unwrap (Type &value) { return value; }
+};
+
+template <>
+struct UnwrapType <TorchTensor *>
+{
+    typedef torch::Tensor Unwrapped;
+
+    static Unwrapped & unwrap (TorchTensor *value) {
+        return torch_tensor_get_real_tensor (value);
+    }
+};
+
+template <typename Type>
+TorchTensor *
+torch_tensor_index_array_put_inplace (TorchTensor  *tensor,
+                                      GPtrArray    *indices,
+                                      Type         &value,
+                                      GError      **error)
+{
+  TorchTensorPrivate *priv = TORCH_TENSOR_GET_PRIVATE (tensor);
+
+  if (!torch_tensor_init_internal (tensor, error))
+    return NULL;
+
+  return call_set_error_on_exception (error, G_IO_ERROR, G_IO_ERROR_FAILED, NULL, [&]() -> TorchTensor * {
+    torch::Tensor &internal = *priv->internal;
+    auto &unwrapped = UnwrapType <Type>::unwrap (value);
+    auto tensor_indices = torch_index_g_ptr_array_to_tensor_indices (indices);
+
+    internal.index_put_ (tensor_indices, unwrapped);
+
+    return tensor;
+  });
+}
+
+/**
+ * torch_tensor_index_array_put_inplace_tensor:
+ * @tensor: A #TorchTensor
+ * @indices: (element-type TorchIndex) (transfer none): A #GPtrArray of index information.
+ * @value: A #TorchTensor with elements to put. The layout must match the remaining
+ *         shape of the tensor as indexed by @indices.
+ * @error: A #GError
+ *
+ * Copy the information in @value (including any gradient information) into
+ * @tensor in the manner indicated by @indices .
+ *
+ * Returns: (transfer none): The original #TorchTensor with the result on success or %NULL
+ *                           with @error set on failure.
+ */
+TorchTensor *
+torch_tensor_index_array_put_inplace_tensor (TorchTensor  *tensor,
+                                             GPtrArray    *indices,
+                                             TorchTensor  *value,
+                                             GError      **error)
+{
+  return torch_tensor_index_array_put_inplace <TorchTensor *> (tensor, indices, value, error);
+}
+
+/**
+ * torch_tensor_index_array_put_inplace_double:
+ * @tensor: A #TorchTensor
+ * @indices: (element-type TorchIndex) (transfer none): A #GPtrArray of index information.
+ * @value: A double with a single element to put. The tensor as specified by
+ *         @indices must have the shape of a single value.
+ * @error: A #GError
+ *
+ * Copy the information in @value into @tensor in the manner indicated by @indices .
+ * Note that this will not copy gradient information.
+ *
+ * Returns: (transfer none): The original #TorchTensor with the result on success or %NULL
+ *                           with @error set on failure.
+ */
+TorchTensor *
+torch_tensor_index_array_put_inplace_double (TorchTensor  *tensor,
+                                             GPtrArray    *indices,
+                                             double        value,
+                                             GError      **error)
+{
+  return torch_tensor_index_array_put_inplace (tensor, indices, value, error);
+}
+
+/**
+ * torch_tensor_index_array_put_inplace_float:
+ * @tensor: A #TorchTensor
+ * @indices: (element-type TorchIndex) (transfer none): A #GPtrArray of index information.
+ * @value: A float with a single element to put. The tensor as specified by
+ *         @indices must have the shape of a single value.
+ * @error: A #GError
+ *
+ * Copy the information in @value into @tensor in the manner indicated by @indices .
+ * Note that this will not copy gradient information.
+ *
+ * Returns: (transfer none): The original #TorchTensor with the result on success or %NULL
+ *                           with @error set on failure.
+ */
+TorchTensor *
+torch_tensor_index_array_put_inplace_float (TorchTensor  *tensor,
+                                            GPtrArray    *indices,
+                                            float         value,
+                                            GError      **error)
+{
+  return torch_tensor_index_array_put_inplace (tensor, indices, value, error);
+}
+
+/**
+ * torch_tensor_index_array_put_inplace_int:
+ * @tensor: A #TorchTensor
+ * @indices: (element-type TorchIndex) (transfer none): A #GPtrArray of index information.
+ * @value: An int with a single element to put. The tensor as specified by
+ *         @indices must have the shape of a single value.
+ * @error: A #GError
+ *
+ * Copy the information in @value into @tensor in the manner indicated by @indices .
+ * Note that this will not copy gradient information.
+ *
+ * Returns: (transfer none): The original #TorchTensor with the result on success or %NULL
+ *                           with @error set on failure.
+ */
+TorchTensor *
+torch_tensor_index_array_put_inplace_int (TorchTensor  *tensor,
+                                          GPtrArray    *indices,
+                                          int64_t       value,
+                                          GError      **error)
+{
+  return torch_tensor_index_array_put_inplace (tensor, indices, value, error);
+}
+
+/**
+ * torch_tensor_index_list_put_inplace_tensor:
+ * @tensor: A #TorchTensor
+ * @indices: (element-type TorchIndex) (transfer none): A #GPtrArray of index information.
+ * @value: A #TorchTensor with elements to put. The layout must match the remaining
+ *         shape of the tensor as indexed by @indices.
+ * @error: A #GError
+ *
+ * Like %torch_tensor_index_array_put_inplace_tensor but uses a #GList
+ * for @indices instead of a #GPtrArray.
+ *
+ * Returns: (transfer none): The original #TorchTensor with the result on success or %NULL
+ *                           with @error set on failure.
+ */
+TorchTensor *
+torch_tensor_index_list_put_inplace_tensor (TorchTensor  *tensor,
+                                            GList        *indices,
+                                            TorchTensor  *value,
+                                            GError      **error)
+{
+  g_autoptr (GPtrArray)  ptr_array = g_ptr_array_new ();
+
+  for (GList *p = indices; p != NULL; p = p->next)
+    g_ptr_array_add (ptr_array, p->data);
+
+  return torch_tensor_index_array_put_inplace_tensor (tensor,
+                                                      ptr_array,
+                                                      value,
+                                                      error);
+}
+
+/**
+ * torch_tensor_index_list_put_inplace_double:
+ * @tensor: A #TorchTensor
+ * @indices: (element-type TorchIndex) (transfer none): A #GPtrArray of index information.
+ * @value: A double with a single element to put. The tensor as specified by
+ *         @indices must have the shape of a single value.
+ * @error: A #GError
+ *
+ * Like %torch_tensor_index_array_put_inplace_int but uses a #GList
+ * for @indices instead of a #GPtrArray.
+ *
+ * Returns: (transfer none): The original #TorchTensor with the result on success or %NULL
+ *                           with @error set on failure.
+ */
+TorchTensor *
+torch_tensor_index_list_put_inplace_double (TorchTensor  *tensor,
+                                            GList        *indices,
+                                            double        value,
+                                            GError      **error)
+{
+  g_autoptr (GPtrArray)  ptr_array = g_ptr_array_new ();
+
+  for (GList *p = indices; p != NULL; p = p->next)
+    g_ptr_array_add (ptr_array, p->data);
+
+  return torch_tensor_index_array_put_inplace_double (tensor,
+                                                      ptr_array,
+                                                      value,
+                                                      error);
+}
+
+/**
+ * torch_tensor_index_list_put_inplace_float:
+ * @tensor: A #TorchTensor
+ * @indices: (element-type TorchIndex) (transfer none): A #GPtrArray of index information.
+ * @value: A float with a single element to put. The tensor as specified by
+ *         @indices must have the shape of a single value.
+ * @error: A #GError
+ *
+ * Like %torch_tensor_index_array_put_inplace_int but uses a #GList
+ * for @indices instead of a #GPtrArray.
+ *
+ * Returns: (transfer none): The original #TorchTensor with the result on success or %NULL
+ *                           with @error set on failure.
+ */
+TorchTensor *
+torch_tensor_index_list_put_inplace_float (TorchTensor  *tensor,
+                                           GList        *indices,
+                                           float        value,
+                                           GError      **error)
+{
+  g_autoptr (GPtrArray)  ptr_array = g_ptr_array_new ();
+
+  for (GList *p = indices; p != NULL; p = p->next)
+    g_ptr_array_add (ptr_array, p->data);
+
+  return torch_tensor_index_array_put_inplace_float (tensor,
+                                                      ptr_array,
+                                                      value,
+                                                      error);
+}
+
+/**
+ * torch_tensor_index_list_put_inplace_int:
+ * @tensor: A #TorchTensor
+ * @indices: (element-type TorchIndex) (transfer none): A #GPtrArray of index information.
+ * @value: A gint64 with a single element to put. The tensor as specified by
+ *         @indices must have the shape of a single value.
+ * @error: A #GError
+ *
+ * Like %torch_tensor_index_array_put_inplace_int but uses a #GList
+ * for @indices instead of a #GPtrArray.
+ *
+ * Returns: (transfer none): The original #TorchTensor with the result on success or %NULL
+ *                           with @error set on failure.
+ */
+TorchTensor *
+torch_tensor_index_list_put_inplace_int (TorchTensor  *tensor,
+                                          GList        *indices,
+                                          int64_t       value,
+                                          GError      **error)
+{
+  g_autoptr (GPtrArray)  ptr_array = g_ptr_array_new ();
+
+  for (GList *p = indices; p != NULL; p = p->next)
+    g_ptr_array_add (ptr_array, p->data);
+
+  return torch_tensor_index_array_put_inplace_int (tensor,
+                                                   ptr_array,
+                                                   value,
+                                                   error);
+}
+
 /**
  * torch_tensor_index_array_steal:
  * @tensor: A #TorchTensor

@@ -54,6 +54,46 @@ TorchTensor * torch_tensor_index (TorchTensor  *tensor,
                                   TorchIndex   *index,
                                   ...);
 
+TorchTensor * torch_tensor_index_list_put_inplace_tensor (TorchTensor  *tensor,
+                                                          GList        *indices,
+                                                          TorchTensor  *value,
+                                                          GError      **error);
+
+TorchTensor * torch_tensor_index_list_put_inplace_double (TorchTensor  *tensor,
+                                                          GList        *indices,
+                                                          double        value,
+                                                          GError      **error);
+
+TorchTensor * torch_tensor_index_list_put_inplace_float (TorchTensor  *tensor,
+                                                         GList        *indices,
+                                                         float         value,
+                                                         GError      **error);
+
+TorchTensor * torch_tensor_index_list_put_inplace_int (TorchTensor  *tensor,
+                                                       GList        *indices,
+                                                       int64_t       value,
+                                                       GError      **error);
+
+TorchTensor * torch_tensor_index_array_put_inplace_tensor (TorchTensor  *tensor,
+                                                           GPtrArray    *indices,
+                                                           TorchTensor  *value,
+                                                           GError      **error);
+
+TorchTensor * torch_tensor_index_array_put_inplace_double (TorchTensor  *tensor,
+                                                           GPtrArray    *indices,
+                                                           double        value,
+                                                           GError      **error);
+
+TorchTensor * torch_tensor_index_array_put_inplace_float (TorchTensor  *tensor,
+                                                          GPtrArray    *indices,
+                                                          float         value,
+                                                          GError      **error);
+
+TorchTensor * torch_tensor_index_array_put_inplace_int (TorchTensor  *tensor,
+                                                        GPtrArray    *indices,
+                                                        int64_t       value,
+                                                        GError      **error);
+
 TorchTensor * torch_tensor_copy_to_device (TorchTensor  *tensor,
                                            TorchDevice  *device,
                                            GError      **error);
