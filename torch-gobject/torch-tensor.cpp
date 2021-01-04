@@ -1048,7 +1048,7 @@ torch_tensor_class_init (TorchTensorClass *klass)
   torch_tensor_props[PROP_DATA] = g_param_spec_variant ("data",
                                                         "Data",
                                                         "Data of the Tensor",
-                                                        G_VARIANT_TYPE ("av"),
+                                                        G_VARIANT_TYPE ("v"),
                                                         nullptr,
                                                         static_cast <GParamFlags> (G_PARAM_READWRITE |
                                                                                    G_PARAM_CONSTRUCT));
