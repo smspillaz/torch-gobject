@@ -26,7 +26,24 @@ describe('TorchTensor', function() {
   it('can be constructed', function() {
     let tensor = new Torch.Tensor({});
   });
-  
+
+  it('can be constructed with data', function() {
+    let tensor = new Torch.Tensor({
+      data: new GLib.Variant("v", new GLib.Variant("ad", [2.0, 2.0]))
+    });
+
+    expect(tensor.get_tensor_data().deep_unpack()).toEqual([2.0, 2.0]);
+  });
+
+  // Broken: Passing empty index to index_put_ is invalid
+  xit('can be constructed with single value', function() {
+    let tensor = new Torch.Tensor({
+      data: new GLib.Variant("v", new GLib.Variant("d", 2.0))
+    });
+
+    expect(tensor.get_tensor_data().deep_unpack()).toEqual(2.0);
+  });
+
   it('can be constructed by Torch.zeros', function() {
     let tensor = Torch.zeros([1], new Torch.TensorOptions({}));
   });
