@@ -436,11 +436,13 @@ def print_function_decl(decl):
 
 
 def make_argument_marshaller(argument, gobject_argument):
-    arg_type = argument["dynamic_type"]
+    arg_type = argument.get("api_dynamic_type", argument["dynamic_type"])
+    unqualified_arg_type = unqualified_dynamic_type(arg_type)
+    wrapped_type = "c10::optional<{}>".format(unqualified_arg_type) if argument.get("is_nullable", False) else unqualified_arg_type
+    qualified_type = " ".join([wrapped_type, TYPE_MAPPING[unqualified_arg_type]["convert_native_qualifiers"]])
 
     return " ".join([
-        arg_type,
-        TYPE_MAPPING[arg_type]["convert_native_qualifiers"],
+        wrapped_type,
         "real_" + argument["name"],
         "=",
         map_type_native_conv(argument)(argument["name"])
