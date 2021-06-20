@@ -167,24 +167,36 @@ def function_name(decl):
     ] if x])
 
 
+def unqualified_dynamic_type(type_spec):
+    unconst = type_spec.replace("const ", "")
+    noqual = unconst.replace("*", "").replace("&", "")
+    return noqual.strip()
+
+
 def map_type_name(type_spec):
-    if type_spec["dynamic_type"] == "IntArrayRef" and type_spec.get("size", None):
+    unqualified = unqualified_dynamic_type(type_spec["dynamic_type"])
+
+    if unqualified == "IntArrayRef" and type_spec.get("size", None):
         return "const long *"
 
-    return TYPE_MAPPING[type_spec["dynamic_type"]]["name"]
+    return TYPE_MAPPING[unqualified]["name"]
 
 
 def map_type_native_conv(type_spec):
-    if type_spec["dynamic_type"] == "IntArrayRef" and type_spec.get("size", None):
+    unqualified = unqualified_dynamic_type(type_spec["dynamic_type"])
+
+    if unqualified == "IntArrayRef" and type_spec.get("size", None):
         return lambda a: "torch_array_ref_from_fixed_array({a}, {s})".format(a=a, s=type_spec["size"])
 
-    return TYPE_MAPPING[type_spec["dynamic_type"]]["convert_native_func"]
+    return TYPE_MAPPING[unqualified]["convert_native_func"]
 
 def map_element_type(type_spec):
-    if type_spec["dynamic_type"] == "IntArrayRef" and type_spec.get("size", None):
+    unqualified = unqualified_dynamic_type(type_spec["dynamic_type"])
+
+    if unqualified == "IntArrayRef" and type_spec.get("size", None):
         return None
 
-    return TYPE_MAPPING[type_spec["dynamic_type"]].get("meta", {}).get("type", None)
+    return TYPE_MAPPING[unqualified].get("meta", {}).get("type", None)
 
 
 def type_spec_to_gobject_type(type_spec):
@@ -372,19 +384,20 @@ def is_skipped(decl):
             print("Skipped", decl["name"], "- is tuple-return", file=sys.stderr)
             return True
 
-        if decl["returns"][0]["dynamic_type"] not in TYPE_MAPPING:
+        if unqualified_dynamic_type(decl["returns"][0]["dynamic_type"]) not in TYPE_MAPPING:
             print("Skipped", decl["name"], "- returns", decl["returns"][0]["dynamic_type"], file=sys.stderr)
             return True
 
     for a in decl["arguments"]:
-        if a["dynamic_type"] not in TYPE_MAPPING:
+        if unqualified_dynamic_type(a["dynamic_type"]) not in TYPE_MAPPING:
             print("Skipped", decl["name"], "- takes", a["dynamic_type"], file=sys.stderr)
             return True
 
 
 def should_rewrite_for_scalar(decl):
     for a in decl["arguments"]:
-        if a["dynamic_type"] == "Scalar":
+        unqualified = unqualified_dynamic_type(a["dynamic_type"])
+        if unqualified == "at::Scalar":
             return True
 
     return False
@@ -393,7 +406,8 @@ def should_rewrite_for_scalar(decl):
 def rewrite_decl_for_scalar(decl, scalar_type):
     d = deepcopy(decl)
     for a in d["arguments"]:
-        if a["dynamic_type"] == "Scalar":
+        a["api_dynamic_type"] = a["dynamic_type"]
+        if unqualified_dynamic_type(a["dynamic_type"]) == "at::Scalar":
             a["dynamic_type"] = scalar_type
 
     d["overload"] = scalar_type
@@ -467,6 +481,7 @@ def make_function_call(decl, gobject_decl):
 
     if decl["returns"]:
         return_type = decl["returns"][0]["dynamic_type"]
+        unqualified_return_type = unqualified_dynamic_type(return_type)
         gobject_return_type = out_return_parameter["type"].strip(" *") if out_return_parameter else gobject_decl["returns"]["type"]
 
         # Need to init the tensor first
@@ -493,10 +508,10 @@ def make_function_call(decl, gobject_decl):
             ])
 
             convert_statement = " ".join([
-                TYPE_MAPPING[return_type]["convert_gobject_prefix"](gobject_return_type),
+                TYPE_MAPPING[unqualified_return_type]["convert_gobject_prefix"](gobject_return_type),
                 "gobject_rv",
                 "=",
-                TYPE_MAPPING[return_type]["convert_gobject_func"]("real_rv") + ";"
+                TYPE_MAPPING[unqualified_return_type]["convert_gobject_func"]("real_rv") + ";"
             ])
 
             # Cannot be "self", was checked earlier
