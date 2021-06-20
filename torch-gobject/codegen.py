@@ -650,7 +650,7 @@ def main():
 
     with open(args.yaml) as f:
         declarations = yaml.load(f, Loader=Loader)
- 
+
     if args.header:
         print_header(declarations)
     else:
