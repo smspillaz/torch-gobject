@@ -39,7 +39,7 @@ if jasmine.found()
     test(test_file,
          gjs,
          args: [
-           jasmine.path(),
+           jasmine.full_path(),
            '--verbose',
            join_paths(meson.current_source_dir(), test_file)
          ],
