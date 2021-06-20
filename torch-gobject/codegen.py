@@ -11,7 +11,7 @@ except ImportError:
     from yaml import Loader, Dumper
 
 TYPE_MAPPING = {
-    "ArrayRef<double>": {
+    "at::ArrayRef<double>": {
         "name": "GArray *",
         "meta": {
             "type": "double"
@@ -21,7 +21,7 @@ TYPE_MAPPING = {
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
         "convert_gobject_func": lambda a: "torch_new_garray_from_array_ref <double> ({a})".format(a=a),
     },
-    "IntArrayRef": {
+    "at::IntArrayRef": {
         "name": "GArray *",
         "meta": {
             "type": "long",
@@ -31,34 +31,33 @@ TYPE_MAPPING = {
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
         "convert_gobject_func": lambda a: "torch_new_garray_from_array_ref <long> ({a})".format(a=a),
     },
-    "Device": {
+    "at::Device": {
         "name": "TorchDevice *",
         "convert_native_qualifiers": "&",
         "convert_native_func": lambda a: "torch_device_get_real_device ({a})".format(a=a),
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
         "convert_gobject_func": lambda a: "torch_device_new_from_real_device ({a})".format(a=a),
     },
-    "MemoryFormat": {
+    "at::MemoryFormat": {
         "name": "TorchMemoryFormat",
         "convert_native_qualifiers": "",
         "convert_native_func": lambda a: "torch_memory_format_get_real_memory_format ({a})".format(a=a),
         "convert_gobject_prefix": lambda a: a,
         "convert_gobject_func": lambda a: "torch_memory_format_from_real_memory_format ({a})".format(a=a),
     },
-    "Scalar": {
+    "at::Scalar": {
         "name": "GValue *",
         "convert_native_qualifiers": "",
         "convert_native_func": lambda a: "torch_scalar_from_gvalue ({a})".format(a=a),
         "convert_gobject_prefix": lambda a: "g_autofree {a}".format(a=a),
         "convert_gobject_func": lambda a: "torch_gvalue_from_scalar ({a})".format(a=a),
     },
-    "ScalarType": {
+    "at::ScalarType": {
         "name": "GType",
         "convert_native_qualifiers": "",
         "convert_native_func": lambda a: "torch_scalar_type_from_gtype ({a})".format(a=a),
         "convert_gobject_prefix": lambda a: a,
         "convert_gobject_func": lambda a: "torch_gtype_from_scalar_type ({a})".format(a=a),
-        
     },
     "Storage": {
         "name": "TorchStorage *",
@@ -67,14 +66,14 @@ TYPE_MAPPING = {
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
         "convert_gobject_func": lambda a: "torch_storage_new_from_real_storage ({a})".format(a=a),
     },
-    "Tensor": {
+    "at::Tensor": {
         "name": "TorchTensor *",
         "convert_native_qualifiers": "&",
         "convert_native_func": lambda a: "torch_tensor_get_real_tensor ({a})".format(a=a),
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
         "convert_gobject_func": lambda a: "torch_tensor_new_from_real_tensor ({a})".format(a=a),
     },
-    "TensorList": {
+    "at::TensorList": {
         "name": "GPtrArray *",
         "meta": {
             "type": "TorchTensor *"
@@ -84,7 +83,7 @@ TYPE_MAPPING = {
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
         "convert_gobject_func": lambda a: "torch_tensor_ptr_array_from_tensor_list ({a})".format(a=a),
     },
-    "TensorOptions": {
+    "at::TensorOptions": {
         "name": "TorchTensorOptions *",
         "convert_native_qualifiers": "&",
         "convert_native_func": lambda a: "torch_tensor_options_get_real_tensor_options ({a})".format(a=a),
