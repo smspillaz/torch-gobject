@@ -22,7 +22,7 @@ project('torch-gobject', ['c', 'cpp'],
         version: '0.0.0',
         default_options : ['cpp_std=c++17'],
         license: 'LGPL2+',
-        meson_version: '>= 0.42.0')
+        meson_version: '>= 0.55.0')
 
 #aten_dep = dependency('ATen', required: true, method: 'cmake')
 torch_dep = dependency('Torch', required: true, method: 'cmake')
