@@ -29,11 +29,11 @@ python_installation = python.find_installation(required: true, modules: ['yaml']
 torch_gobject_aten_generated_source = custom_target('gen-torch-aten-src',
                                                     input : ['codegen.py'],
                                                     output : ['torch-tensor-generated.cpp'],
-                                                    command : [python_installation.path(), '@INPUT@', '--output', '@OUTPUT0@', '/usr/local/share/ATen/Declarations.yaml'])
+                                                    command : [python_installation, '@INPUT@', '--output', '@OUTPUT0@', '/usr/local/share/ATen/Declarations.yaml'])
 torch_gobject_aten_generated_header = custom_target('gen-torch-aten-header',
                                                     input : ['codegen.py'],
                                                     output : ['torch-tensor-generated.h'],
-                                                    command : [python_installation.path(), '@INPUT@', '--header', '--output', '@OUTPUT0@', '/usr/local/share/ATen/Declarations.yaml'],
+                                                    command : [python_installation, '@INPUT@', '--header', '--output', '@OUTPUT0@', '/usr/local/share/ATen/Declarations.yaml'],
                                                     install: true,
                                                     install_dir: get_option('includedir') / torch_gobject_headers_subdir)
 
