@@ -488,22 +488,22 @@ def make_function_call(decl, gobject_decl):
             ])
         )
 
+    # Need to init the tensor first
+    if "Tensor" in decl["method_of"]:
+        before_block = "\n".join([
+            "if (!torch_tensor_init_internal ({}, error))".format(
+                gobject_decl["arguments"][0]["name"]
+            ),
+            "  {",
+            "    {} rv = 0;".format(gobject_decl["returns"]["type"]),
+            "    return rv;",
+            "  }",
+        ])
+
     if decl["returns"]:
         return_type = decl["returns"][0]["dynamic_type"]
         unqualified_return_type = unqualified_dynamic_type(return_type)
         gobject_return_type = out_return_parameter["type"].strip(" *") if out_return_parameter else gobject_decl["returns"]["type"]
-
-        # Need to init the tensor first
-        if "Tensor" in decl["method_of"]:
-            before_block = "\n".join([
-                "if (!torch_tensor_init_internal ({}, error))".format(
-                    gobject_decl["arguments"][0]["name"]
-                ),
-                "  {",
-                "    {} rv = 0;".format(gobject_decl["returns"]["type"]),
-                "    return rv;",
-                "  }",
-            ])
 
         if gobject_decl["returns"]["transfer"] == "self":
             convert_statement = ""
