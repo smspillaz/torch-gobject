@@ -525,7 +525,7 @@ def make_function_call(decl, gobject_decl):
 
             # Cannot be "self", was checked earlier
             if gobject_decl["returns"]["transfer"] == "none":
-                return_statement_operand = "gobject_rv;";
+                return_statement_operand = "gobject_rv;"
             elif gobject_decl["returns"]["transfer"] == "full":
                 return_statement_operand = "static_cast <{}> (g_steal_pointer (&gobject_rv));".format(gobject_return_type)
             else:
