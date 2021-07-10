@@ -217,10 +217,11 @@ def type_spec_to_gobject_type(type_spec):
     }
 
 
-def determine_return_transfer_mode(decl):
-    if (decl["schema_order_arguments"] and decl["schema_order_arguments"][0]["annotation"] == "a!"):
+def determine_return_transfer_mode(func_decl, return_decl):
+    if (func_decl["schema_order_arguments"] and func_decl["schema_order_arguments"][0]["annotation"] == "a!"):
+        assert len(func_decl["returns"]) == 1
         return "self"
-    elif "*" not in map_type_name(decl["returns"][0]):
+    elif "*" not in map_type_name(return_decl):
         return "none"
 
     return "full"
@@ -228,47 +229,36 @@ def determine_return_transfer_mode(decl):
 
 def make_gobject_decl(decl):
     is_method = "namespace" not in decl["method_of"]
-    out_return_parameter = None
-    return_gobject = type_spec_to_gobject_type(dict(
-        **decl["returns"][0],
-        transfer=determine_return_transfer_mode(decl),
-    )) if decl["returns"] else {
-        "name": "",
-        # If the function doesn't return anything,
-        # it can still fail, so we need to return gboolean
-        # here
-        "type": "gboolean",
-        "transfer": "none",
-        "element-type": None,
-        "size": None,
-        "nullable": False
-    }
+    return_rv_directly = False
+    returns_and_gobject_transfers = [
+        type_spec_to_gobject_type(dict(
+            **return_decl,
+            transfer=determine_return_transfer_mode(decl, return_decl)
+        ))
+        for return_decl in decl["returns"]
+    ]
 
     gobject_arguments = [
         type_spec_to_gobject_type(dict(**a, transfer="none"))
         for a in decl["arguments"]
     ]
 
-    # We return a non-pointer type. Since calls into
-    # C++ methods can throw exceptions, we need to convert
-    # the return value into an outparam and make
-    # the return value a gboolean indicating success
-    # or failure
-    if decl["returns"] and "*" not in return_gobject["type"]:
-        return_gobject["name"] = return_gobject["name"] or "out_rv"
-        out_return_parameter = return_gobject["name"]
-
-        # The return value is now a pointer that gets passed in and set
-        return_gobject["type"] = "{} *".format(return_gobject["type"])
-
-        out_argument = dict(
-            **return_gobject,
-            out=True
-        )
-        out_argument["transfer"] = ""
-        out_argument["element-type"] = ""
-
-        gobject_arguments.append(out_argument)
+    # If we return a single pointer-typed value
+    # then the return value is that pointer according
+    # to whatever transfer rules it is subject to. Otherwise
+    # the return value is a gboolean
+    if len(decl["returns"]) == 1 and "*" in returns_and_gobject_transfers[0]["type"]:
+        return_gobject = returns_and_gobject_transfers[0]
+        out_arguments = [
+            {
+                **returns_and_gobject_transfers[0],
+                "out": True,
+                "type": "{} *".format(returns_and_gobject_transfers[0]["type"]),
+                "nullable": True
+            }
+        ]
+        return_rv_directly = True
+    else:
         return_gobject = {
             "name": "",
             "type": "gboolean",
@@ -277,9 +267,18 @@ def make_gobject_decl(decl):
             "element-type": None,
             "nullable": False
         }
+        out_arguments = [
+            {
+                **out_arg,
+                "out": True,
+                "type": "{} *".format(out_arg["type"]),
+                "nullable": True
+            }
+            for out_arg in returns_and_gobject_transfers
+        ]
 
     # Append an error argument to the parameters
-    gobject_arguments.append({
+    error_argument = {
         "type": "GError **",
         "name": "error",
         "nullable": True,
@@ -287,14 +286,16 @@ def make_gobject_decl(decl):
         "element-type": None,
         "out": True,
         "size": None
-    })
+    }
 
     return {
         "name": function_name(decl),
         "is_method": is_method,
-        "out_return_parameter": out_return_parameter,
         "returns": return_gobject,
-        "arguments": gobject_arguments
+        "arguments": gobject_arguments,
+        "out-arguments": out_arguments,
+        "error-argument": error_argument,
+        "return-rv-directly": return_rv_directly
     }
 
 
@@ -303,6 +304,14 @@ def make_gobject_decl_fwd_decl(decl):
 
     for a in decl["arguments"]:
         arg_str_list.append(a["type"] + " " + a["name"])
+
+    if not decl["return-rv-directly"]:
+        for a in decl["out-arguments"]:
+            arg_str_list.append(a["type"] + " " + a["name"])
+
+    arg_str_list.append(
+        decl["error-argument"]["type"] + " " + decl["error-argument"]["name"]
+    )
 
     return "".join([
         decl["returns"]["type"] + " ",
@@ -349,10 +358,25 @@ def make_gobject_decl_header(decl):
     return "\n".join([
         "/**",
         " * " + decl["name"] + ":",
-    ] + [" * @{a[name]}{annotations}: A #{a[type]}".format(
-        a=a,
-        annotations=fmt_annotations(a)
-    ) for a in decl["arguments"]] + [" *"] + (
+    ] + [
+        " * @{a[name]}{annotations}: A #{a[type]}".format(
+            a=a,
+            annotations=fmt_annotations(a)
+        ) for a in decl["arguments"]
+    ] + [
+        " * @{a[name]}{annotations}: An out-param #{a[type]}".format(
+            a=a,
+            annotations=fmt_annotations(a)
+        )
+        for a in (
+            decl["out-arguments"] if not decl["return-rv-directly"] else []
+        )
+    ] + [
+        " * @{a[name]}{annotations}: An error-out #{a[type]}".format(
+            a=decl["error-argument"],
+            annotations=fmt_annotations(a=decl["error-argument"])
+        )
+    ] + [" *"] + (
         [" * Returns{annotations}: A #{ret[type]}".format(
             ret=decl["returns"],
             annotations=fmt_annotations(decl["returns"])
@@ -387,13 +411,10 @@ def is_skipped(decl):
         return True
 
     if decl["returns"]:
-        if len(decl["returns"]) > 1:
-            print("Skipped", decl["name"], "- is tuple-return", file=sys.stderr)
-            return True
-
-        if unqualified_dynamic_type(decl["returns"][0]["dynamic_type"]) not in TYPE_MAPPING:
-            print("Skipped", decl["name"], "- returns", decl["returns"][0]["dynamic_type"], file=sys.stderr)
-            return True
+        for return_type_info in decl["returns"]:
+            if unqualified_dynamic_type(return_type_info["dynamic_type"]) not in TYPE_MAPPING:
+                print("Skipped", decl["name"], "- returns", return_type_info["dynamic_type"], file=sys.stderr)
+                return True
 
     for a in decl["arguments"]:
         if unqualified_dynamic_type(a["dynamic_type"]) not in TYPE_MAPPING:
@@ -463,12 +484,52 @@ def make_argument_marshallers(arguments, gobject_arguments):
     ]);
 
 
+def determine_real_function_call_return_type(return_decl):
+    assert len(return_decl) > 0
+
+    if len(return_decl) == 1:
+        return return_decl[0]["type"]
+
+    return "std::tuple <{}>".format(", ".join([
+        rd["type"] for rd in return_decl
+    ]))
+
+
+def unpack_real_rv_to_gobject_rv(return_decl,
+                                 gobject_return_decl,
+                                 real_rv_name,
+                                 gobject_rv_name,
+                                 out_arg=False):
+    return_type = return_decl["dynamic_type"]
+    unqualified_return_type = unqualified_dynamic_type(return_type)
+    gobject_return_type = gobject_return_decl["type"].removesuffix(" *")
+
+    return " ".join([
+        TYPE_MAPPING[unqualified_return_type]["convert_gobject_prefix"](gobject_return_type),
+        gobject_rv_name,
+        "=",
+        TYPE_MAPPING[unqualified_return_type]["convert_gobject_func"](real_rv_name) + ";"
+    ])
+
+
+def determine_return_statement_operand(gobject_return_decl, name):
+    gobject_return_type = gobject_return_decl["type"].removesuffix(" *")
+
+    # Cannot be "self", was checked earlier
+    if gobject_return_decl["transfer"] == "none":
+        return_statement_operand = "{}".format(name)
+    elif gobject_return_decl["transfer"] == "full":
+        return_statement_operand = "static_cast <{}> (g_steal_pointer (&{}))".format(
+            gobject_return_type,
+            name
+        )
+    else:
+        assert "Section not reachable" and False
+
+    return return_statement_operand
+
+
 def make_function_call(decl, gobject_decl):
-    out_return_parameter = [
-        a for a in
-        gobject_decl["arguments"]
-        if a["name"] == gobject_decl["out_return_parameter"]
-    ][0] if gobject_decl["out_return_parameter"] else None
     before_block = ""
 
     if "namespace" in decl["method_of"]:
@@ -501,44 +562,76 @@ def make_function_call(decl, gobject_decl):
         ])
 
     if decl["returns"]:
-        return_type = decl["returns"][0]["dynamic_type"]
-        unqualified_return_type = unqualified_dynamic_type(return_type)
-        gobject_return_type = out_return_parameter["type"].strip(" *") if out_return_parameter else gobject_decl["returns"]["type"]
+        assert len(gobject_decl["out-arguments"]) > 0
 
         if gobject_decl["returns"]["transfer"] == "self":
+            assert len(gobject_decl["out-arguments"]) == 1
+            assert (gobject_decl["returns"]["type"] + " *") == gobject_decl["out-arguments"][0]["type"]
+
             convert_statement = ""
             return_statement = "return {};".format(gobject_decl["arguments"][0]["name"])
         else:
             call = " ".join([
-                decl["returns"][0]["type"],
+                determine_real_function_call_return_type(decl["returns"]),
                 "real_rv",
                 "=",
                 call
             ])
 
-            convert_statement = " ".join([
-                TYPE_MAPPING[unqualified_return_type]["convert_gobject_prefix"](gobject_return_type),
-                "gobject_rv",
-                "=",
-                TYPE_MAPPING[unqualified_return_type]["convert_gobject_func"]("real_rv") + ";"
-            ])
+            # This is a tuple return, so we need to unpack tuple arguments
+            if len(gobject_decl["out-arguments"]) > 1:
+                convert_statement = "\n".join([
+                    unpack_real_rv_to_gobject_rv(return_decl,
+                                                 gobject_return_decl,
+                                                 "std::get<{}> (real_rv)".format(i),
+                                                 "gobject_rv{}".format(i))
+                    for i, (return_decl, gobject_return_decl) in enumerate(zip(
+                        decl["returns"],
+                        gobject_decl["out-arguments"]
+                    ))
+                ])
 
-            # Cannot be "self", was checked earlier
-            if gobject_decl["returns"]["transfer"] == "none":
-                return_statement_operand = "gobject_rv;"
-            elif gobject_decl["returns"]["transfer"] == "full":
-                return_statement_operand = "static_cast <{}> (g_steal_pointer (&gobject_rv));".format(gobject_return_type)
+                assert not gobject_decl["return-rv-directly"]
             else:
-                assert "Section not reachable" and False
+                assert len(gobject_decl["out-arguments"]) == 1
+                assert len(decl["returns"]) == 1
 
-            if out_return_parameter is not None:
+                # We convert the real rv directly
+                convert_statement = unpack_real_rv_to_gobject_rv(
+                    decl["returns"][0],
+                    gobject_decl["out-arguments"][0],
+                    "real_rv",
+                    "gobject_rv0",
+                    out_arg=True
+                )
+
+                if gobject_decl["return-rv-directly"]:
+                    (gobject_decl["returns"]["type"] + " *") == gobject_decl["out-arguments"][0]["type"]
+                    return_statement = "return {};".format(
+                        determine_return_statement_operand(
+                            gobject_decl["out-arguments"][0],
+                            "gobject_rv0"
+                        )
+                    )
+
+            if not gobject_decl["return-rv-directly"]:
+                return_assignments = "\n".join([
+                    "\n".join([
+                        "if ({arg} != NULL)".format(arg=out_arg["name"]),
+                        indent("*{arg} = {ro};".format(
+                            arg=out_arg["name"],
+                            ro=determine_return_statement_operand(
+                                out_arg,
+                                "gobject_rv{index}".format(index=index)
+                            )
+                        ), 2)
+                    ])
+                    for index, out_arg in enumerate(gobject_decl["out-arguments"])
+                ])
                 return_statement = "\n".join([
-                    "*{} = {}".format(out_return_parameter["name"],
-                                      return_statement_operand),
+                    return_assignments,
                     "return TRUE;"
                 ])
-            else:
-                return_statement = "return {}".format(return_statement_operand)
     else:
         convert_statement = ""
         return_statement = "return TRUE;"
@@ -557,7 +650,9 @@ def make_function_call(decl, gobject_decl):
         "catch (const std::exception &e)",
         "  {",
         indent("\n".join([
-            "g_set_error (error, G_IO_ERROR, G_IO_ERROR_FAILED, \"%s\", e.what ());",
+            "g_set_error ({error_param_name}, G_IO_ERROR, G_IO_ERROR_FAILED, \"%s\", e.what ());".format(
+                error_param_name=gobject_decl["error-argument"]["name"]
+            ),
             "{} rv = 0;".format(gobject_decl["returns"]["type"]),
             "return rv;",
         ]), 4),
