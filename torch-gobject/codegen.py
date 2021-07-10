@@ -124,6 +124,13 @@ TYPE_MAPPING = {
         "convert_native_func": lambda a: "std::string ({a})".format(a=a),
         "convert_gobject_prefix": lambda a: "g_autofree {a}".format(a=a),
         "convert_gobject_func": lambda a: "g_strdup ({a}.c_str())".format(a=a),
+    },
+    "c10::string_view": {
+        "name": "const char *",
+        "convert_native_qualifiers": "",
+        "convert_native_func": lambda a: "c10::string_view ({a})".format(a=a),
+        "convert_gobject_prefix": lambda a: "g_autofree {a}".format(a=a),
+        "convert_gobject_func": lambda a: "g_strdup ({a}.data())".format(a=a),
     }
 }
 
