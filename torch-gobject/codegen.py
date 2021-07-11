@@ -55,6 +55,13 @@ TYPE_MAPPING = {
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
         "convert_gobject_func": lambda a: "torch_tensor_ptr_array_from_dimname_list ({a})".format(a=a),
     },
+    "at::Generator": {
+        "name": "TorchGenerator *",
+        "convert_native_qualifiers": "&",
+        "convert_native_func": lambda a: "torch_generator_get_real_generator ({a})".format(a=a),
+        "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
+        "convert_gobject_func": lambda a: "torch_generator_new_from_real_generator ({a})".format(a=a),
+    },
     "at::MemoryFormat": {
         "name": "TorchMemoryFormat",
         "convert_native_qualifiers": "",
@@ -739,6 +746,7 @@ def print_header(declarations):
     print("#include <torch-gobject/torch-device.h>")
     print("#include <torch-gobject/torch-dimname.h>")
     print("#include <torch-gobject/torch-errors.h>")
+    print("#include <torch-gobject/torch-generator.h>")
     print("#include <torch-gobject/torch-storage.h>")
     print("#include <torch-gobject/torch-memory-format.h>")
     print("#include <torch-gobject/torch-tensor.h>")
@@ -759,6 +767,7 @@ def print_source(declarations):
     print("#include <torch-gobject/torch-device-type-internal.h>")
     print("#include <torch-gobject/torch-dimname-internal.h>")
     print("#include <torch-gobject/torch-dimname-type-internal.h>")
+    print("#include <torch-gobject/torch-generator-internal.h>")
     print("#include <torch-gobject/torch-layout-internal.h>")
     print("#include <torch-gobject/torch-memory-format-internal.h>")
     print("#include <torch-gobject/torch-storage-internal.h>")
@@ -772,6 +781,7 @@ def print_source(declarations):
     print("using IntArrayRef = c10::IntArrayRef;")
     print("using Device = c10::Device;")
     print("using Dimname = at::Dimname;")
+    print("using Generator = at::Generator;")
     print("using Layout = c10::Layout;")
     print("using MemoryFormat = c10::MemoryFormat;")
     print("using Scalar = c10::Scalar;")
