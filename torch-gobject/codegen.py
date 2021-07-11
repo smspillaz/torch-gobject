@@ -76,7 +76,7 @@ TYPE_MAPPING = {
         "convert_gobject_prefix": lambda a: a,
         "convert_gobject_func": lambda a: "torch_gtype_from_scalar_type ({a})".format(a=a),
     },
-    "Storage": {
+    "at::Storage": {
         "name": "TorchStorage *",
         "convert_native_qualifiers": "&",
         "convert_native_func": lambda a: "torch_storage_get_real_storage ({a})".format(a=a),
