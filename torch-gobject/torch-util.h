@@ -30,6 +30,7 @@
 
 #include <c10/util/ArrayRef.h>
 #include <c10/core/Scalar.h>
+#include <ATen/Dimname.h>
 #include <ATen/TypeDefault.h>
 
 namespace
@@ -126,5 +127,9 @@ c10::ScalarType torch_scalar_type_from_gtype (GType type);
 GPtrArray * torch_tensor_ptr_array_from_tensor_list (at::TensorList const &list);
 
 std::vector <at::Tensor> torch_tensor_list_from_tensor_ptr_array (GPtrArray *array);
+
+GPtrArray * torch_dimname_ptr_array_from_dimname_list (at::DimnameList const &list);
+
+std::vector <at::Dimname> torch_dimname_list_from_dimname_ptr_array (GPtrArray *array);
 
 

@@ -22,6 +22,8 @@
 
 #include <vector>
 
+#include <torch-gobject/torch-dimname.h>
+#include <torch-gobject/torch-dimname-internal.h>
 #include <torch-gobject/torch-tensor.h>
 #include <torch-gobject/torch-tensor-internal.h>
 #include <torch-gobject/torch-util.h>
@@ -155,4 +157,14 @@ GPtrArray * torch_tensor_ptr_array_from_tensor_list (at::TensorList const &list)
 std::vector <at::Tensor> torch_tensor_list_from_tensor_ptr_array (GPtrArray *array)
 {
   return object_vector_from_object_ptr_array <at::Tensor, TorchTensor *> (array, torch_tensor_get_real_tensor);
+}
+
+GPtrArray * torch_dimname_ptr_array_from_dimname_list (at::DimnameList const &list)
+{
+  return object_ptr_array_from_object_array_ref (list, torch_dimname_new_from_real_dimname);
+}
+
+std::vector <at::Dimname> torch_dimname_list_from_dimname_ptr_array (GPtrArray *array)
+{
+  return object_vector_from_object_ptr_array <at::Dimname, TorchDimname *> (array, torch_dimname_get_real_dimname);
 }
