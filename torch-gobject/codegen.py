@@ -423,13 +423,11 @@ def is_skipped(decl):
         return True
 
     # Skip internal funcs
-    if decl["name"].startswith("_"):
-        print("Skipped", decl["name"], " - is internal", file=sys.stderr)
+    if decl["name"].startswith("_") and not decl["name"].startswith("__"):
         return True
 
     # Skip "out" versions
     if decl["name"].endswith("_out"):
-        print("Skipped", decl["name"], " - is outfunc", file=sys.stderr)
         return True
 
     if decl["returns"]:
