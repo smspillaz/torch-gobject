@@ -235,13 +235,27 @@ def map_element_type(type_spec):
     return TYPE_MAPPING[unqualified].get("meta", {}).get("type", None)
 
 
+def is_nullable(type_spec):
+    unqualified = unqualified_dynamic_type(type_spec["dynamic_type"])
+
+    if TYPE_MAPPING[unqualified].get("meta", {}).get("nullable_elements", False):
+        # The container isn't nullable, but the elements may be
+        return False
+
+    return type_spec.get("is_nullable", False)
+
+
+def map_nullable(type_spec):
+    return is_nullable(type_spec)
+
+
 def type_spec_to_gobject_type(type_spec):
     return {
         "name": type_spec["name"],
         "type": map_type_name(type_spec),
         "element-type": map_element_type(type_spec),
         "size": type_spec.get("size", None),
-        "nullable": type_spec.get("is_nullable", False),
+        "nullable": map_nullable(type_spec),
         "transfer": type_spec["transfer"]
     }
 
@@ -493,7 +507,7 @@ def print_function_decl(decl):
 def make_argument_marshaller(argument, gobject_argument):
     arg_type = argument.get("api_dynamic_type", argument["dynamic_type"])
     unqualified_arg_type = unqualified_dynamic_type(arg_type)
-    wrapped_type = "c10::optional<{}>".format(unqualified_arg_type) if argument.get("is_nullable", False) else unqualified_arg_type
+    wrapped_type = "c10::optional<{}>".format(unqualified_arg_type) if is_nullable(argument) else unqualified_arg_type
     qualified_type = " ".join([wrapped_type, TYPE_MAPPING[unqualified_arg_type]["convert_native_qualifiers"]])
 
     return " ".join([
