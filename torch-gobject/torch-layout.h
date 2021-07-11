@@ -32,7 +32,7 @@ G_BEGIN_DECLS
  * @TORCH_LAYOUT_SPARSE: Sparse layout
  * @TORCH_LAYOUT_MKLDNN: MKLDNN specific layout
  *
- * Error enumeration for Scorch related errors.
+ * Enumeration for layout types.
  */
 typedef enum {
   TORCH_LAYOUT_STRIDED,
