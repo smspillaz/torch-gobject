@@ -549,6 +549,25 @@ def determine_return_statement_operand(gobject_return_decl, name):
     return return_statement_operand
 
 
+AT_NAMESPACE_ONLY = {
+    "normal": {
+        "overloads": [
+            "Tensor_float",
+            "float_Tensor",
+            "Tensor_Tensor"
+        ]
+    }
+}
+
+
+def determine_namespace(decl):
+    if decl["name"] in AT_NAMESPACE_ONLY:
+        if decl["overload_name"] in AT_NAMESPACE_ONLY[decl["name"]]["overloads"]:
+            return "at"
+
+    return "torch"
+
+
 def make_function_call(decl, gobject_decl):
     before_block = ""
 
