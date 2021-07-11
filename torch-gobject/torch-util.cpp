@@ -159,6 +159,37 @@ std::vector <at::Tensor> torch_tensor_list_from_tensor_ptr_array (GPtrArray *arr
   return object_vector_from_object_ptr_array <at::Tensor, TorchTensor *> (array, torch_tensor_get_real_tensor);
 }
 
+GPtrArray * torch_tensor_ptr_array_from_optional_tensor_list (c10::List <c10::optional <at::Tensor> > const &list)
+{
+  g_autoptr (GPtrArray) ptr_array = g_ptr_array_new_with_free_func (g_object_unref);
+
+  for (c10::optional <at::Tensor> const &optional_tensor: list)
+    g_ptr_array_add (ptr_array,
+                     optional_tensor.has_value () ?
+                       torch_tensor_new_from_real_tensor (optional_tensor.value ()) :
+                       NULL
+                     );
+
+  return static_cast <GPtrArray *> (g_steal_pointer (&ptr_array));
+}
+
+c10::List <c10::optional <at::Tensor> > torch_optional_tensor_list_from_tensor_ptr_array (GPtrArray *ptr_array)
+{
+  c10::List <c10::optional <at::Tensor> > list;
+
+  for (size_t i = 0; i < ptr_array->len; ++i)
+    {
+      TorchTensor *tensor = static_cast <TorchTensor *> (g_ptr_array_index (ptr_array, i));
+
+      list.push_back (tensor != NULL ?
+        c10::optional <at::Tensor> (torch_tensor_get_real_tensor (tensor)) :
+        c10::nullopt
+      );
+    }
+
+  return list;
+}
+
 GPtrArray * torch_dimname_ptr_array_from_dimname_list (at::DimnameList const &list)
 {
   return object_ptr_array_from_object_array_ref (list, torch_dimname_new_from_real_dimname);
