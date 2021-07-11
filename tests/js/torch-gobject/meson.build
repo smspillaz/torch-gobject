@@ -21,6 +21,7 @@
 javascript_tests = [
   'testDevice.js',
   'testDimname.js',
+  'testGenerator.js',
   'testTensor.js'
 ]
 
