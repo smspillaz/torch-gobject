@@ -40,6 +40,7 @@ torch_gobject_aten_generated_header = custom_target('gen-torch-aten-header',
 
 torch_gobject_toplevel_enums_headers = files([
   'torch-device-type.h',
+  'torch-dimname-type.h',
   'torch-layout.h',
   'torch-errors.h',
   'torch-memory-format.h',
@@ -55,6 +56,7 @@ torch_gobject_enums = gnome.mkenums_simple(
 torch_gobject_toplevel_headers = files([
   'torch-allocator.h',
   'torch-device.h',
+  'torch-dimname.h',
   'torch-storage.h',
   'torch-slice.h',
   'torch-tensor.h',
@@ -67,6 +69,8 @@ torch_gobject_toplevel_introspectable_sources = files([
   'torch-allocator.cpp',
   'torch-device.cpp',
   'torch-device-type.cpp',
+  'torch-dimname.cpp',
+  'torch-dimname-type.cpp',
   'torch-errors.c',
   'torch-layout.cpp',
   'torch-memory-format.cpp',
@@ -81,6 +85,8 @@ torch_gobject_toplevel_introspectable_sources = files([
 torch_gobject_toplevel_private_headers = files([
   'torch-device-internal.h',
   'torch-device-type-internal.h',
+  'torch-dimname-internal.h',
+  'torch-dimname-type-internal.h',
   'torch-layout-internal.h',
   'torch-memory-format-internal.h',
   'torch-slice-internal.h',
