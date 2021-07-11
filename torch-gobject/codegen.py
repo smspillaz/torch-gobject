@@ -45,6 +45,16 @@ TYPE_MAPPING = {
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
         "convert_gobject_func": lambda a: "torch_dimname_new_from_real_dimname ({a})".format(a=a),
     },
+    "at::DimnameList": {
+        "name": "GPtrArray *",
+        "meta": {
+            "type": "TorchDimname *"
+        },
+        "convert_native_qualifiers": "",
+        "convert_native_func": lambda a: "torch_dimname_list_from_dimname_ptr_array ({a})".format(a=a),
+        "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
+        "convert_gobject_func": lambda a: "torch_tensor_ptr_array_from_dimname_list ({a})".format(a=a),
+    },
     "at::MemoryFormat": {
         "name": "TorchMemoryFormat",
         "convert_native_qualifiers": "",
