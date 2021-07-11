@@ -155,6 +155,17 @@ TYPE_MAPPING = {
         "convert_native_func": lambda a: "c10::string_view ({a})".format(a=a),
         "convert_gobject_prefix": lambda a: "g_autofree {a}".format(a=a),
         "convert_gobject_func": lambda a: "g_strdup ({a}.data())".format(a=a),
+    },
+    "c10::List<c10::optional<at::Tensor>>": {
+        "name": "GPtrArray *",
+        "meta": {
+            "type": "TorchTensor *",
+            "nullable_elements": True,
+        },
+        "convert_native_qualifiers": "",
+        "convert_native_func": lambda a: "torch_optional_tensor_list_from_tensor_ptr_array ({a})".format(a=a),
+        "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
+        "convert_gobject_func": lambda a: "torch_tensor_ptr_array_from_optional_tensor_list ({a})".format(a=a),
     }
 }
 
