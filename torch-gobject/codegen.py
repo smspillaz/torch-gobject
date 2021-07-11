@@ -572,7 +572,8 @@ def make_function_call(decl, gobject_decl):
     before_block = ""
 
     if "namespace" in decl["method_of"]:
-        call = "torch::{name} ({args});".format(
+        call = "{namespace}::{name} ({args});".format(
+            namespace=determine_namespace(decl),
             name=decl["name"],
             args=", ".join([
                 "real_" + a["name"] for a in decl["arguments"]
