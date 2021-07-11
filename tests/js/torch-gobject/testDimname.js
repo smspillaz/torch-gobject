@@ -1,7 +1,7 @@
 /*
- * tests/js/torch-gobject/testTensor.js
+ * tests/js/torch-gobject/testDimname.js
  *
- * Tests for the JavaScript Binding to the Tensor Object.
+ * Tests for the JavaScript Binding to the Dimname Object.
  *
  * Copyright (C) 2021 Sam Spilsbury.
  *
