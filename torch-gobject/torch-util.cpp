@@ -123,22 +123,36 @@ c10::ScalarType torch_scalar_type_from_gtype (GType type)
     }
 }
 
+namespace {
+  template <typename InternalType, typename ConversionFunc>
+  GPtrArray * object_ptr_array_from_object_array_ref (c10::ArrayRef<InternalType> const &array, ConversionFunc &&conv)
+  {
+    g_autoptr (GPtrArray) ptr_array = g_ptr_array_new_with_free_func (g_object_unref);
+
+    for (auto const &object: array)
+      g_ptr_array_add (ptr_array, conv (object));
+
+    return static_cast <GPtrArray *> (g_steal_pointer (&ptr_array));
+  }
+
+  template <typename InternalType, typename LibraryType, typename ConversionFunc>
+  std::vector<InternalType> object_vector_from_object_ptr_array (GPtrArray *ptr_array, ConversionFunc &&conv)
+  {
+    std::vector <InternalType> array;
+
+    for (size_t i = 0; i < ptr_array->len; ++i)
+      array.push_back(conv (static_cast <LibraryType> (g_ptr_array_index (ptr_array, i))));
+
+    return array;
+  }
+}
+
 GPtrArray * torch_tensor_ptr_array_from_tensor_list (at::TensorList const &list)
 {
-  g_autoptr (GPtrArray) ptr_array = g_ptr_array_new_with_free_func (g_object_unref);
-
-  for (auto const &tensor: list)
-    g_ptr_array_add (ptr_array, torch_tensor_new_from_real_tensor (tensor));
-
-  return static_cast <GPtrArray *> (g_steal_pointer (&ptr_array));
+  return object_ptr_array_from_object_array_ref (list, torch_tensor_new_from_real_tensor);
 }
 
 std::vector <at::Tensor> torch_tensor_list_from_tensor_ptr_array (GPtrArray *array)
 {
-  std::vector <at::Tensor> list;
-
-  for (size_t i = 0; i < array->len; ++i)
-    list.push_back(torch_tensor_get_real_tensor (static_cast <TorchTensor *> (g_ptr_array_index (array, i))));
-
-  return list;
+  return object_vector_from_object_ptr_array <at::Tensor, TorchTensor *> (array, torch_tensor_get_real_tensor);
 }
