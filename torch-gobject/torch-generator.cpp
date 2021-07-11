@@ -218,7 +218,7 @@ torch_generator_set_device (TorchGenerator  *generator,
 /**
  * torch_generator_seed:
  * @generator: A #TorchGenerator
- * @out_seed: An out-param to return the new seed.
+ * @out_seed: (out): An out-param to return the new seed.
  * @error: An out-error parameter.
  *
  * Re-seeds the generator with a new value from the system RNG. Not threadsafe, you
