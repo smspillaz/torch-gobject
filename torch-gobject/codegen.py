@@ -159,6 +159,10 @@ def non_namespaced_function_name(decl):
     inplace = ""
     overload = ""
     overload_name = ""
+    op = ""
+
+    if decl["name"].startswith("__"):
+        op = "op"
 
     if decl["name"].endswith("_"):
         inplace = "inplace"
@@ -171,7 +175,8 @@ def non_namespaced_function_name(decl):
         overload_name = decl["overload_name"].lower()
 
     return "_".join([x for x in [
-        RENAME_LIST.get(decl["name"], decl["name"]).rstrip("_"),
+        op,
+        RENAME_LIST.get(decl["name"], decl["name"]).strip("_"),
         overload_name,
         overload,
         inplace
