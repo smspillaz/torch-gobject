@@ -38,6 +38,14 @@ torch_gobject_aten_generated_header = custom_target('gen-torch-aten-header',
                                                     install_dir: get_option('includedir') / torch_gobject_headers_subdir)
 
 
+torch_gobject_nn_options_generated_header = custom_target('gen-torch-nn-options-header',
+                                                          input : ['codegen-options.py'],
+                                                          output : ['torch-nn-options-generated.h'],
+                                                          command : [python_installation, '@INPUT@', '--header', '--output', '@OUTPUT0@', '/usr/local/include/torch/csrc/api/include/torch/nn/options.h'],
+                                                          install: true,
+                                                          install_dir: get_option('includedir') / torch_gobject_headers_subdir)
+
+
 torch_gobject_toplevel_enums_headers = files([
   'torch-device-type.h',
   'torch-dimname-type.h',
@@ -148,7 +156,8 @@ introspection_sources = [
   torch_gobject_enums,
   torch_gobject_headers,
   torch_gobject_aten_generated_source,
-  torch_gobject_aten_generated_header
+  torch_gobject_aten_generated_header,
+  torch_gobject_nn_options_generated_header
 ]
 
 torch_gobject_gir = gnome.generate_gir(
