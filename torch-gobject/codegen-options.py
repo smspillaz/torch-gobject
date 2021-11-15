@@ -356,6 +356,20 @@ def refine_options_info(options_info):
     camel_name = "Torch{}".format(options_info["struct"])
     upper_name = camel_case_to_snake_case(camel_name)
     lower_name = upper_name.lower()
+    parent_camel = (
+        "Torch{}".format(options_info["parent"])
+        if options_info["parent"]
+        else "GObject"
+    )
+    parent_upper = camel_case_to_snake_case(parent_camel)
+    parent_upper_components = parent_upper.split("_")
+    parent_gtype = "_".join(
+        [
+            parent_upper_components[0],
+            "TYPE",
+        ]
+        + parent_upper_components[1:]
+    )
 
     return {
         **options_info,
@@ -363,9 +377,8 @@ def refine_options_info(options_info):
             "upper": upper_name,
             "lower": lower_name,
             "name": camel_name,
-            "parent": "Torch{}".format(options_info["parent"])
-            if options_info["parent"]
-            else "GObject",
+            "parent": parent_camel,
+            "parent_gtype": parent_gtype,
             "args": [
                 {
                     "type": convert_type(arg["type"], options_info["struct"])["name"],
