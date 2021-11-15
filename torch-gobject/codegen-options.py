@@ -618,6 +618,124 @@ def generate_header(headers_options):
     print("\nG_END_DECLS")
 
 
+def print_options_struct_source(options_info):
+    upper_camel_case = "_".join(options_info["gobject"]["upper"].split("_")[1:])
+    lower_camel_case = options_info["gobject"]["lower"]
+    camel = options_info["gobject"]["name"]
+    parent_gtype = options_info["gobject"]["parent_gtype"]
+
+    print(
+        "\n".join(
+            [
+                "struct _{}".format(camel),
+                "{",
+                indent(
+                    "{type} parent;".format(type=options_info["gobject"]["parent"]), 2
+                ),
+                "};",
+            ]
+        )
+    )
+    print("")
+
+    if "detail" not in options_info["namespace"]:
+        print(
+            "\n".join(
+                [
+                    "typedef struct _{}Private".format(camel),
+                    "{",
+                    indent(
+                        "\n".join(
+                            [
+                                "{namespace}{type} *internal;".format(
+                                    # This is fine to do since leading "::" means "global namespace"
+                                    namespace="::".join(options_info["namespace"])
+                                    + "::",
+                                    type=options_info["struct"],
+                                ),
+                            ]
+                        ),
+                        2,
+                    ),
+                    "",
+                    indent(
+                        "\n".join(
+                            [
+                                "{type} {name};".format(type=a["type"], name=a["name"])
+                                for a in options_info["gobject"]["args"]
+                            ]
+                        ),
+                        2,
+                    ),
+                    "}} {}Private;".format(camel),
+                ]
+            )
+        )
+    else:
+        # If this is a "detail" namespace we shouldn't actually
+        # try to generate this object - just use it as a parent
+        # for another object type and keep the properties there
+        print(
+            "\n".join(
+                [
+                    "typedef struct _{camel}Private {{}} {camel}Private;".format(
+                        camel=camel
+                    )
+                ]
+            )
+        )
+
+    print("")
+    print("static void initable_iface_init (GInitableIface *iface);")
+    print("")
+    print(
+        "G_DEFINE_TYPE_WITH_CODE ({camel}, {lower}, {parent_gtype}, G_ADD_PRIVATE ({camel}) G_IMPLEMENT_INTERFACE (G_TYPE_INITABLE, initable_iface_init))".format(
+            camel=camel, lower=lower_camel_case, parent_gtype=parent_gtype
+        )
+    )
+    print(
+        "#define {upper}_GET_PRIVATE(a) static_cast <{camel}Private *> ({lower}_get_instance_private ((a)));".format(
+            camel=camel,
+            lower=lower_camel_case,
+            upper=upper_camel_case,
+        )
+    )
+    print("")
+
+
+def print_enum_source(enum):
+    print("")
+
+
+def print_typedef_source(typedef):
+    print("")
+
+
+def print_source(parsed_structs):
+    for parsed_struct in parsed_structs:
+        if parsed_struct["type"] == "options_info":
+            print_options_struct_source(parsed_struct["data"])
+        if parsed_struct["type"] == "enum":
+            print_enum_source(parsed_struct["data"])
+        if parsed_struct["type"] == "typedef":
+            print_typedef_source(parsed_struct["data"])
+
+
+def generate_source(headers_options):
+    print("#include <gio/gio.h>")
+    print("#include <torch-gobject/torch-tensor.h>")
+    print("#include <torch-gobject/torch-nn-options-generated.h>")
+    print("")
+    print("#include <string>")
+    print("#include <vector>")
+    print("#include <torch/nn/options.h>")
+    print('#include "torch-enums.h"')
+
+    for header_filename, options in headers_options:
+        print("/* source: {} */".format(os.path.basename(header_filename)))
+        print_source(options)
+
+
 def generate_options_for_header_filename(header_filename):
     with open(header_filename) as f:
         options = list(parse_header(f.read()))
@@ -634,6 +752,7 @@ def main():
     )
     parser.add_argument("--output", help="Where to write the file")
     parser.add_argument("--header", action="store_true", help="Writing a header file")
+    parser.add_argument("--source", action="store_true", help="Writing a source file")
     args = parser.parse_args()
 
     if args.output:
@@ -646,6 +765,9 @@ def main():
 
     if args.header:
         generate_header(headers_options)
+
+    if args.source:
+        generate_source(headers_options)
 
 
 if __name__ == "__main__":
