@@ -19,6 +19,10 @@ _RE_TEMPLATE = r = re.compile(
     r"(?P<template>[A-Za-z][A-Za-z0-9\:]*)\<(?P<name>[A-Za-z0-9][A-Za-z0-9\_\:\,\s\<\>]*)\>"
 )
 _MATCH_VARIANT_DEF = re.compile(r".*(using|typedef).*c10::variant")
+_MATCH_FUNC = re.compile(r"\s*(?P<name>[A-Za-z_][\w_]*)\((?P<args>.*?)\).*")
+_MATCH_FUNC_ARG = re.compile(
+    r"(?P<type>[A-Za-z_][\w_\<\>]*)\s*(?P<name>[A-Za-z_][\w]*)(?:\s*=\s*(?P<default>[\w\\-]+)|.*)"
+)
 
 TYPE_CONVERSION = {
     ".*": {
@@ -160,25 +164,71 @@ def camel_case_to_snake_case(camel_cased):
     return _RE_CAMEL_CASE2.sub(r"\1_\2", camel_cased).upper()
 
 
+class MultilineFunctionDeclParser(object):
+    def __init__(self):
+        super().__init__()
+        self.lines_data = []
+
+    def process_line(self, line):
+        self.lines_data.append(line)
+
+        return ":" in line or ";" in line
+
+    def emit(self):
+        concat_lines = " ".join(
+            " ".join(map(lambda x: x.strip(), self.lines_data)).split()
+        )
+
+        func_match = _MATCH_FUNC.match(concat_lines)
+        assert func_match is not None
+
+        name = func_match.group("name").strip()
+        args = func_match.group("args").strip()
+
+        # Hopefully whatever we get as the arguments here isn't too complicated...
+        if args:
+            args = list(map(lambda x: x.strip(), args.split(",")))
+            args = [_MATCH_FUNC_ARG.match(a).groupdict() for a in args]
+        else:
+            args = []
+
+        return {"name": name, "args": args}
+
+
 class OptionsStructParser(object):
     def __init__(self, name):
         super().__init__()
         self.name = name
         self.args = []
+        self.constructors = []
+        self.subparser = None
 
     def process_line(self, line):
-        m = _MATCH_ARG.match(line)
+        if self.subparser is not None:
+            if self.subparser.process_line(line):
+                self.constructors.append(self.subparser.emit())
+                self.subparser = None
+                return False
+        else:
+            m = _MATCH_ARG.match(line)
 
-        if m != None:
-            self.args.append(
-                {
-                    "type": m.group("type"),
-                    "name": m.group("name"),
-                    "init": m.group("init"),
-                }
-            )
+            if m != None:
+                self.args.append(
+                    {
+                        "type": m.group("type"),
+                        "name": m.group("name"),
+                        "init": m.group("init"),
+                    }
+                )
 
-        return line.startswith("};")
+            # Matched a constructor, it may be over multiple lines
+            if re.match("\s*{}\(.*\).*".format(self.name), line):
+                self.subparser = MultilineFunctionDeclParser()
+
+                # Call again, this time with subparser set
+                self.process_line(line)
+
+            return line.startswith("};")
 
     def emit(self):
         return {
