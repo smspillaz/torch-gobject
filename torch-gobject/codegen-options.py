@@ -3,6 +3,8 @@ import re
 import os
 import sys
 
+from copy import copy
+
 
 _MATCH_OPTIONS_STRUCT = re.compile(
     "struct.*\s(?P<name>[A-Za-z][A-Za-z0-9]*?Options)(?=\s).*"
@@ -196,12 +198,13 @@ class MultilineFunctionDeclParser(object):
 
 
 class OptionsStructParser(object):
-    def __init__(self, name):
+    def __init__(self, name, namespace):
         super().__init__()
         self.name = name
         self.args = []
         self.constructors = []
         self.subparser = None
+        self.namespace = namespace
 
     def process_line(self, line):
         if self.subparser is not None:
@@ -233,16 +236,22 @@ class OptionsStructParser(object):
     def emit(self):
         return {
             "type": "options_info",
-            "data": {"struct": self.name, "args": self.args, "parent": None},
+            "data": {
+                "struct": self.name,
+                "args": self.args,
+                "parent": None,
+                "namespace": self.namespace,
+            },
         }
 
 
 class VariantStructParser(object):
-    def __init__(self, line, context):
+    def __init__(self, line, context, namespace):
         super().__init__()
         self.lines_data = []
         self.done = False
         self.context = context
+        self.namespace = namespace
 
     def process_line(self, line):
         if not self.done:
@@ -288,24 +297,36 @@ class VariantStructParser(object):
                     {"enumtype": a, "type": a.lstrip("enumtype::k")}
                     for a in enumtype_args
                 ],
+                "namespace": self.namespace,
             },
         }
 
 
 def parse_header(contents):
     current_stack = []
+    namespace_stack = []
 
     for line in contents.splitlines():
         m_options_struct = _MATCH_OPTIONS_STRUCT.match(line)
         m_using = _MATCH_USING.match(line)
         m_variant_start = _MATCH_VARIANT_DEF.match(line)
 
+        if line.strip().startswith("namespace"):
+            namespace_stack.append(line.strip().split()[1])
+        if "} // namespace" in line.strip():
+            # this seems to be a pattern, don't know if we can rely on it
+            namespace_stack.pop()
+
         if m_options_struct != None:
             if current_stack:
                 for parser in reversed(current_stack):
                     yield parser.emit()
 
-            current_stack = [OptionsStructParser(m_options_struct.group("name"))]
+            current_stack = [
+                OptionsStructParser(
+                    m_options_struct.group("name"), copy(namespace_stack)
+                )
+            ]
         elif line.startswith("struct"):
             if current_stack:
                 for parser in reversed(current_stack):
@@ -318,7 +339,9 @@ def parse_header(contents):
             # If not defined, then there is no context.
             current_stack.append(
                 VariantStructParser(
-                    line, current_stack[-1].name if current_stack else None
+                    line,
+                    current_stack[-1].name if current_stack else None,
+                    copy(namespace_stack),
                 )
             )
         elif m_using != None:
@@ -329,6 +352,7 @@ def parse_header(contents):
                         "struct": m_using.group("name"),
                         "args": [],
                         "parent": m_using.group("parent"),
+                        "namespace": copy(namespace_stack),
                     },
                 }
             elif current_stack:
@@ -338,6 +362,7 @@ def parse_header(contents):
                         "alias": m_using.group("name"),
                         "name": m_using.group("parent").split("::")[-1],
                         "context": current_stack[-1].name,
+                        "namespace": copy(namespace_stack),
                     },
                 }
 
