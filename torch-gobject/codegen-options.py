@@ -42,7 +42,7 @@ TYPE_CONVERSION = {
         "conv_padding_t": {"name": "TorchConvPadding"},
         "rnn_options_base_mode_t": {"name": "TorchRNNOptionsBaseMode"},
         "activation_t": {"name": "TorchTransformerActivation"},
-        "AnyModule": {"name": "TorchAnyModule"},
+        "AnyModule": {"name": "TorchAnyModule *"},
         "ExpandingArrayDouble": {
             "name": "GArray *",
             "meta": {"element-type": "double", "n-elements": None},
