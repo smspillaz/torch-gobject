@@ -27,6 +27,9 @@ CONVERSIONS = {
     "TorchOptionalValue *": lambda name, meta: "torch_optional_value_to_c10_optional ({name}, torch_optional_value_get_{type})".format(
         type=meta["type"], name=name
     ),
+    "TorchNNConvPaddingOptions *": lambda name, meta: "torch_nn_conv_padding_options_get_real_padding_t <{dims}> ({name})".format(
+        dims=meta["dims"], name=name
+    ),
 }
 
 COPY_G_OBJECT_REF = "g_object_ref"
@@ -35,6 +38,7 @@ COPY_FUNCS = {
     "GArray *": "g_array_ref",
     "TorchTensor *": COPY_G_OBJECT_REF,
     "TorchOptionalValue *": COPY_TORCH_OPTIONAL_VALUE_COPY,
+    "TorchNNConvPaddingOptions *": "torch_nn_conv_padding_options_copy",
 }
 
 DESTROY_G_OBJECT_UNREF = "g_object_unref"
@@ -43,6 +47,7 @@ DESTROY_FUNCS = {
     "GArray *": "g_array_unref",
     "TorchTensor *": DESTROY_G_OBJECT_UNREF,
     "TorchOptionalValue *": DESTROY_TORCH_OPTIONAL_VALUE_FREE,
+    "TorchNNConvPaddingOptions *": "torch_nn_conv_padding_options_free",
 }
 
 
