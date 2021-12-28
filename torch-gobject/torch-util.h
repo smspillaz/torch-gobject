@@ -30,11 +30,51 @@
 
 #include <c10/util/ArrayRef.h>
 #include <c10/core/Scalar.h>
+#include <ATen/core/ivalue.h>
 #include <ATen/Dimname.h>
 #include <ATen/TypeDefault.h>
 
+#include <torch-gobject/torch-optional-value.h>
+
 namespace
 {
+  template <typename T>
+  T *
+  torch_copy_assign (T *ptr)
+  {
+    if (ptr == nullptr)
+      return nullptr;
+
+    T *copy = g_new0 (T, 1);
+    *copy = *ptr;
+
+    return copy;
+  }
+
+  template <typename T>
+  c10::optional <T>
+  torch_pointer_to_optional (T *ptr)
+  {
+    if (ptr == nullptr)
+      {
+        return c10::nullopt;
+      }
+
+    return c10::optional <T> (*ptr);
+  }
+
+  template <typename T>
+  c10::optional <T>
+  torch_optional_value_to_c10_optional (TorchOptionalValue *value, T (*getter)(TorchOptionalValue *))
+  {
+    if (value == nullptr)
+      {
+        return c10::nullopt;
+      }
+
+    return c10::optional <T> ((*getter) (value));
+  }
+
   template <typename T>
   c10::ArrayRef <T>
   torch_array_ref_from_fixed_array (const T *array_data, size_t size)
