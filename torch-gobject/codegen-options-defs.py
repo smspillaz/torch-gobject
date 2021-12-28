@@ -32,6 +32,7 @@ CONVERSIONS = {
 COPY_G_OBJECT_REF = "g_object_ref"
 COPY_TORCH_OPTIONAL_VALUE_COPY = "torch_optional_value_copy"
 COPY_FUNCS = {
+    "GArray *": "g_array_ref",
     "TorchTensor *": COPY_G_OBJECT_REF,
     "TorchOptionalValue *": COPY_TORCH_OPTIONAL_VALUE_COPY,
 }
@@ -39,6 +40,7 @@ COPY_FUNCS = {
 DESTROY_G_OBJECT_UNREF = "g_object_unref"
 DESTROY_TORCH_OPTIONAL_VALUE_FREE = "torch_optional_value_free"
 DESTROY_FUNCS = {
+    "GArray *": "g_array_unref",
     "TorchTensor *": DESTROY_G_OBJECT_UNREF,
     "TorchOptionalValue *": DESTROY_TORCH_OPTIONAL_VALUE_FREE,
 }
