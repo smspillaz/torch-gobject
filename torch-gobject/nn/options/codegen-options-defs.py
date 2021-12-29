@@ -153,9 +153,9 @@ def generate_source(options):
     print("#include <gio/gio.h>")
     print("#include <torch-gobject/torch-tensor.h>")
     print("#include <torch-gobject/torch-tensor-internal.h>")
-    print("#include <torch-gobject/torch-nn-options-generated.h>")
     print("#include <torch-gobject/torch-optional-value.h>")
     print("#include <torch-gobject/torch-util.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-options-generated.h>")
     print("")
     print("#include <string>")
     print("#include <vector>")
@@ -273,8 +273,8 @@ def print_opt_struct_introspectable_source(opt_struct):
 
 
 def generate_introspectable_source(options):
-    print("#include <torch-gobject/torch-nn-options-generated.h>")
     print("#include <torch-gobject/torch-util.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-options-generated.h>")
     print("")
 
     for opt_struct in options:
