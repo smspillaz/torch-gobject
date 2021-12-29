@@ -149,7 +149,7 @@ install_headers(
   subdir: torch_gobject_headers_subdir
 )
 
-torch_gobject_sources = torch_gobject_introspectable_sources + torch_gobject_private_sources
+torch_gobject_sources = torch_gobject_introspectable_sources + torch_gobject_private_sources + torch_gobject_enums
 
 c10 = cpp.find_library('c10')
 torch_cpu = cpp.find_library('torch_cpu')
