@@ -75,7 +75,7 @@ def convert_c_to_cpp(opt_info, name):
 def print_opt_struct_source(opt_struct):
     snake_name = camel_case_to_snake_case(opt_struct["name"]).lower()
     convert_func_name = f"torch_{snake_name}_struct_to_options"
-    struct_name = f"Torch{opt_struct['name']}Options"
+    struct_name = f"Torch{opt_struct['name']}"
 
     print("")
     print(f"{opt_struct['cpp']} {convert_func_name} ({struct_name} *opts)")
@@ -99,7 +99,7 @@ def print_opt_struct_source(opt_struct):
 
 
 def print_opt_struct_header(opt_struct):
-    struct_name = f"Torch{opt_struct['name']}Options"
+    struct_name = f"Torch{opt_struct['name']}"
     snake_name = camel_case_to_snake_case(struct_name).lower()
     constructor = f"{snake_name}_new"
     destructor = f"{snake_name}_free"
@@ -166,7 +166,7 @@ def generate_source(options):
 
 
 def print_opt_struct_introspectable_source(opt_struct):
-    struct_name = f"Torch{opt_struct['name']}Options"
+    struct_name = f"Torch{opt_struct['name']}"
     snake_name = camel_case_to_snake_case(struct_name).lower()
     constructor = f"{snake_name}_new"
     destructor = f"{snake_name}_free"
