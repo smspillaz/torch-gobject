@@ -105,7 +105,7 @@ torch_gobject_toplevel_introspectable_sources = files([
   'torch-tensor-index-array.c',
   'torch-tensor-index-type.cpp',
   'torch-tensor-options.cpp'
-])
+]) + [torch_gobject_aten_generated_source]
 torch_gobject_toplevel_private_headers = files([
   'torch-device-internal.h',
   'torch-device-type-internal.h',
