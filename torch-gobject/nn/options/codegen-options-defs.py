@@ -102,8 +102,29 @@ def print_opt_struct_source(opt_struct):
     print("")
     print(f"{opt_struct['cpp']} {convert_func_name} ({struct_name} *opts)")
     print("{")
-    print(indent(f"auto options = {opt_struct['cpp']}();", 2))
+
+    opts_by_name = {opt_info["name"]: opt_info for opt_info in opt_struct["opts"]}
+    cpp_args = (
+        ""
+        if "cpp_constructor" not in opt_struct
+        else ", ".join(
+            [
+                convert_c_to_cpp(opts_by_name[opt_name], f"opts->{opt_name}")
+                for opt_name in opt_struct["cpp_constructor"]["args"]
+            ]
+        )
+    )
+    skip_args = set(
+        []
+        if "cpp_constructor" not in opt_struct
+        else opt_struct["cpp_constructor"]["args"]
+    )
+
+    print(indent(f"auto options = {opt_struct['cpp']}({cpp_args});", 2))
     for opt_info in opt_struct["opts"]:
+        if opt_info["name"] in skip_args:
+            continue
+
         wrapped_arg = convert_c_to_cpp(opt_info, f"opts->{opt_info['name']}")
 
         print("")
