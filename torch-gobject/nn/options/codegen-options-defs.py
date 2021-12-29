@@ -47,6 +47,20 @@ CONVERSIONS = {
     ),
 }
 
+STORAGE = {
+    "int64_t *": {
+        "container": "GArray *",
+        "element_type": "int64_t",
+        "convert_func": lambda name, meta: "torch_new_g_array_from_c_array ({name}, {length}, {sentinel})".format(
+            name=name, length=meta.get("length", -1), sentinel=meta.get("sentinel", 0)
+        ),
+    }
+}
+ACCESS_FUNCS = {
+    "GArray *": lambda name, element_type: f"&(g_array_index ({name}, {element_type}, 0))"
+}
+C_TYPE_TO_INTROSPECTION_TYPE = {"int64_t": "gint64"}
+
 COPY_G_OBJECT_REF = "g_object_ref"
 COPY_TORCH_OPTIONAL_VALUE_COPY = "torch_optional_value_copy"
 COPY_FUNCS = {
@@ -67,9 +81,17 @@ DESTROY_FUNCS = {
 
 
 def convert_c_to_cpp(opt_info, name):
-    return CONVERSIONS.get(opt_info["c_type"], lambda name, meta: name)(
-        name, opt_info.get("meta", {})
+    storage_type = (
+        STORAGE[opt_info["c_type"]]["container"]
+        if opt_info["c_type"] in STORAGE
+        else opt_info["c_type"]
     )
+    meta = (
+        {"type": STORAGE[opt_info["c_type"]]["element_type"]}
+        if opt_info["c_type"] in STORAGE
+        else opt_info.get("meta", {})
+    )
+    return CONVERSIONS.get(storage_type, lambda name, meta: name)(name, meta)
 
 
 def print_opt_struct_source(opt_struct):
@@ -108,7 +130,19 @@ def print_opt_struct_header(opt_struct):
     print("")
     print("typedef struct {")
     for opt_info in opt_struct["opts"]:
-        print(indent(f"{opt_info['c_type']} {opt_info['name']};", 2))
+        storage_type = (
+            STORAGE[opt_info["c_type"]]["container"]
+            if opt_info["c_type"] in STORAGE
+            else opt_info["c_type"]
+        )
+        storage_element_type = (
+            f"/*< (element-type {C_TYPE_TO_INTROSPECTION_TYPE[STORAGE[opt_info['c_type']]['element_type']]}) >*/"
+            if opt_info["c_type"] in STORAGE
+            else ""
+        )
+        if storage_element_type:
+            print(indent(storage_element_type, 2))
+        print(indent(f"{storage_type} {opt_info['name']};", 2))
     print(f"}} {struct_name};")
     print("")
 
@@ -177,6 +211,16 @@ def generate_source(options):
     print_source(options)
 
 
+def access_underlying(variable, opt_info):
+    if opt_info["c_type"] in STORAGE:
+        storage_info = STORAGE[opt_info["c_type"]]
+        return ACCESS_FUNCS.get(storage_info["container"], lambda x, t: x)(
+            variable, storage_info["element_type"]
+        )
+
+    return variable
+
+
 def make_array_annotation(opt_info):
     if "*" not in opt_info["c_type"]:
         return ""
@@ -230,7 +274,18 @@ def print_opt_struct_introspectable_source(opt_struct):
     print(indent(f"{struct_name} *opts = g_new0({struct_name}, 1);", 2))
     print("")
     for opt_info in opt_struct["opts"]:
-        if opt_info["c_type"] in COPY_FUNCS:
+        storage_info = STORAGE.get(opt_info["c_type"])
+
+        # We have a custom storage container, so we need to wrap
+        # the value into the container first
+        if storage_info is not None:
+            print(
+                indent(
+                    f"opts->{opt_info['name']} = {storage_info['convert_func'](opt_info['name'], opt_info.get('meta', {}))};",
+                    2,
+                )
+            )
+        elif opt_info["c_type"] in COPY_FUNCS:
             print(
                 indent(
                     f"opts->{opt_info['name']} = {opt_info['name']} != NULL ? {COPY_FUNCS[opt_info['c_type']]} ({opt_info['name']}) : NULL;",
@@ -262,7 +317,8 @@ def print_opt_struct_introspectable_source(opt_struct):
     print("{")
     print(
         indent(
-            f"return {constructor} ({', '.join(['opts->{}'.format(opt_info['name']) for opt_info in opt_struct['opts']])});",
+            f"return {constructor} "
+            f"({', '.join([access_underlying('opts->{}'.format(opt_info['name']), opt_info) for opt_info in opt_struct['opts']])});",
             2,
         )
     )
@@ -284,10 +340,15 @@ def print_opt_struct_introspectable_source(opt_struct):
     print(f"void {destructor} ({struct_name} *opts)")
     print("{")
     for opt_info in opt_struct["opts"]:
-        if opt_info["c_type"] in DESTROY_FUNCS:
+        storage_c_type = (
+            STORAGE[opt_info["c_type"]]["container"]
+            if opt_info["c_type"] in STORAGE
+            else opt_info["c_type"]
+        )
+        if storage_c_type in DESTROY_FUNCS:
             print(
                 indent(
-                    f"g_clear_pointer (&opts->{opt_info['name']}, {DESTROY_FUNCS[opt_info['c_type']]});",
+                    f"g_clear_pointer (&opts->{opt_info['name']}, {DESTROY_FUNCS[storage_c_type]});",
                     2,
                 )
             )
