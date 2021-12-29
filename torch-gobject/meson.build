@@ -118,6 +118,7 @@ torch_gobject_private_sources = files([])
 torch_gobject_headers = files([])
 torch_gobject_enums = files([])
 
+subdir('nn')
 
 torch_gobject_introspectable_sources += torch_gobject_toplevel_introspectable_sources
 torch_gobject_private_sources += torch_gobject_toplevel_private_sources
