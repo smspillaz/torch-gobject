@@ -63,7 +63,7 @@ torch_gobject_toplevel_enums_headers = files([
   'torch-memory-format.h',
 ])
 
-torch_gobject_enums = gnome.mkenums_simple(
+torch_gobject_toplevel_enums = gnome.mkenums_simple(
   'torch-enums',
   sources: torch_gobject_toplevel_enums_headers,
   install_header: true,
@@ -142,6 +142,7 @@ torch_gobject_private_sources += torch_gobject_toplevel_private_sources
 torch_gobject_generated_headers += torch_gobject_toplevel_generated_headers
 torch_gobject_headers += torch_gobject_toplevel_headers
 torch_gobject_private_headers += torch_gobject_toplevel_private_headers
+torch_gobject_enums += torch_gobject_toplevel_enums
 
 install_headers(
   torch_gobject_toplevel_headers,
