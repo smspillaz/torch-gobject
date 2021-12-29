@@ -6,13 +6,16 @@ import sys
 
 from copy import copy
 
-_RE_CAMEL_CASE1 = re.compile(r"(.)([A-Z][a-z]+)")
-_RE_CAMEL_CASE2 = re.compile(r"([a-z0-9])([A-Z])")
+_RE_CAMEL_CASE1 = re.compile(r"([A-Z]+)([A-Z\d][a-z])")
+_RE_CAMEL_CASE2 = re.compile(r"([a-z])([A-Z\d])")
 
 
 def camel_case_to_snake_case(camel_cased):
     camel_cased = _RE_CAMEL_CASE1.sub(r"\1_\2", camel_cased)
-    return _RE_CAMEL_CASE2.sub(r"\1_\2", camel_cased).upper()
+    camel_cased = _RE_CAMEL_CASE2.sub(r"\1_\2", camel_cased)
+    camel_cased = camel_cased.replace("-", "_")
+
+    return camel_cased.upper()
 
 
 def indent(text, indent):
