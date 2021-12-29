@@ -134,6 +134,10 @@ def print_header(opts):
 def generate_header(options):
     print("#include <torch-gobject/torch-optional-value.h>")
     print("#include <torch-gobject/torch-tensor.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-conv-padding-options.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-embedding-bag-mode.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-grid-sample-mode.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-grid-sample-padding-mode.h>")
     print('#include "torch-enums.h"')
     print("")
     print("G_BEGIN_DECLS")
@@ -156,6 +160,14 @@ def generate_source(options):
     print("#include <torch-gobject/torch-optional-value.h>")
     print("#include <torch-gobject/torch-util.h>")
     print("#include <torch-gobject/nn/options/torch-nn-options-generated.h>")
+    print(
+        "#include <torch-gobject/nn/options/torch-nn-conv-padding-options-internal.h>"
+    )
+    print("#include <torch-gobject/nn/options/torch-nn-embedding-bag-mode-internal.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-grid-sample-mode-internal.h>")
+    print(
+        "#include <torch-gobject/nn/options/torch-nn-grid-sample-padding-mode-internal.h>"
+    )
     print("")
     print("#include <string>")
     print("#include <vector>")
