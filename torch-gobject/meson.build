@@ -166,7 +166,7 @@ torch_gobject_lib = shared_library(
   torch_gobject_enums,
   soversion: api_version,
   install: true,
-  include_directories: [ torch_gobject_inc ],
+  include_directories: [ torch_gobject_inc ] + torch_gobject_include_directories,
   dependencies: [ c10, gio, glib, gobject, torch_cpu, torch_dep ]
 )
 
