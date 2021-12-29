@@ -142,10 +142,6 @@ gobject = dependency('gobject-2.0')
 torch_gobject_lib = shared_library(
   'torch-gobject',
   torch_gobject_sources,
-  torch_gobject_aten_generated_source,
-  torch_gobject_nn_options_generated_source,
-  torch_gobject_nn_options_generated_introspectable_source,
-  torch_gobject_enums,
   soversion: api_version,
   install: true,
   include_directories: [ torch_gobject_inc ] + torch_gobject_include_directories,
@@ -160,11 +156,8 @@ torch_gobject_dep = declare_dependency(
 introspection_sources = [
   torch_gobject_introspectable_sources,
   torch_gobject_enums,
-  torch_gobject_headers,
-  torch_gobject_aten_generated_source,
-  torch_gobject_aten_generated_header,
-  torch_gobject_nn_options_generated_header,
-  torch_gobject_nn_options_generated_introspectable_source
+  torch_gobject_generated_headers,
+  torch_gobject_headers
 ]
 
 torch_gobject_gir = gnome.generate_gir(
