@@ -177,6 +177,30 @@ def generate_source(options):
     print_source(options)
 
 
+def make_array_annotation(opt_info):
+    if "*" not in opt_info["c_type"]:
+        return ""
+
+    if opt_info.get("meta", {}).get("length", None) is None:
+        return ""
+
+    return f" (array fixed-size={opt_info['meta']['length']})"
+
+
+def format_arg_annotation(opt_info):
+    transfer = " (transfer none)" if "*" in opt_info["c_type"] else ""
+    array_length = make_array_annotation(opt_info)
+    nullable = " (nullable)" if "*" in opt_info["c_type"] else ""
+
+    annotations = (
+        f"{transfer}{array_length}{nullable}: " if (transfer or array_length) else " "
+    )
+
+    return "@{name}:{annotations}A #{c_type}".format(
+        name=opt_info["name"], c_type=opt_info["c_type"], annotations=annotations
+    )
+
+
 def print_opt_struct_introspectable_source(opt_struct):
     struct_name = f"Torch{opt_struct['name']}"
     snake_name = camel_case_to_snake_case(struct_name).lower()
@@ -195,16 +219,7 @@ def print_opt_struct_introspectable_source(opt_struct):
         + (
             "\n * ".join(
                 [f"{constructor}:"]
-                + [
-                    "@{name}: {transfer}A #{c_type}".format(
-                        name=opt_info["name"],
-                        c_type=opt_info["c_type"],
-                        transfer="(transfer none): "
-                        if "*" in opt_info["c_type"]
-                        else "",
-                    )
-                    for opt_info in opt_struct["opts"]
-                ]
+                + [format_arg_annotation(opt_info) for opt_info in opt_struct["opts"]]
                 + ["", f"Returns: (transfer full): A new #{struct_name}"]
             )
         )
