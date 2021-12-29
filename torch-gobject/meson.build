@@ -122,10 +122,16 @@ torch_gobject_toplevel_private_sources = files([
   'torch-util.cpp'
 ])
 
+# This is a workaround for meson bug which assumes that the headers
+# are always in the toplevel include directories when generating
+# enums from a nested subdirectory
+torch_gobject_include_directories = []
+torch_gobject_generated_headers = []
 torch_gobject_introspectable_sources = files([])
 torch_gobject_private_headers = files([])
 torch_gobject_private_sources = files([])
 torch_gobject_headers = files([])
+torch_gobject_enums = files([])
 
 
 torch_gobject_introspectable_sources += torch_gobject_toplevel_introspectable_sources
