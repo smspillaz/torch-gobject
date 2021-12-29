@@ -24,6 +24,9 @@ def indent(text, indent):
 
 
 CONVERSIONS = {
+    "GArray *": lambda name, meta: "torch_array_ref_from_garray <{type}> ({name})".format(
+        type=meta["type"], name=name
+    ),
     "TorchTensor *": lambda name, meta: "torch_tensor_get_real_tensor ({name})".format(
         name=name
     ),
