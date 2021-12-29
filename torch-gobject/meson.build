@@ -70,6 +70,9 @@ torch_gobject_enums = gnome.mkenums_simple(
   install_dir: get_option('includedir') / torch_gobject_headers_subdir
 )
 
+torch_gobject_toplevel_generated_headers = [
+  torch_gobject_aten_generated_header
+]
 torch_gobject_toplevel_headers = files([
   'torch-allocator.h',
   'torch-device.h',
@@ -136,6 +139,7 @@ torch_gobject_enums = files([])
 
 torch_gobject_introspectable_sources += torch_gobject_toplevel_introspectable_sources
 torch_gobject_private_sources += torch_gobject_toplevel_private_sources
+torch_gobject_generated_headers += torch_gobject_toplevel_generated_headers
 torch_gobject_headers += torch_gobject_toplevel_headers
 torch_gobject_private_headers += torch_gobject_toplevel_private_headers
 
