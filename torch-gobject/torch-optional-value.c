@@ -44,6 +44,22 @@ torch_optional_value_new_double (double value)
 }
 
 /**
+ * torch_optional_value_new_int64_t:
+ * @value: The #int64_t to put in the #TorchOptionalValue.
+ *
+ * Returns: (transfer full): A new #TorchOptionalValue with data @value and type %G_TYPE_INT64
+ */
+TorchOptionalValue *
+torch_optional_value_new_int64_t (int64_t value)
+{
+    TorchOptionalValue *optional_value = g_new0 (TorchOptionalValue, 1);
+    g_value_init (&optional_value->internal_value, G_TYPE_INT64);
+    g_value_set_int64 (&optional_value->internal_value, value);
+
+    return optional_value;
+}
+
+/**
  * torch_optional_value_get_double:
  * @value: The #TorchOptionalValue to get the internal value from.
  *
@@ -56,6 +72,21 @@ double
 torch_optional_value_get_double (TorchOptionalValue *value)
 {
     return g_value_get_double (&value->internal_value);
+}
+
+/**
+ * torch_optional_value_get_int64_t:
+ * @value: The #TorchOptionalValue to get the internal value from.
+ *
+ * It is an error to use this function on any #TorchOptionalValue that does
+ * not contain a #int64_t.
+ *
+ * Returns: A #int64_t with the internal value.
+ */
+int64_t
+torch_optional_value_get_int64_t (TorchOptionalValue *value)
+{
+    return g_value_get_int64 (&value->internal_value);
 }
 
 /**

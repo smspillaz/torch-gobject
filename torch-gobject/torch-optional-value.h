@@ -32,9 +32,13 @@ typedef struct _TorchOptionalValue TorchOptionalValue;
 
 TorchOptionalValue * torch_optional_value_new_double (double value);
 
+TorchOptionalValue * torch_optional_value_new_int64_t (int64_t value);
+
 TorchOptionalValue * torch_optional_value_copy (TorchOptionalValue *value);
 
 double torch_optional_value_get_double (TorchOptionalValue *value);
+
+int64_t torch_optional_value_get_int64_t (TorchOptionalValue *value);
 
 void torch_optional_value_free (TorchOptionalValue *value);
 
