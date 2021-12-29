@@ -33,7 +33,7 @@ CONVERSIONS = {
     "TorchOptionalValue *": lambda name, meta: "torch_optional_value_to_c10_optional ({name}, torch_optional_value_get_{type})".format(
         type=meta["type"], name=name
     ),
-    "TorchNNConvPaddingOptions *": lambda name, meta: "torch_nn_conv_padding_options_get_real_padding_t <{dims}> ({name})".format(
+    "TorchNNConvPaddingOptions *": lambda name, meta: "torch_nn_conv_padding_options_to_real_padding_t <{dims}> ({name})".format(
         dims=meta["dims"], name=name
     ),
 }
