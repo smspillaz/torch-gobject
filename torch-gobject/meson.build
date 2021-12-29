@@ -37,24 +37,6 @@ torch_gobject_aten_generated_header = custom_target('gen-torch-aten-header',
                                                     install: true,
                                                     install_dir: get_option('includedir') / torch_gobject_headers_subdir)
 
-torch_nn_options_defs = files(['definitions/options.json'])
-torch_gobject_nn_options_generated_header = custom_target('gen-torch-nn-options-header',
-                                                          input : ['codegen-options-defs.py', torch_nn_options_defs],
-                                                          output : ['torch-nn-options-generated.h'],
-                                                          command : [python_installation, '@INPUT@', '--header', '--output', '@OUTPUT0@'],
-                                                          install: true,
-                                                          install_dir: get_option('includedir') / torch_gobject_headers_subdir)
-
-torch_gobject_nn_options_generated_source = custom_target('gen-torch-nn-options-source',
-                                                          input : ['codegen-options-defs.py', torch_nn_options_defs],
-                                                          output : ['torch-nn-options-generated.cpp'],
-                                                          command : [python_installation, '@INPUT@', '--source', '--output', '@OUTPUT0@'])
-torch_gobject_nn_options_generated_introspectable_source = custom_target('gen-torch-nn-options-introspectable-source',
-                                                          input : ['codegen-options-defs.py', torch_nn_options_defs],
-                                                          output : ['torch-nn-options-generated-introspectable.cpp'],
-                                                          command : [python_installation, '@INPUT@', '--introspectable-source', '--output', '@OUTPUT0@'])
-
-
 torch_gobject_toplevel_enums_headers = files([
   'torch-device-type.h',
   'torch-dimname-type.h',
