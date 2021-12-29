@@ -101,6 +101,43 @@ namespace
     return static_cast <GArray *> (g_steal_pointer (&array));
   }
 
+  template <typename T>
+  size_t
+  sentinel_terminated_array_length (T *c_array, int sentinel)
+  {
+    size_t i = 0;
+
+    while ((*c_array++) != sentinel)
+      ++i;
+
+    return i;
+  }
+
+  template <typename T>
+  GArray *
+  torch_new_g_array_from_c_array (T *c_array, int fixed_length, int sentinel = 0)
+  {
+    g_assert (fixed_length != 0);
+
+    /* If the fixed_length is positive, use that as the length */
+    if (fixed_length > 0)
+      {
+        g_autoptr (GArray) array = g_array_sized_new (FALSE, FALSE, sizeof (T), fixed_length);
+        T *array_data = reinterpret_cast <T *> (array->data);
+
+        std::copy (c_array, (c_array + fixed_length), array_data);
+        return static_cast <GArray *> (g_steal_pointer (&array));
+      }
+
+    /* Otherwise we assume that are are null-terminated */
+    size_t dynamic_length = sentinel_terminated_array_length (c_array, sentinel);
+    g_autoptr (GArray) array = g_array_sized_new (TRUE, FALSE, sizeof (T), dynamic_length - 1);
+    T *array_data = reinterpret_cast <T *> (array->data);
+
+    std::copy (c_array, (c_array + dynamic_length), array_data);
+    return static_cast <GArray *> (g_steal_pointer (&array));
+  }
+
   template <typename ErrorEnum>
   unsigned int set_error_from_exception (std::exception const  &exception,
                                          GQuark                 domain,
