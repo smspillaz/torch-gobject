@@ -218,7 +218,7 @@ def print_opt_struct_introspectable_source(opt_struct):
         if opt_info["c_type"] in COPY_FUNCS:
             print(
                 indent(
-                    f"opts->{opt_info['name']} = {COPY_FUNCS[opt_info['c_type']]} ({opt_info['name']});",
+                    f"opts->{opt_info['name']} = {opt_info['name']} != NULL ? {COPY_FUNCS[opt_info['c_type']]} ({opt_info['name']}) : NULL;",
                     2,
                 )
             )
