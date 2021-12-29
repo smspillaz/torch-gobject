@@ -36,6 +36,15 @@ CONVERSIONS = {
     "TorchNNConvPaddingOptions *": lambda name, meta: "torch_nn_conv_padding_options_to_real_padding_t <{dims}> ({name})".format(
         dims=meta["dims"], name=name
     ),
+    "TorchNNEmbeddingBagMode": lambda name, meta: "torch_nn_embedding_bag_mode_to_real_embedding_bag_mode ({name})".format(
+        name=name
+    ),
+    "TorchNNGridSampleMode": lambda name, meta: "torch_nn_grid_sample_mode_to_real_grid_sample_mode ({name})".format(
+        name=name
+    ),
+    "TorchNNGridSamplePaddingMode": lambda name, meta: "torch_nn_grid_sample_padding_mode_to_real_grid_sample_padding_mode ({name})".format(
+        name=name
+    ),
 }
 
 COPY_G_OBJECT_REF = "g_object_ref"
