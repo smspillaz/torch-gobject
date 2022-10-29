@@ -99,7 +99,66 @@ DESTROY_FUNCS = {
 }
 
 
+def convert_cpp_to_c(opt_info, name):
+    wrapped_conversion = GOBJECT_CONVERSIONS.get(
+        opt_info["cpp_type"], lambda n, m: name
+    )(name, opt_info.get("meta", {}))
+    return wrapped_conversion
+
+
+def convert_callback_to_cpp(opt_info, name):
+    callback_c_type = opt_info["c_type"]
+    callback_temporary_variable = f"{opt_info['name']}_callback_data_callable_wrapper"
+    callback_lambda_wrapper_variable = f"{opt_info['name']}_callback_lambda"
+    callback_temporary_capture = f"{callback_temporary_variable} = TorchCallbackDataCallableWrapper<{callback_c_type}> ({name})"
+    opt_info_args = opt_info.get("meta", {}).get("args", [])
+    opt_rv_c_type = opt_info.get("meta", {}).get("return", {}).get("c_type", "void")
+    opt_rv_cpp_type = opt_info.get("meta", {}).get("return", {}).get("cpp_type", "void")
+    lambda_decl = (
+        f"[{callback_temporary_capture}]("
+        + ", ".join([f"{oa['cpp_type']} {oa['name']}" for oa in opt_info_args])
+        + ") -> "
+        + opt_rv_cpp_type
+    )
+    convert_arg_lines = [
+        f"{oa['c_type']} c_{oa['name']} = {convert_cpp_to_c(oa, oa['name'])};"
+        for oa in opt_info_args
+    ]
+    call_func_line_args = ", ".join([f"c_{oa['name']}" for oa in opt_info_args])
+    rv_storage_type = (
+        f"g_autoptr ({opt_rv_c_type.strip('*').strip()})"
+        if "*" in opt_rv_c_type
+        else opt_rv_c_type
+    )
+    call_func_part = f"{callback_temporary_variable} ({call_func_line_args})"
+    call_func_line = (
+        f"{rv_storage_type} rv = {call_func_part};"
+        if rv_storage_type != "void"
+        else f"{call_func_part};"
+    )
+    convert_rv_part = (
+        convert_c_to_cpp(opt_info["meta"]["return"], "rv")
+        if rv_storage_type != "void"
+        else ""
+    )
+    return_line = (
+        f"return {convert_rv_part};" if rv_storage_type != "void" else "return;"
+    )
+
+    return "\n".join(
+        [
+            lambda_decl,
+            "{",
+            indent("\n".join(convert_arg_lines + [call_func_line, return_line]), 2),
+            "}",
+        ]
+    )
+
+
 def convert_c_to_cpp(opt_info, name):
+    if opt_info.get("meta", {}).get("func_data_ptr"):
+        return convert_callback_to_cpp(opt_info, name)
+
     storage_type = (
         STORAGE[opt_info["c_type"]]["container"]
         if opt_info["c_type"] in STORAGE
@@ -268,6 +327,10 @@ def print_opt_struct_header(opt_struct):
             else opt_info["c_type"]
         )
 
+        if "func_data_ptr" in opt_info.get("meta", {}):
+            # This is a closure, we need to create a TorchCallbackData
+            # to store the callback pointer, func_data_ptr and func_data_destroy_ptr
+            storage_c_type = "TorchCallbackData *"
         print(indent(f"{storage_c_type} {opt_info['name']};", 2))
     print(f"}} {struct_name};")
     print("")
