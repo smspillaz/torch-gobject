@@ -362,10 +362,18 @@ def print_header(opts):
 def generate_header(options):
     print("#include <torch-gobject/torch-optional-value.h>")
     print("#include <torch-gobject/torch-tensor.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-conv-padding-mode.h>")
     print("#include <torch-gobject/nn/options/torch-nn-conv-padding-options.h>")
     print("#include <torch-gobject/nn/options/torch-nn-embedding-bag-mode.h>")
     print("#include <torch-gobject/nn/options/torch-nn-grid-sample-mode.h>")
     print("#include <torch-gobject/nn/options/torch-nn-grid-sample-padding-mode.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-interpolate-mode.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-loss-reduction-mode.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-namedshape-element.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-pad-mode.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-rnn-nonlinearity-type.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-transformer-activation-type.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-upsample-mode.h>")
     print('#include "torch-enums.h"')
     print("")
     print("G_BEGIN_DECLS")
@@ -388,6 +396,7 @@ def generate_source(options):
     print("#include <torch-gobject/torch-optional-value.h>")
     print("#include <torch-gobject/torch-util.h>")
     print("#include <torch-gobject/nn/options/torch-nn-options-generated.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-conv-padding-mode-internal.h>")
     print(
         "#include <torch-gobject/nn/options/torch-nn-conv-padding-options-internal.h>"
     )
@@ -396,6 +405,17 @@ def generate_source(options):
     print(
         "#include <torch-gobject/nn/options/torch-nn-grid-sample-padding-mode-internal.h>"
     )
+    print("#include <torch-gobject/nn/options/torch-nn-interpolate-mode-internal.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-loss-reduction-mode-internal.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-namedshape-element-internal.h>")
+    print("#include <torch-gobject/nn/options/torch-nn-pad-mode-internal.h>")
+    print(
+        "#include <torch-gobject/nn/options/torch-nn-rnn-nonlinearity-type-internal.h>"
+    )
+    print(
+        "#include <torch-gobject/nn/options/torch-nn-transformer-activation-type-internal.h>"
+    )
+    print("#include <torch-gobject/nn/options/torch-nn-upsample-mode-internal.h>")
     print("")
     print("#include <string>")
     print("#include <vector>")
