@@ -504,7 +504,7 @@ def print_opt_struct_introspectable_source(opt_struct):
         if storage_info is not None:
             print(
                 indent(
-                    f"opts->{opt_info['name']} = {storage_info['convert_func'](opt_info['name'], opt_info.get('meta', {}))};",
+                    f"opts->{opt_info['name']} = {storage_info['convert_func'].format(name=opt_info['name'], meta=opt_info.get('meta', {}))};",
                     2,
                 )
             )
