@@ -67,6 +67,7 @@ ACCESS_FUNCS = {
     "GPtrArray *": "static_cast <{element_type} *> ({name}->pdata)",
     "TorchCallbackData *": "{name}->callback",
 }
+ACCESS_LENGTH_FUNCS = {"GArray *": "{name}->len", "GPtrArray *": "{name}->len"}
 C_TYPE_TO_INTROSPECTION_TYPE = {
     "double": "gdouble",
     "int64_t": "gint64",
