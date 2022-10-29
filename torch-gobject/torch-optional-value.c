@@ -76,6 +76,38 @@ torch_optional_value_new_int64_t (int64_t value)
 }
 
 /**
+ * torch_optional_value_new_int32_t:
+ * @value: The #int32_t to put in the #TorchOptionalValue.
+ *
+ * Returns: (transfer full): A new #TorchOptionalValue with data @value and type %G_TYPE_INT64
+ */
+TorchOptionalValue *
+torch_optional_value_new_int32_t (int32_t value)
+{
+    TorchOptionalValue *optional_value = g_new0 (TorchOptionalValue, 1);
+    g_value_init (&optional_value->internal_value, G_TYPE_INT);
+    g_value_set_int64 (&optional_value->internal_value, value);
+
+    return optional_value;
+}
+
+/**
+ * torch_optional_value_new_bool:
+ * @value: The #gboolean to put in the #TorchOptionalValue.
+ *
+ * Returns: (transfer full): A new #TorchOptionalValue with data @value and type %G_TYPE_INT64
+ */
+TorchOptionalValue *
+torch_optional_value_new_bool (gboolean value)
+{
+    TorchOptionalValue *optional_value = g_new0 (TorchOptionalValue, 1);
+    g_value_init (&optional_value->internal_value, G_TYPE_BOOLEAN);
+    g_value_set_boolean (&optional_value->internal_value, value);
+
+    return optional_value;
+}
+
+/**
  * torch_optional_value_get_gtype:
  * @value: The #TorchOptionalValue to get the internal value from.
  *
@@ -119,6 +151,36 @@ int64_t
 torch_optional_value_get_int64_t (TorchOptionalValue *value)
 {
     return g_value_get_int64 (&value->internal_value);
+}
+
+/**
+ * torch_optional_value_get_int32_t:
+ * @value: The #TorchOptionalValue to get the internal value from.
+ *
+ * It is an error to use this function on any #TorchOptionalValue that does
+ * not contain a #int32_t.
+ *
+ * Returns: A #int32_t with the internal value.
+ */
+int64_t
+torch_optional_value_get_int32_t (TorchOptionalValue *value)
+{
+    return g_value_get_int (&value->internal_value);
+}
+
+/**
+ * torch_optional_value_get_bool:
+ * @value: The #TorchOptionalValue to get the internal value from.
+ *
+ * It is an error to use this function on any #TorchOptionalValue that does
+ * not contain a #gboolean.
+ *
+ * Returns: A #gboolean with the internal value.
+ */
+gboolean
+torch_optional_value_get_bool (TorchOptionalValue *value)
+{
+    return g_value_get_boolean (&value->internal_value);
 }
 
 /**

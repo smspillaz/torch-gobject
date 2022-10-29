@@ -35,6 +35,10 @@ TorchOptionalValue * torch_optional_value_new_double (double value);
 
 TorchOptionalValue * torch_optional_value_new_int64_t (int64_t value);
 
+TorchOptionalValue * torch_optional_value_new_int32_t (int32_t value);
+
+TorchOptionalValue * torch_optional_value_new_bool (gboolean value);
+
 TorchOptionalValue * torch_optional_value_copy (TorchOptionalValue *value);
 
 GType torch_optional_value_get_gtype (TorchOptionalValue *value);
@@ -42,6 +46,10 @@ GType torch_optional_value_get_gtype (TorchOptionalValue *value);
 double torch_optional_value_get_double (TorchOptionalValue *value);
 
 int64_t torch_optional_value_get_int64_t (TorchOptionalValue *value);
+
+int64_t torch_optional_value_get_int32_t (TorchOptionalValue *value);
+
+gboolean torch_optional_value_get_bool (TorchOptionalValue *value);
 
 void torch_optional_value_free (TorchOptionalValue *value);
 
