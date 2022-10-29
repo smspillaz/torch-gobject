@@ -1,4 +1,5 @@
 import argparse
+import functools
 import json
 import os
 import re
@@ -109,7 +110,16 @@ def convert_c_to_cpp(opt_info, name):
         if opt_info["c_type"] in STORAGE
         else opt_info.get("meta", {})
     )
-    return CONVERSIONS.get(storage_type, lambda name, meta: name)(name, meta)
+
+    if "convert_pipeline" in meta:
+        return functools.reduce(
+            lambda prev, next: next.format(name=prev, meta=meta),
+            meta["convert_pipeline"],
+            name,
+        )
+
+    wrapped_conversion = CONVERSIONS.get(storage_type, lambda n, m: name)(name, meta)
+    return wrapped_conversion
 
 
 def print_opt_struct_source(opt_struct):
