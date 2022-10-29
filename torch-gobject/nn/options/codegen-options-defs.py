@@ -48,6 +48,12 @@ STORAGE = {
         "element_type": "int64_t",
         "convert_func": "torch_new_g_array_from_c_array ({name}, {meta[length]})",
         "copy_func": "g_array_copy ({name})",
+    },
+    "double *": {
+        "container": "GArray *",
+        "element_type": "double",
+        "convert_func": "torch_new_g_array_from_c_array ({name}, {meta[length]})",
+        "copy_func": "g_array_copy ({name})",
     }
 }
 ACCESS_FUNCS = {
