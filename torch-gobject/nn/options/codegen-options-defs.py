@@ -462,6 +462,29 @@ def format_arg_annotation(opt_info):
     )
 
 
+def opts_to_access_args(opts_struct_name, opts):
+    for opt_info in opts:
+        opt_name = opt_info["name"]
+        struct_member = f"{opts_struct_name}->{opt_name}"
+
+        opt_length = opt_info.get("meta", {}).get("length", None)
+
+        if opt_length is not None:
+            try:
+                int(opt_length)
+            except ValueError:
+                if opt_info["c_type"] in STORAGE:
+                    storage_container = STORAGE[opt_info["c_type"]]["container"]
+                else:
+                    storage_container = opt_info["c_type"]
+
+                assert storage_container in ACCESS_LENGTH_FUNCS
+
+                yield ACCESS_LENGTH_FUNCS[storage_container].format(name=struct_member)
+
+        yield access_underlying(struct_member, opt_info)
+
+
 def print_opt_struct_introspectable_source(opt_struct):
     struct_name = f"Torch{opt_struct['name']}"
     snake_name = camel_case_to_snake_case(struct_name).lower()
