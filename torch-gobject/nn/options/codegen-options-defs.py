@@ -54,7 +54,13 @@ STORAGE = {
         "element_type": "double",
         "convert_func": "torch_new_g_array_from_c_array ({name}, {meta[length]})",
         "copy_func": "g_array_copy ({name})",
-    }
+    },
+    "TorchNNNamedshapeElement *": {
+        "container": "GArray *",
+        "element_type": "TorchNNNamedshapeElement",
+        "convert_func": "torch_new_g_array_from_c_array ({name}, {meta[length]})",
+        "copy_func": "g_array_copy ({name})",
+    },
 }
 ACCESS_FUNCS = {
     "GArray *": lambda name, element_type: f"&(g_array_index ({name}, {element_type}, 0))"
