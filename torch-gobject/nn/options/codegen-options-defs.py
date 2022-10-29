@@ -622,11 +622,18 @@ def print_opt_struct_introspectable_source(opt_struct):
     print(f"void {destructor} ({struct_name} *opts)")
     print("{")
     for opt_info in opt_struct["opts"]:
+        storage_info = STORAGE.get(opt_info["c_type"])
         storage_c_type = (
-            STORAGE[opt_info["c_type"]]["container"]
+            storage_info["container"]
             if opt_info["c_type"] in STORAGE
             else opt_info["c_type"]
         )
+
+        if "func_data_ptr" in opt_info.get("meta", {}):
+            # This is a closure, we need to create a TorchCallbackData
+            # to store the callback pointer, func_data_ptr and func_data_destroy_ptr
+            storage_c_type = "TorchCallbackData *"
+
         if storage_c_type in DESTROY_FUNCS:
             print(
                 indent(
