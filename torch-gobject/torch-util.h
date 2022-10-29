@@ -147,27 +147,38 @@ namespace
 
   template <typename T>
   GArray *
-  torch_new_g_array_from_c_array (T *c_array, int fixed_length, int sentinel = 0)
+  torch_new_g_array_from_c_array (T *c_array, int fixed_length)
   {
-    g_assert (fixed_length != 0);
+    g_assert (fixed_length >= 0);
 
-    /* If the fixed_length is positive, use that as the length */
-    if (fixed_length > 0)
-      {
-        g_autoptr (GArray) array = g_array_sized_new (FALSE, FALSE, sizeof (T), fixed_length);
-        T *array_data = reinterpret_cast <T *> (array->data);
-
-        std::copy (c_array, (c_array + fixed_length), array_data);
-        return static_cast <GArray *> (g_steal_pointer (&array));
-      }
-
-    /* Otherwise we assume that are are null-terminated */
-    size_t dynamic_length = sentinel_terminated_array_length (c_array, sentinel);
-    g_autoptr (GArray) array = g_array_sized_new (TRUE, FALSE, sizeof (T), dynamic_length - 1);
+    g_autoptr (GArray) array = g_array_sized_new (FALSE, FALSE, sizeof (T), fixed_length);
     T *array_data = reinterpret_cast <T *> (array->data);
 
-    std::copy (c_array, (c_array + dynamic_length), array_data);
+    if (fixed_length > 0)
+      {
+        std::copy (c_array, (c_array + fixed_length), array_data);
+      }
+
+    array->len = fixed_length;
     return static_cast <GArray *> (g_steal_pointer (&array));
+  }
+
+  template <typename T>
+  GPtrArray *
+  torch_new_g_ptr_array_from_c_array_null_terminated (T **c_array, GBoxedCopyFunc copy, GDestroyNotify destructor)
+  {
+    g_autoptr (GPtrArray) array = g_ptr_array_new_null_terminated (
+      sentinel_terminated_array_length(c_array),
+      destructor
+    );
+    T *array_data = reinterpret_cast <T *> (array->pdata);
+
+    while (*c_array != nullptr)
+      {
+        g_ptr_array_add (copy (*c_array));
+      }
+
+    return static_cast <GPtrArray *> (g_steal_pointer (&array));
   }
 
   template <typename ErrorEnum>
