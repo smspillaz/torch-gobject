@@ -94,6 +94,7 @@ DESTROY_FUNCS = {
     "TorchTensor *": DESTROY_G_OBJECT_UNREF,
     "TorchOptionalValue *": DESTROY_TORCH_OPTIONAL_VALUE_FREE,
     "TorchNNConvPaddingOptions *": "torch_nn_conv_padding_options_free",
+    "TorchCallbackData *": "torch_callback_data_unref",
 }
 
 
