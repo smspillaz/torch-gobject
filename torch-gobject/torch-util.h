@@ -104,7 +104,7 @@ namespace
         return c10::nullopt;
       }
 
-    return c10::optional <T> ((*getter) (value));
+    return c10::optional <typename internal::ValueConversion<T>::Type> ((*getter) (value));
   }
 
   template <typename T>
