@@ -175,6 +175,24 @@ def print_opt_struct_source(opt_struct):
     print("}")
 
 
+def maybe_yield_opt_to_array_constructor_arg(meta):
+    length = meta.get("length", None)
+
+    if length is not None:
+        try:
+            int(length)
+        except ValueError:
+            yield ("size_t", length)
+
+
+def opts_to_constructor_args(opts):
+    for opt_info in opts:
+        yield (opt_info["c_type"], opt_info["name"])
+
+        meta = opt_info.get("meta", {})
+        yield from maybe_yield_opt_to_array_constructor_arg(meta)
+
+
 def print_opt_struct_header(opt_struct):
     struct_name = f"Torch{opt_struct['name']}"
     snake_name = camel_case_to_snake_case(struct_name).lower()
