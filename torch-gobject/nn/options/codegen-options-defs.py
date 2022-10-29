@@ -471,8 +471,11 @@ def print_opt_struct_introspectable_source(opt_struct):
 
     print("")
 
+    constructor_args_infos = list(opts_to_constructor_args(opt_struct["opts"]))
+
     formatted_args = ", ".join(
-        [f"{opt_info['c_type']} {opt_info['name']}" for opt_info in opt_struct["opts"]]
+        # type and name
+        list(map(lambda x: f"{x[0]} {x[1]}", constructor_args_infos))
     )
     print("/**")
     print(
@@ -480,7 +483,10 @@ def print_opt_struct_introspectable_source(opt_struct):
         + (
             "\n * ".join(
                 [f"{constructor}:"]
-                + [format_arg_annotation(opt_info) for opt_info in opt_struct["opts"]]
+                + [
+                    format_arg_annotation({"name": name, "c_type": c_type})
+                    for c_type, name in constructor_args_infos
+                ]
                 + ["", f"Returns: (transfer full): A new #{struct_name}"]
             )
         )
