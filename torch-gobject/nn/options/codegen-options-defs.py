@@ -499,6 +499,14 @@ def print_opt_struct_introspectable_source(opt_struct):
     for opt_info in opt_struct["opts"]:
         storage_info = STORAGE.get(opt_info["c_type"])
 
+        if storage_info is None:
+            if "func_data_ptr" in opt_info.get("meta", {}):
+                # This is a closure, we need to create a TorchCallbackData
+                # to store the callback pointer, func_data_ptr and func_data_destroy_ptr
+                storage_info = {
+                    "convert_func": f"torch_callback_data_new (reinterpret_cast<gpointer> ({opt_info['name']}), {opt_info['meta'].get('func_data_ptr', 'NULL')}, {opt_info['meta'].get('func_data_ptr_destroy', 'NULL')});"
+                }
+
         # We have a custom storage container, so we need to wrap
         # the value into the container first
         if storage_info is not None:
