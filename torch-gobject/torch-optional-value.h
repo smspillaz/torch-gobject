@@ -29,12 +29,15 @@ G_BEGIN_DECLS
 
 typedef struct _TorchOptionalValue TorchOptionalValue;
 
+TorchOptionalValue * torch_optional_value_new_gtype (GType value);
 
 TorchOptionalValue * torch_optional_value_new_double (double value);
 
 TorchOptionalValue * torch_optional_value_new_int64_t (int64_t value);
 
 TorchOptionalValue * torch_optional_value_copy (TorchOptionalValue *value);
+
+GType torch_optional_value_get_gtype (TorchOptionalValue *value);
 
 double torch_optional_value_get_double (TorchOptionalValue *value);
 

@@ -28,6 +28,22 @@ struct _TorchOptionalValue {
 };
 
 /**
+ * torch_optional_value_new_gtype:
+ * @value: The #GType to put in the #TorchOptionalValue.
+ *
+ * Returns: (transfer full): A new #TorchOptionalValue with data @value and type %G_TYPE_DOUBLE
+ */
+TorchOptionalValue *
+torch_optional_value_new_gtype (GType value)
+{
+    TorchOptionalValue *optional_value = g_new0 (TorchOptionalValue, 1);
+    g_value_init (&optional_value->internal_value, G_TYPE_GTYPE);
+    g_value_set_gtype (&optional_value->internal_value, value);
+
+    return optional_value;
+}
+
+/**
  * torch_optional_value_new_double:
  * @value: The #double to put in the #TorchOptionalValue.
  *
@@ -58,6 +74,22 @@ torch_optional_value_new_int64_t (int64_t value)
 
     return optional_value;
 }
+
+/**
+ * torch_optional_value_get_gtype:
+ * @value: The #TorchOptionalValue to get the internal value from.
+ *
+ * It is an error to use this function on any #TorchOptionalValue that does
+ * not contain a #double.
+ *
+ * Returns: A #double with the internal value.
+ */
+GType
+torch_optional_value_get_gtype (TorchOptionalValue *value)
+{
+    return g_value_get_gtype (&value->internal_value);
+}
+
 
 /**
  * torch_optional_value_get_double:
