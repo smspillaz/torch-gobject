@@ -63,6 +63,23 @@ namespace
     return c10::optional <T> (*ptr);
   }
 
+  template <typename T>
+  std::vector <T>
+  torch_c_array_to_vector (T *c_array, size_t length)
+  {
+    std::vector <T> vec (length);
+    std::copy (c_array, (c_array + length), vec.begin ());
+
+    return vec;
+  }
+
+  template <typename T>
+  std::vector <T>
+  torch_g_array_to_vector (GArray *array, size_t length)
+  {
+    return torch_c_array_to_vector <T> (reinterpret_cast <T *> (array->data), array->len);
+  }
+
   namespace internal
   {
     template <typename T>
