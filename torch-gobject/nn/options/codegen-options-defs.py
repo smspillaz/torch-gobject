@@ -383,6 +383,9 @@ def generate_header(options):
     print('#include "torch-enums.h"')
     print("")
     print("G_BEGIN_DECLS")
+    print(
+        "typedef TorchTensor * (*TorchNNDistanceFunction) (TorchTensor const *first, TorchTensor const *second, gpointer data);"
+    )
 
     print_header(options)
 
