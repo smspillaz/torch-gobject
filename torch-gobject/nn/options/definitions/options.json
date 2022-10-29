@@ -1,0 +1,4346 @@
+[
+    {
+        "name": "AlphaDropoutFuncOptions",
+        "cpp": "torch::nn::functional::AlphaDropoutFuncOptions",
+        "opts": [
+            {
+                "name": "p",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "training",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "inplace",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "BatchNormFuncOptions",
+        "cpp": "torch::nn::functional::BatchNormFuncOptions",
+        "opts": [
+            {
+                "name": "weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "bias",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "training",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "momentum",
+                "cpp_type": "c10::optional<double>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "double"
+                }
+            },
+            {
+                "name": "eps",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "ConvFunc1DOptions",
+        "cpp": "torch::nn::functional::ConvFuncOptions<1>",
+        "opts": [
+            {
+                "name": "bias",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::nn::functional::ConvFuncOptions<1>::conv_padding_t",
+                "c_type": "TorchNNConvPaddingOptions *",
+                "meta": {
+                    "dims": 1
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "groups",
+                "cpp_type": "int64_t",
+                "c_type": "int"
+            }
+        ]
+    },
+    {
+        "name": "ConvFunc2DOptions",
+        "cpp": "torch::nn::functional::ConvFuncOptions<2>",
+        "opts": [
+            {
+                "name": "bias",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::nn::functional::ConvFuncOptions<2>::conv_padding_t",
+                "c_type": "TorchNNConvPaddingOptions *",
+                "meta": {
+                    "dims": 2
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "groups",
+                "cpp_type": "int64_t",
+                "c_type": "int"
+            }
+        ]
+    },
+    {
+        "name": "ConvFunc3DOptions",
+        "cpp": "torch::nn::functional::ConvFuncOptions<3>",
+        "opts": [
+            {
+                "name": "bias",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::nn::functional::ConvFuncOptions<3>::conv_padding_t",
+                "c_type": "TorchNNConvPaddingOptions *",
+                "meta": {
+                    "dims": 3
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "groups",
+                "cpp_type": "int64_t",
+                "c_type": "int"
+            }
+        ]
+    },
+    {
+        "name": "ConvTransposeFunc1DOptions",
+        "cpp": "torch::nn::functional::ConvTransposeFuncOptions<1>",
+        "opts": [
+            {
+                "name": "bias",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "output_padding",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "groups",
+                "cpp_type": "int64_t",
+                "c_type": "int"
+            }
+        ]
+    },
+    {
+        "name": "ConvTransposeFunc2DOptions",
+        "cpp": "torch::nn::functional::ConvTransposeFuncOptions<2>",
+        "opts": [
+            {
+                "name": "bias",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "output_padding",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "groups",
+                "cpp_type": "int64_t",
+                "c_type": "int"
+            }
+        ]
+    },
+    {
+        "name": "ConvTransposeFunc3DOptions",
+        "cpp": "torch::nn::functional::ConvTransposeFuncOptions<3>",
+        "opts": [
+            {
+                "name": "bias",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "output_padding",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "groups",
+                "cpp_type": "int64_t",
+                "c_type": "int"
+            }
+        ]
+    },
+    {
+        "name": "DropoutFuncOptions",
+        "cpp": "torch::nn::functional::DropoutFuncOptions",
+        "opts": [
+            {
+                "name": "p",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "training",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "inplace",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "EmbeddingBagFuncOptions",
+        "cpp": "torch::nn::functional::EmbeddingBagFuncOptions",
+        "opts": [
+            {
+                "name": "offsets",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "max_norm",
+                "cpp_type": "c10::optional<double>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "double"
+                }
+            },
+            {
+                "name": "norm_type",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "scale_grad_by_freq",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "mode",
+                "cpp_type": "torch::nn::EmbeddingBagMode",
+                "c_type": "TorchNNEmbeddingBagMode"
+            },
+            {
+                "name": "sparse",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "per_sample_weights",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "include_last_offset",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "padding_idx",
+                "cpp_type": "c10::optional<int64_t>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "int64_t"
+                }
+            }
+        ]
+    },
+    {
+        "name": "EmbeddingFuncOptions",
+        "cpp": "torch::nn::functional::EmbeddingFuncOptions",
+        "opts": [
+            {
+                "name": "max_norm",
+                "cpp_type": "c10::optional<double>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "double"
+                }
+            },
+            {
+                "name": "norm_type",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "scale_grad_by_freq",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "sparse",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "padding_idx",
+                "cpp_type": "c10::optional<int64_t>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "int64_t"
+                }
+            }
+        ]
+    },
+    {
+        "name": "FeatureAlphaDropoutFuncOptions",
+        "cpp": "torch::nn::functional::FeatureAlphaDropoutFuncOptions",
+        "opts": [
+            {
+                "name": "p",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "training",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "inplace",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "GridSampleFuncOptions",
+        "cpp": "torch::nn::functional::GridSampleFuncOptions",
+        "opts": [
+            {
+                "name": "mode",
+                "cpp_type": "torch::nn::functional::GridSampleFuncOptions::mode_t",
+                "c_type": "TorchNNGridSampleMode"
+            },
+            {
+                "name": "padding_mode",
+                "cpp_type": "torch::nn::functional::GridSampleFuncOptions::padding_mode_t",
+                "c_type": "TorchNNGridSamplePaddingMode"
+            },
+            {
+                "name": "align_corners",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "GroupNormFuncOptions",
+        "cpp": "torch::nn::functional::GroupNormFuncOptions",
+        "cpp_constructor": {
+            "args": ["num_groups"]
+        },
+        "opts": [
+            {
+                "name": "num_groups",
+                "cpp_type": "int64",
+                "c_type": "int"
+            },
+            {
+                "name": "weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "bias",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "eps",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "GumbelSoftmaxFuncOptions",
+        "cpp": "torch::nn::functional::GumbelSoftmaxFuncOptions",
+        "opts": [
+            {
+                "name": "tau",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "hard",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "dim",
+                "cpp_type": "int",
+                "c_type": "int"
+            }
+        ]
+    },
+    {
+        "name": "InstanceNormFuncOptions",
+        "cpp": "torch::nn::functional::InstanceNormFuncOptions",
+        "opts": [
+            {
+                "name": "running_mean",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "running_var",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "bias",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "use_input_stats",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "momentum",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "eps",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "InterpolateFuncOptions",
+        "cpp": "torch::nn::functional::InterpolateFuncOptions",
+        "opts": [
+            {
+                "name": "size",
+                "cpp_type": "c10::optional<std::vector<int64_t>>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": "size_length",
+                    "type": "int64_t",
+                    "convert_pipeline": [
+                        "torch_g_array_to_vector <{meta[type]}> ({name}, {meta[length]})"
+                    ]
+                }
+            },
+            {
+                "name": "scale_factor",
+                "cpp_type": "c10::optional<std::vector<double>>",
+                "c_type": "double *",
+                "meta": {
+                    "length": "scale_factor_length",
+                    "type": "int64_t",
+                    "convert_pipeline": [
+                        "torch_g_array_to_vector <{meta[type]}> ({name}, {meta[length]})"
+                    ]
+                }
+            },
+            {
+                "name": "mode",
+                "cpp_type": "torch::nn::functional::InterpolateFuncOptions::mode_t",
+                "c_type": "TorchNNInterpolateMode"
+            },
+            {
+                "name": "align_corners",
+                "cpp_type": "c10::optional<bool>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "bool"
+                }
+            },
+            {
+                "name": "recompute_scale_factor",
+                "cpp_type": "c10::optional<bool>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "bool"
+                }
+            },
+            {
+                "name": "antialias",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "LayerNormFuncOptions",
+        "cpp": "torch::nn::functional::LayerNormFuncOptions",
+        "cpp_constructor": {
+            "args": ["normalized_shape"]
+        },
+        "opts": [
+            {
+                "name": "normalized_shape",
+                "cpp_type": "std::vector<int64_t>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": "normalized_shape_length",
+                    "type": "int64_t",
+                    "convert_pipeline": [
+                        "torch_g_array_to_vector <{meta[type]}> ({name}, {meta[length]})"
+                    ]
+                }
+            },
+            {
+                "name": "weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "bias",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "eps",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "LogSoftmaxFuncOptions",
+        "cpp": "torch::nn::functional::LogSoftmaxFuncOptions",
+        "cpp_constructor": {
+            "args": ["dim"]
+        },
+        "opts": [
+            {
+                "name": "dim",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "dtype",
+                "cpp_type": "c10::optional<torch::Dtype>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "GType",
+                    "convert_pipeline": [
+                        "torch_optional_value_get_gtype ({name})",
+                        "torch_scalar_type_from_gtype ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "MaxUnpoolFunc1DOptions",
+        "cpp": "torch::nn::functional::MaxUnpoolFuncOptions<1>",
+        "cpp_constructor": {
+            "args": ["kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "output_size",
+                "cpp_type": "std::vector <int64_t>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": "output_size_len",
+                    "type": "int64_t",
+                    "convert_pipeline": [
+                        "torch_g_array_to_vector <{meta[type]}> ({name}, {meta[length]})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "MaxUnpoolFunc2DOptions",
+        "cpp": "torch::nn::functional::MaxUnpoolFuncOptions<2>",
+        "cpp_constructor": {
+            "args": ["kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "output_size",
+                "cpp_type": "std::vector <int64_t>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": "output_size_len",
+                    "type": "int64_t",
+                    "convert_pipeline": [
+                        "torch_g_array_to_vector <{meta[type]}> ({name}, {meta[length]})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "MultiheadAttentionForwardFuncOptions",
+        "cpp": "torch::nn::functional::MultiheadAttentionForwardFuncOptions",
+        "cpp_constructor": {
+            "args": [
+                "embed_dim_to_check",
+                "num_heads",
+                "in_proj_weight",
+                "in_proj_bias",
+                "bias_k",
+                "bias_v",
+                "add_zero_attn",
+                "dropout_p",
+                "out_proj_weight",
+                "out_proj_bias"
+            ]
+        },
+        "opts": [
+            {
+                "name": "embed_dim_to_check",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "num_heads",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "in_proj_weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "in_proj_bias",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "bias_k",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "bias_v",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "add_zero_attn",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "dropout_p",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "out_proj_weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "out_proj_bias",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "training",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "key_padding_mask",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "need_weights",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "attn_mask",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "use_separate_proj_weight",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "q_proj_weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "k_proj_weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "v_proj_weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "static_k",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "static_v",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "average_attn_weights",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "NormalizeFuncOptions",
+        "cpp": "torch::nn::functional::NormalizeFuncOptions",
+        "opts": [
+            {
+                "name": "p",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "dim",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "eps",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "out",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            } 
+        ]
+    },
+    {
+        "name": "PadFuncOptions",
+        "cpp": "torch::nn::functional::PadFuncOptions",
+        "cpp_constructor": {
+            "args": ["pad"]
+        },
+        "opts": [
+            {
+                "name": "pad",
+                "cpp_type": "std::vector <int64_t>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "type": "int64_t",
+                    "length": "pad_len",
+                    "convert_pipeline": [
+                        "torch_g_array_to_vector <{meta[type]}> ({name}, {meta[length]})"
+                    ]
+                }
+            },
+            {
+                "name": "mode",
+                "cpp_type": "torch::nn::functional::PadFuncOptions::mode_t",
+                "c_type": "TorchNNPadMode"
+            },
+            {
+                "name": "value",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "RReluFuncOptions",
+        "cpp": "torch::nn::functional::RReLUFuncOptions",
+        "opts": [
+            {
+                "name": "lower",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "upper",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "training",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "inplace",
+                "cpp_type": "gboolean",
+                "c_type": "bool"
+            }
+        ]
+    },
+    {
+        "name": "SoftmaxFuncOptions",
+        "cpp": "torch::nn::functional::SoftmaxFuncOptions",
+        "cpp_constructor": {
+            "args": ["dim"]
+        },
+        "opts": [
+            {
+                "name": "dim",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "dtype",
+                "cpp_type": "c10::optional<torch::Dtype>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "GType",
+                    "convert_pipeline": [
+                        "torch_optional_value_get_gtype ({name})",
+                        "torch_scalar_type_from_gtype ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "SoftminFuncOptions",
+        "cpp": "torch::nn::functional::SoftminFuncOptions",
+        "cpp_constructor": {
+            "args": ["dim"]
+        },
+        "opts": [
+            {
+                "name": "dim",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "dtype",
+                "cpp_type": "c10::optional<torch::Dtype>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "GType",
+                    "convert_pipeline": [
+                        "torch_optional_value_get_gtype ({name})",
+                        "torch_scalar_type_from_gtype ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "AdaptiveAvgPoolOptionsNd",
+        "cpp": "torch::nn::AdaptiveAvgPoolOptions <std::vector <int64_t> >",
+        "cpp_constructor": {
+            "args": ["output_size"]
+        },
+        "opts": [
+            {
+                "name": "output_size",
+                "cpp_type": "std::vector <int64_t>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "type": "int64_t",
+                    "length": "output_size_len",
+                    "convert_pipeline": [
+                        "torch_g_array_to_vector <{meta[type]}> ({name}, {meta[length]})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "AdaptiveLogSoftmaxWithLossOptions",
+        "cpp": "torch::nn::AdaptiveLogSoftmaxWithLossOptions",
+        "cpp_constructor": {
+            "args": ["in_features", "n_classes", "cutoffs"]
+        },
+        "opts": [
+            {
+                "name": "in_features",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "n_classes",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "cutoffs",
+                "cpp_type": "std::vector <int64_t>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": "cutoffs_len",
+                    "type": "int64_t",
+                    "convert_pipeline": [
+                        "torch_g_array_to_vector <{meta[type]}> ({name}, {meta[length]})"
+                    ]
+                }
+            },
+            {
+                "name": "div_value",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "head_bias",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "AdaptiveMaxPoolOptions",
+        "cpp": "torch::nn::AdaptiveAvgPoolOptions <std::vector <int64_t> >",
+        "cpp_constructor": {
+            "args": ["output_size"]
+        },
+        "opts": [
+            {
+                "name": "output_size",
+                "cpp_type": "std::vector <int64_t>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "type": "int64_t",
+                    "length": "output_size_len",
+                    "convert_pipeline": [
+                        "torch_g_array_to_vector <{meta[type]}> ({name}, {meta[length]})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "AvgPool1DOptions",
+        "cpp": "torch::nn::AvgPoolOptions<1>",
+        "cpp_constructor": {
+            "args": ["kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "ceil_mode",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "count_include_pad",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "divisor_override",
+                "cpp_type": "c10::optional <int64_t>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "int64_t"
+                }
+            }
+        ]
+    },
+    {
+        "name": "AvgPool2DOptions",
+        "cpp": "torch::nn::AvgPoolOptions<2>",
+        "cpp_constructor": {
+            "args": ["kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "ceil_mode",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "count_include_pad",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "divisor_override",
+                "cpp_type": "c10::optional <int64_t>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "int64_t"
+                }
+            }
+        ]
+    },
+    {
+        "name": "AvgPool3DOptions",
+        "cpp": "torch::nn::AvgPoolOptions<3>",
+        "cpp_constructor": {
+            "args": ["kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "ceil_mode",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "count_include_pad",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "divisor_override",
+                "cpp_type": "c10::optional <int64_t>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "int64_t"
+                }
+            }
+        ]
+    },
+    {
+        "name": "BatchNormOptions",
+        "cpp": "torch::nn::BatchNormOptions",
+        "cpp_constructor": {
+            "args": ["num_features"]
+        },
+        "opts": [
+            {
+                "name": "num_features",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "eps",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "momentum",
+                "cpp_type": "c10::optional<double>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "double"
+                }
+            },
+            {
+                "name": "affine",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "track_running_stats",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "BCELossOptions",
+        "cpp": "torch::nn::BCELossOptions",
+        "opts": [
+            {
+                "name": "weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::BCELossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "BCEWithLogitsLossOptions",
+        "cpp": "torch::nn::BCEWithLogitsLossOptions",
+        "opts": [
+            {
+                "name": "weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::BCELossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            },
+            {
+                "name": "pos_weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            }
+        ]
+    },
+    {
+        "name": "BilinearOptions",
+        "cpp": "torch::nn::BilinearOptions",
+        "cpp_constructor": {
+            "args": ["in1_features", "in2_features", "out_features"]
+        },
+        "opts": [
+            {
+                "name": "in1_features",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "in2_features",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "out_features",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "bias",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "CELUOptions",
+        "cpp": "torch::nn::CELUOptions",
+        "opts": [
+            {
+                "name": "alpha",
+                "c_type": "double",
+                "cpp_type": "double"
+            },
+            {
+                "name": "inplace",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            }
+        ]
+    },
+    {
+        "name": "ConstantPad1DOptions",
+        "cpp": "torch::nn::ConstantPadOptions <1>",
+        "cpp_constructor": {
+            "args": ["padding", "value"]
+        },
+        "opts": [
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "value",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "ConstantPad2DOptions",
+        "cpp": "torch::nn::ConstantPadOptions <2>",
+        "cpp_constructor": {
+            "args": ["padding", "value"]
+        },
+        "opts": [
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <4>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 4
+                }
+            },
+            {
+                "name": "value",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "ConstantPad3DOptions",
+        "cpp": "torch::nn::ConstantPadOptions <3>",
+        "cpp_constructor": {
+            "args": ["padding", "value"]
+        },
+        "opts": [
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <6>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 6
+                }
+            },
+            {
+                "name": "value",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "Conv1DOptions",
+        "cpp": "torch::nn::ConvOptions <1>",
+        "cpp_constructor": {
+            "args": ["in_channels", "out_channels", "kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "in_channels",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "out_channels",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::nn::detail::conv_padding_t <1>",
+                "c_type": "TorchNNConvPaddingOptions *",
+                "meta": {
+                    "dims": 1
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "groups",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "bias",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "padding_mode",
+                "c_type": "TorchNNConvPaddingMode"
+            }
+        ]
+    },
+    {
+        "name": "Conv2DOptions",
+        "cpp": "torch::nn::ConvOptions <2>",
+        "cpp_constructor": {
+            "args": ["in_channels", "out_channels", "kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "in_channels",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "out_channels",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::nn::detail::conv_padding_t <2>",
+                "c_type": "TorchNNConvPaddingOptions *",
+                "meta": {
+                    "dims": 2
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "groups",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "bias",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "padding_mode",
+                "c_type": "TorchNNConvPaddingMode"
+            }
+        ]
+    },
+    {
+        "name": "Conv3DOptions",
+        "cpp": "torch::nn::ConvOptions <3>",
+        "cpp_constructor": {
+            "args": ["in_channels", "out_channels", "kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "in_channels",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "out_channels",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::nn::detail::conv_padding_t <3>",
+                "c_type": "TorchNNConvPaddingOptions *",
+                "meta": {
+                    "dims": 3
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "groups",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "bias",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "padding_mode",
+                "c_type": "TorchNNConvPaddingMode"
+            }
+        ]
+    },
+    {
+        "name": "ConvTranspose1DOptions",
+        "cpp": "torch::nn::ConvTransposeOptions <1>",
+        "cpp_constructor": {
+            "args": ["in_channels", "out_channels", "kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "in_channels",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "out_channels",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "output_padding",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "groups",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "bias",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "padding_mode",
+                "c_type": "TorchNNConvPaddingMode"
+            }
+        ]
+    },
+    {
+        "name": "ConvTranspose2DOptions",
+        "cpp": "torch::nn::ConvTransposeOptions <2>",
+        "cpp_constructor": {
+            "args": ["in_channels", "out_channels", "kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "in_channels",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "out_channels",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "output_padding",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "groups",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "bias",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "padding_mode",
+                "c_type": "TorchNNConvPaddingMode"
+            }
+        ]
+    },
+    {
+        "name": "ConvTranspose3DOptions",
+        "cpp": "torch::nn::ConvTransposeOptions <3>",
+        "cpp_constructor": {
+            "args": ["in_channels", "out_channels", "kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "in_channels",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "out_channels",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "output_padding",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "groups",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "bias",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "padding_mode",
+                "c_type": "TorchNNConvPaddingMode"
+            }
+        ]
+    },
+    {
+        "name": "CosineEmbeddingLossOptions",
+        "cpp": "torch::nn::CosineEmbeddingLossOptions",
+        "opts": [
+            {
+                "name": "margin",
+                "c_type": "double",
+                "cpp_type": "double"
+            },
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::CosineEmbeddingLossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "torch::nn::CosineEmbeddingLossOptions::reduction_t",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "CosineSimilarityOptions",
+        "cpp": "torch::nn::CosineSimilarityOptions",
+        "opts": [
+            {
+                "name": "dim",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "eps",
+                "c_type": "double",
+                "cpp_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "CrossEntropyLossOptions",
+        "cpp": "torch::nn::CrossEntropyLossOptions",
+        "opts": [
+            {
+                "name": "weight",
+                "c_type": "TorchTensor *",
+                "cpp_type": "torch::Tensor"
+            },
+            {
+                "name": "ignore_index",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::CrossEntropyLossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "torch::nn::CrossEntropyLossOptions::reduction_t",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            },
+            {
+                "name": "label_smoothing",
+                "c_type": "double",
+                "cpp_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "CrossMapLRN2DOptions",
+        "cpp": "torch::nn::CrossMapLRN2dOptions",
+        "cpp_constructor": {
+            "args": ["size"]
+        },
+        "opts": [
+            {
+                "name": "size",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "alpha",
+                "c_type": "double",
+                "cpp_type": "double"
+            },
+            {
+                "name": "beta",
+                "c_type": "double",
+                "cpp_type": "double"
+            },
+            {
+                "name": "k",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            }
+        ]
+    },
+    {
+        "name": "CTCLossOptions",
+        "cpp": "torch::nn::CTCLossOptions",
+        "opts": [
+            {
+                "name": "blank",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "reduction",
+                "c_type": "TorchNNLossReductionMode",
+                "cpp_type": "torch::nn::CTCLossOptions::reduction_t",
+                "meta": {
+                    "variant_type": "torch::nn::CTCLossOptions::reduction_t",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            },
+            {
+                "name": "zero_infinity",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            }
+        ]
+    },
+    {
+        "name": "DropoutOptions",
+        "cpp": "torch::nn::DropoutOptions",
+        "opts": [
+            {
+                "name": "p",
+                "c_type": "double",
+                "cpp_type": "double"
+            },
+            {
+                "name": "inplace",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            }
+        ]
+    },
+    {
+        "name": "ELUOptions",
+        "cpp": "torch::nn::ELUOptions",
+        "opts": [
+            {
+                "name": "alpha",
+                "c_type": "double",
+                "cpp_type": "double"
+            },
+            {
+                "name": "inplace",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            }
+        ]
+    },
+    {
+        "name": "EmbeddingBagFromPretrainedOptions",
+        "cpp": "torch::nn::EmbeddingBagFromPretrainedOptions",
+        "opts": [
+            {
+                "name": "freeze",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "max_norm",
+                "cpp_type": "c10::optional<double>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "double"
+                }
+            },
+            {
+                "name": "norm_type",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "scale_grad_by_freq",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "mode",
+                "c_type": "TorchNNEmbeddingBagMode",
+                "cpp_type": "torch::nn::EmbeddingBagMode"
+            },
+            {
+                "name": "sparse",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "include_last_offset",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "padding_idx",
+                "cpp_type": "c10::optional <int64_t>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "int64_t"
+                }
+            }
+        ]
+    },
+    {
+        "name": "EmbeddingBagOptions",
+        "cpp": "torch::nn::EmbeddingBagOptions",
+        "cpp_constructor": {
+            "args": ["num_embeddings", "embedding_dim"]
+        },
+        "opts": [
+            {
+                "name": "num_embeddings",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "embedding_dim",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "max_norm",
+                "cpp_type": "c10::optional<double>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "double"
+                }
+            },
+            {
+                "name": "norm_type",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "scale_grad_by_freq",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "mode",
+                "c_type": "TorchNNEmbeddingBagMode",
+                "cpp_type": "torch::nn::EmbeddingBagMode"
+            },
+            {
+                "name": "sparse",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "_weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "include_last_offset",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "padding_idx",
+                "cpp_type": "c10::optional <int64_t>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "int64_t"
+                }
+            }
+        ]
+    },
+    {
+        "name": "EmbeddingFromPretrainedOptions",
+        "cpp": "torch::nn::EmbeddingFromPretrainedOptions",
+        "opts": [
+            {
+                "name": "freeze",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "padding_idx",
+                "cpp_type": "c10::optional <int64_t>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "int64_t"
+                }
+            },
+            {
+                "name": "max_norm",
+                "cpp_type": "c10::optional<double>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "double"
+                }
+            },
+            {
+                "name": "norm_type",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "scale_grad_by_freq",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "sparse",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "EmbeddingOptions",
+        "cpp": "torch::nn::EmbeddingOptions",
+        "cpp_constructor": {
+            "args": ["num_embeddings", "embedding_dim"]
+        },
+        "opts": [
+            {
+                "name": "num_embeddings",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "embedding_dim",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "padding_idx",
+                "cpp_type": "c10::optional <int64_t>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "int64_t"
+                }
+            },
+            {
+                "name": "max_norm",
+                "cpp_type": "c10::optional<double>",
+                "c_type": "TorchOptionalValue *",
+                "meta": {
+                    "type": "double"
+                }
+            },
+            {
+                "name": "norm_type",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "scale_grad_by_freq",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "sparse",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "_weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            }
+        ]
+    },
+    {
+        "name": "FlattenOptions",
+        "cpp": "torch::nn::FlattenOptions",
+        "opts": [
+            {
+                "name": "start_dim",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "end_dim",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            }
+        ]
+    },
+    {
+        "name": "FoldOptions",
+        "cpp": "torch::nn::FoldOptions",
+        "cpp_constructor": {
+            "args": ["output_size", "kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "output_size",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "type": "int64_t",
+                    "length": "2"
+                }
+            },
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "type": "int64_t",
+                    "length": "2"
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "type": "int64_t",
+                    "length": "2"
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "type": "int64_t",
+                    "length": "2"
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "type": "int64_t",
+                    "length": "2"
+                }
+            }
+        ]
+    },
+    {
+        "name": "FractionalMaxPool1DOptions",
+        "cpp": "torch::nn::FractionalMaxPoolOptions <1>",
+        "cpp_constructor": {
+            "args": ["kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "type": "int64_t",
+                    "length": "1"
+                }
+            },
+            {
+                "name": "output_size",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "type": "int64_t",
+                    "length": "1"
+                }
+            },
+            {
+                "name": "output_ratio",
+                "cpp_type": "torch::ExpandingArrayDouble <1>",
+                "c_type": "double *",
+                "meta": {
+                    "type": "double",
+                    "length": "1"
+                }
+            },
+            {
+                "name": "_random_samples",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            }
+        ]
+    },
+    {
+        "name": "FractionalMaxPool2DOptions",
+        "cpp": "torch::nn::FractionalMaxPoolOptions <2>",
+        "cpp_constructor": {
+            "args": ["kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "type": "int64_t",
+                    "length": "2"
+                }
+            },
+            {
+                "name": "output_size",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "type": "int64_t",
+                    "length": "2"
+                }
+            },
+            {
+                "name": "output_ratio",
+                "cpp_type": "torch::ExpandingArrayDouble <2>",
+                "c_type": "double *",
+                "meta": {
+                    "type": "double",
+                    "length": "2"
+                }
+            },
+            {
+                "name": "_random_samples",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            }
+        ]
+    },
+    {
+        "name": "FractionalMaxPool3DOptions",
+        "cpp": "torch::nn::FractionalMaxPoolOptions <3>",
+        "cpp_constructor": {
+            "args": ["kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "type": "int64_t",
+                    "length": "3"
+                }
+            },
+            {
+                "name": "output_size",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "type": "int64_t",
+                    "length": "3"
+                }
+            },
+            {
+                "name": "output_ratio",
+                "cpp_type": "torch::ExpandingArrayDouble <3>",
+                "c_type": "double *",
+                "meta": {
+                    "type": "double",
+                    "length": "3"
+                }
+            },
+            {
+                "name": "_random_samples",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            }
+        ]
+    },
+    {
+        "name": "GELUOptions",
+        "cpp": "torch::nn::GELUOptions",
+        "opts": [
+            {
+                "name": "approximate",
+                "cpp_type": "std::string",
+                "c_type": "char *"
+            }
+        ]
+    },
+    {
+        "name": "GLUOptions",
+        "cpp": "torch::nn::GLUOptions",
+        "cpp_constructor": {
+            "args": ["dim"]
+        },
+        "opts": [
+            {
+                "name": "dim",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            }
+        ]
+    },
+    {
+        "name": "GroupNormOptions",
+        "cpp": "torch::nn::GroupNormOptions",
+        "cpp_constructor": {
+            "args": ["num_groups", "num_channels"]
+        },
+        "opts": [
+            {
+                "name": "num_groups",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "num_channels",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "eps",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "affine",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "GRUCellOptions",
+        "cpp": "torch::nn::GRUCellOptions",
+        "cpp_constructor": {
+            "args": ["input_size", "hidden_size"]
+        },
+        "opts": [
+            {
+                "name": "input_size",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "hidden_size",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "bias",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            }
+        ]
+    },
+    {
+        "name": "GRUOptions",
+        "cpp": "torch::nn::GRUOptions",
+        "cpp_constructor": {
+            "args": ["input_size", "hidden_size"]
+        },
+        "opts": [
+            {
+                "name": "input_size",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "hidden_size",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "num_layers",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "bias",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "batch_first",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "dropout",
+                "c_type": "double",
+                "cpp_type": "double"
+            },
+            {
+                "name": "bidirectional",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            }
+        ]
+    },
+    {
+        "name": "HardshrinkOptions",
+        "cpp": "torch::nn::HardshrinkOptions",
+        "cpp_constructor": {
+            "args": ["lambda"]
+        },
+        "opts": [
+            {
+                "name": "lambda",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "HardtanhOptions",
+        "cpp": "torch::nn::HardtanhOptions",
+        "opts": [
+            {
+                "name": "min_val",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "max_val",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "inplace",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "HingeEmbeddingLossOptions",
+        "cpp": "torch::nn::HingeEmbeddingLossOptions",
+        "opts": [
+            {
+                "name": "margin",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::HingeEmbeddingLossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "HuberLossOptions",
+        "cpp": "torch::nn::HuberLossOptions",
+        "opts": [
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::BCELossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            },
+            {
+                "name": "delta",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "InstanceNormOptions",
+        "cpp": "torch::nn::InstanceNormOptions",
+        "cpp_constructor": {
+            "args": [
+                "num_features"
+            ]
+        },
+        "opts": [
+            {
+                "name": "num_features",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "eps",
+                "c_type": "double",
+                "cpp_type": "double"
+            },
+            {
+                "name": "momentum",
+                "c_type": "double",
+                "cpp_type": "double"
+            },
+            {
+                "name": "affine",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "track_running_stats",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            }
+        ]
+    },
+    {
+        "name": "KLDivLossOptions",
+        "cpp": "torch::nn::KLDivLossOptions",
+        "opts": [
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::KLDivLossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kBatchMean, torch::enumtype::kSum, torch::enumtype::kMean>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            },
+            {
+                "name": "log_target",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "L1LossOptions",
+        "cpp": "torch::nn::L1LossOptions",
+        "opts": [
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::L1LossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "LayerNormOptions",
+        "cpp": "torch::nn::LayerNormOptions",
+        "cpp_constructor": {
+            "args": [
+                "normalized_shape"
+            ]
+        },
+        "opts": [
+            {
+                "name": "normalized_shape",
+                "cpp_type": "std::vector<int64_t>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": "normalized_shape_length",
+                    "type": "int64_t",
+                    "convert_pipeline": [
+                        "torch_g_array_to_vector <{meta[type]}> ({name}, {meta[length]})"
+                    ]
+                }
+            },
+            {
+                "name": "eps",
+                "c_type": "double",
+                "cpp_type": "double"
+            },
+            {
+                "name": "elementwise_affine",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            }
+        ]
+    },
+    {
+        "name": "LeakyReLUOptions",
+        "cpp": "torch::nn::LeakyReLUOptions",
+        "opts": [
+            {
+                "name": "negative_slope",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "inplace",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "LinearOptions",
+        "cpp": "torch::nn::LinearOptions",
+        "cpp_constructor": {
+            "args": [
+                "in_features", "out_features"
+            ]
+        },
+        "opts": [
+            {
+                "name": "in_features",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "out_features",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "bias",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "LocalResponseNormOptions",
+        "cpp": "torch::nn::LocalResponseNormOptions",
+        "cpp_constructor": {
+            "args": [
+                "size"
+            ]
+        },
+        "opts": [
+            {
+                "name": "size",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "alpha",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "beta",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "k",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "LogSoftmaxOptions",
+        "cpp": "torch::nn::LogSoftmaxOptions",
+        "cpp_constructor": {
+            "args": [
+                "dim"
+            ]
+        },
+        "opts": [
+            {
+                "name": "dim",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            }
+        ]
+    },
+    {
+        "name": "LPPool1DOptions",
+        "cpp": "torch::nn::LPPoolOptions <1>",
+        "cpp_constructor": {
+            "args": [
+                "norm_type", "kernel_size"
+            ]
+        },
+        "opts": [
+            {
+                "name": "norm_type",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "ceil_mode",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "LPPool2DOptions",
+        "cpp": "torch::nn::LPPoolOptions <2>",
+        "cpp_constructor": {
+            "args": [
+                "norm_type", "kernel_size"
+            ]
+        },
+        "opts": [
+            {
+                "name": "norm_type",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "ceil_mode",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "LPPool3DOptions",
+        "cpp": "torch::nn::LPPoolOptions <3>",
+        "cpp_constructor": {
+            "args": [
+                "norm_type", "kernel_size"
+            ]
+        },
+        "opts": [
+            {
+                "name": "norm_type",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "ceil_mode",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "LSTMCellOptions",
+        "cpp": "torch::nn::LSTMCellOptions",
+        "cpp_constructor": {
+            "args": ["input_size", "hidden_size"]
+        },
+        "opts": [
+            {
+                "name": "input_size",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "hidden_size",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "bias",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            }
+        ]
+    },
+    {
+        "name": "LSTMOptions",
+        "cpp": "torch::nn::LSTMOptions",
+        "cpp_constructor": {
+            "args": ["input_size", "hidden_size"]
+        },
+        "opts": [
+            {
+                "name": "input_size",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "hidden_size",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "num_layers",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "bias",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "batch_first",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "dropout",
+                "c_type": "double",
+                "cpp_type": "double"
+            },
+            {
+                "name": "bidirectional",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "proj_size",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            }
+        ]
+    },
+    {
+        "name": "MarginRankingLossOptions",
+        "cpp": "torch::nn::MarginRankingLossOptions",
+        "opts": [
+            {
+                "name": "margin",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::MarginRankingLossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "MaxPool1DOptions",
+        "cpp": "torch::nn::MaxPoolOptions <1>",
+        "cpp_constructor": {
+            "args": [
+                "kernel_size"
+            ]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "ceil_mode",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "MaxPool2DOptions",
+        "cpp": "torch::nn::MaxPoolOptions <2>",
+        "cpp_constructor": {
+            "args": [
+                "kernel_size"
+            ]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "ceil_mode",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "MaxPool3DOptions",
+        "cpp": "torch::nn::MaxPoolOptions <3>",
+        "cpp_constructor": {
+            "args": [
+                "kernel_size"
+            ]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "dilation",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "ceil_mode",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "MaxUnpool1DOptions",
+        "cpp": "torch::nn::MaxUnpoolOptions <1>",
+        "cpp_constructor": {
+            "args": [
+                "kernel_size"
+            ]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <1>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "MaxUnpool2DOptions",
+        "cpp": "torch::nn::MaxUnpoolOptions <2>",
+        "cpp_constructor": {
+            "args": [
+                "kernel_size"
+            ]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            }
+        ]
+    },
+    {
+        "name": "MaxUnpool3DOptions",
+        "cpp": "torch::nn::MaxUnpoolOptions <3>",
+        "cpp_constructor": {
+            "args": [
+                "kernel_size"
+            ]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "stride",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            },
+            {
+                "name": "padding",
+                "cpp_type": "torch::ExpandingArray <3>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 3
+                }
+            }
+        ]
+    },
+    {
+        "name": "MSELossOptions",
+        "cpp": "torch::nn::MSELossOptions",
+        "opts": [
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::MSELossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "MultiheadAttentionOptions",
+        "cpp": "torch::nn::MultiheadAttentionOptions",
+        "cpp_constructor": {
+            "args": [
+                "embed_dim",
+                "num_heads"
+            ]
+        },
+        "opts": [
+            {
+                "name": "embed_dim",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "num_heads",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "dropout",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "bias",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "add_bias_kv",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "add_zero_attn",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "kdim",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "vdim",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            }
+        ]
+    },
+    {
+        "name": "MultiLabelMarginLossOptions",
+        "cpp": "torch::nn::MultiLabelMarginLossOptions",
+        "opts": [
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::MultiLabelMarginLossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "MultiLabelSoftMarginLossOptions",
+        "cpp": "torch::nn::MultiLabelSoftMarginLossOptions",
+        "opts": [
+            {
+                "name": "weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::MultiLabelSoftMarginLossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "MultiMarginLossOptions",
+        "cpp": "torch::nn::MultiMarginLossOptions",
+        "opts": [
+            {
+                "name": "p",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "margin",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::MultiMarginLossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "NLLLossOptions",
+        "cpp": "torch::nn::NLLLossOptions",
+        "opts": [
+            {
+                "name": "weight",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "ignore_index",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::NLLLossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "PairwiseDistanceOptions",
+        "cpp": "torch::nn::PairwiseDistanceOptions",
+        "opts": [
+            {
+                "name": "p",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "eps",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "keepdim",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "PixelShuffleOptions",
+        "cpp": "torch::nn::PixelShuffleOptions",
+        "cpp_constructor": {
+            "args": [
+                "upscale_factor"
+            ]
+        },
+        "opts": [
+            {
+                "name": "upscale_factor",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            }
+        ]
+    },
+    {
+        "name": "PixelUnshuffleOptions",
+        "cpp": "torch::nn::PixelUnshuffleOptions",
+        "cpp_constructor": {
+            "args": [
+                "downscale_factor"
+            ]
+        },
+        "opts": [
+            {
+                "name": "downscale_factor",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            }
+        ]
+    },
+    {
+        "name": "PoissonNLLLossOptions",
+        "cpp": "torch::nn::PoissonNLLLossOptions",
+        "opts": [
+            {
+                "name": "log_input",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "full",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "reduction",
+                "cpp_type": "torch::nn::PoissonNLLLossOptions::reduction_t",
+                "c_type": "TorchNNLossReductionMode",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "PReLUOptions",
+        "cpp": "torch::nn::PReLUOptions",
+        "opts": [
+            {
+                "name": "num_parameters",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "init",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "ReflectionPad1DOptions",
+        "cpp": "torch::nn::ReflectionPadOptions <1>",
+        "cpp_constructor": {
+            "args": ["padding"]
+        },
+        "opts": [
+            {
+                "name": "padding",
+                "cpp_type": "c10::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            }
+        ]
+    },
+    {
+        "name": "ReflectionPad2DOptions",
+        "cpp": "torch::nn::ReflectionPadOptions <2>",
+        "cpp_constructor": {
+            "args": ["padding"]
+        },
+        "opts": [
+            {
+                "name": "padding",
+                "cpp_type": "c10::ExpandingArray <4>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 4
+                }
+            }
+        ]
+    },
+    {
+        "name": "ReflectionPad3DOptions",
+        "cpp": "torch::nn::ReflectionPadOptions <3>",
+        "cpp_constructor": {
+            "args": ["padding"]
+        },
+        "opts": [
+            {
+                "name": "padding",
+                "cpp_type": "c10::ExpandingArray <6>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 6
+                }
+            }
+        ]
+    },
+    {
+        "name": "ReLU6Options",
+        "cpp": "torch::nn::ReLU6Options",
+        "opts": [
+            {
+                "name": "inplace",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "ReLUOptions",
+        "cpp": "torch::nn::ReLUOptions",
+        "opts": [
+            {
+                "name": "inplace",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "ReplicationPad1DOptions",
+        "cpp": "torch::nn::ReplicationPadOptions <1>",
+        "cpp_constructor": {
+            "args": ["padding"]
+        },
+        "opts": [
+            {
+                "name": "padding",
+                "cpp_type": "c10::ExpandingArray <2>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 2
+                }
+            }
+        ]
+    },
+    {
+        "name": "ReplicationPad2DOptions",
+        "cpp": "torch::nn::ReplicationPadOptions <2>",
+        "cpp_constructor": {
+            "args": ["padding"]
+        },
+        "opts": [
+            {
+                "name": "padding",
+                "cpp_type": "c10::ExpandingArray <4>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 4
+                }
+            }
+        ]
+    },
+    {
+        "name": "ReplicationPad3DOptions",
+        "cpp": "torch::nn::ReplicationPadOptions <3>",
+        "cpp_constructor": {
+            "args": ["padding"]
+        },
+        "opts": [
+            {
+                "name": "padding",
+                "cpp_type": "c10::ExpandingArray <6>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": 6
+                }
+            }
+        ]
+    },
+    {
+        "name": "RNNCellOptions",
+        "cpp": "torch::nn::RNNCellOptions",
+        "cpp_constructor": {
+            "args": ["input_size", "hidden_size"]
+        },
+        "opts": [
+            {
+                "name": "input_size",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "hidden_size",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "bias",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "nonlinearity",
+                "cpp_type": "torch::nn::RNNCellOptions::nonlinearity_t",
+                "c_type": "TorchNNRNNNonlinearityType",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kReLU, torch::enumtype::kTanh>",
+                    "convert_pipeline": [
+                        "torch_nn_rnn_nonlinearity_type_to_real_rnn_nonlinearity_type ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "RNNOptions",
+        "cpp": "torch::nn::RNNOptions",
+        "cpp_constructor": {
+            "args": ["input_size", "hidden_size"]
+        },
+        "opts": [
+            {
+                "name": "input_size",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "hidden_size",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "num_layers",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "bias",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "nonlinearity",
+                "cpp_type": "torch::nn::RNNCellOptions::nonlinearity_t",
+                "c_type": "TorchNNRNNNonlinearityType",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kReLU, torch::enumtype::kTanh>",
+                    "convert_pipeline": [
+                        "torch_nn_rnn_nonlinearity_type_to_real_rnn_nonlinearity_type ({name})"
+                    ]
+                }
+            },
+            {
+                "name": "batch_first",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            },
+            {
+                "name": "dropout",
+                "c_type": "double",
+                "cpp_type": "double"
+            },
+            {
+                "name": "bidirectional",
+                "c_type": "gboolean",
+                "cpp_type": "bool"
+            }
+        ]
+    },
+    {
+        "name": "RReLUOptions",
+        "cpp": "torch::nn::RReLUOptions",
+        "opts": [
+            {
+                "name": "lower",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "upper",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "inplace",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "SELUOptions",
+        "cpp": "torch::nn::SELUOptions",
+        "opts": [
+            {
+                "name": "inplace",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "SmoothL1LossOptions",
+        "cpp": "torch::nn::SmoothL1LossOptions",
+        "opts": [
+            {
+                "name": "reduction",
+                "c_type": "TorchNNLossReductionMode",
+                "cpp_type": "torch::nn::SmoothL1LossOptions::reduction_t",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            },
+            {
+                "name": "beta",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "SoftMarginLossOptions",
+        "cpp": "torch::nn::SoftMarginLossOptions",
+        "opts": [
+            {
+                "name": "reduction",
+                "c_type": "TorchNNLossReductionMode",
+                "cpp_type": "torch::nn::SoftMarginLossOptions::reduction_t",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "SoftmaxOptions",
+        "cpp": "torch::nn::SoftmaxOptions",
+        "cpp_constructor": {
+            "args": [
+                "dim"
+            ]
+        },
+        "opts": [
+            {
+                "name": "dim",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            }
+        ]
+    },
+    {
+        "name": "SoftminOptions",
+        "cpp": "torch::nn::SoftminOptions",
+        "cpp_constructor": {
+            "args": [
+                "dim"
+            ]
+        },
+        "opts": [
+            {
+                "name": "dim",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            }
+        ]
+    },
+    {
+        "name": "SoftplusOptions",
+        "cpp": "torch::nn::SoftplusOptions",
+        "opts": [
+            {
+                "name": "beta",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "threshold",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "SoftshrinkOptions",
+        "cpp": "torch::nn::SoftshrinkOptions",
+        "cpp_constructor": {
+            "args": [
+                "lambda"
+            ]
+        },
+        "opts": [
+            {
+                "name": "lambda",
+                "cpp_type": "double",
+                "c_type": "double"
+            }
+        ]
+    },
+    {
+        "name": "ThresholdOptions",
+        "cpp": "torch::nn::ThresholdOptions",
+        "cpp_constructor": {
+            "args": ["threshold", "value"]
+        },
+        "opts": [
+            {
+                "name": "threshold",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "value",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "inplace",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            }
+        ]
+    },
+    {
+        "name": "TransformerDecoderLayerOptions",
+        "cpp": "torch::nn::TransformerDecoderLayerOptions",
+        "cpp_constructor": {
+            "args": ["d_model", "nhead"]
+        },
+        "opts": [
+            {
+                "name": "d_model",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "nhead",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "dim_feedforward",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "dropout",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "activation",
+                "cpp_type": "torch::nn::TransformerDecoderLayerOptions::activation_t",
+                "c_type": "TorchNNTransformerActivationType",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kReLU, torch::enumtype::kGELU>",
+                    "convert_pipeline": [
+                        "torch_nn_transformer_activation_type_to_real_transformer_activation_type ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "TransformerDecoderOptions",
+        "cpp": "torch::nn::TransformerDecoderOptions",
+        "cpp_constructor": {
+            "args": ["decoder_layer", "num_layers"]
+        },
+        "opts": [
+            {
+                "name": "decoder_layer",
+                "cpp_type": "torch::nn::TransformerDecoderLayer",
+                "c_type": "TorchNNTransformerDecoderLayer *"
+            },
+            {
+                "name": "num_layers",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "norm",
+                "cpp_type": "torch::nn::AnyModule",
+                "c_type": "TorchNNAnyModuleCastable *"
+            }
+        ]
+    },
+    {
+        "name": "TransformerEncoderLayerOptions",
+        "cpp": "torch::nn::TransformerEncoderLayerOptions",
+        "cpp_constructor": {
+            "args": ["d_model", "nhead"]
+        },
+        "opts": [
+            {
+                "name": "d_model",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "nhead",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "dim_feedforward",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "dropout",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "activation",
+                "cpp_type": "torch::nn::TransformerDecoderLayerOptions::activation_t",
+                "c_type": "TorchNNTransformerActivationType",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kReLU, torch::enumtype::kGELU>",
+                    "convert_pipeline": [
+                        "torch_nn_transformer_activation_type_to_real_transformer_activation_type ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "TransformerEncoderOptions",
+        "cpp": "torch::nn::TransformerEncoderOptions",
+        "cpp_constructor": {
+            "args": ["encoder_layer", "num_layers"]
+        },
+        "opts": [
+            {
+                "name": "encoder_layer",
+                "cpp_type": "torch::nn::TransformerEncoderLayer",
+                "c_type": "TorchNNTransformerEncoderLayer *"
+            },
+            {
+                "name": "num_layers",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "norm",
+                "cpp_type": "torch::nn::AnyModule",
+                "c_type": "TorchNNAnyModuleCastable *"
+            }
+        ]
+    },
+    {
+        "name": "TransformerOptions",
+        "cpp": "torch::nn::TransformerOptions",
+        "cpp_constructor": {
+            "args": ["d_model", "nhead"]
+        },
+        "opts": [
+            {
+                "name": "d_model",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "nhead",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "num_encoder_layers",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "num_decoder_layers",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "dim_feedforward",
+                "cpp_type": "int64_t",
+                "c_type": "int64_t"
+            },
+            {
+                "name": "dropout",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "activation",
+                "cpp_type": "torch::nn::TransformerOptions::activation_t",
+                "c_type": "TorchNNTransformerActivationType",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kReLU, torch::enumtype::kGELU>",
+                    "convert_pipeline": [
+                        "torch_nn_transformer_activation_type_to_real_transformer_activation_type ({name})"
+                    ]
+                }
+            },
+            {
+                "name": "custom_encoder",
+                "cpp_type": "torch::nn::AnyModule",
+                "c_type": "TorchNNAnyModuleCastable *"
+            },
+            {
+                "name": "custom_decoder",
+                "cpp_type": "torch::nn::AnyModule",
+                "c_type": "TorchNNAnyModuleCastable *"
+            }
+        ]
+    },
+    {
+        "name": "TripletMarginLossOptions",
+        "cpp": "torch::nn::TripletMarginLossOptions",
+        "opts": [
+            {
+                "name": "margin",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "p",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "eps",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "swap",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "reduction",
+                "c_type": "TorchNNLossReductionMode",
+                "cpp_type": "torch::nn::TripletMarginLossOptions::reduction_t",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "TripletMarginWithDistanceLossOptions",
+        "cpp": "torch::nn::TripletMarginWithDistanceLossOptions",
+        "opts": [
+            {
+                "name": "distance_function",
+                "cpp_type": "c10::optional<torch::nn::TripletMarginWithDistanceLossOptions::distance_function_t>",
+                "c_type": "TorchNNDistanceFunction",
+                "meta": {
+                    "func_data_ptr": "distance_function_data",
+                    "func_data_ptr_destroy": "distance_function_data_destroy",
+                    "args": [
+                        {
+                            "name": "first",
+                            "c_type": "TorchTensor *",
+                            "cpp_type": "torch::Tensor const &"
+                        },
+                        {
+                            "name": "second",
+                            "c_type": "TorchTensor *",
+                            "cpp_type": "torch::Tensor const &"
+                        }
+                    ],
+                    "return": {
+                        "c_type": "TorchTensor *",
+                        "cpp_type": "torch::Tensor"
+                    }
+                }
+            },
+            {
+                "name": "margin",
+                "cpp_type": "double",
+                "c_type": "double"
+            },
+            {
+                "name": "swap",
+                "cpp_type": "bool",
+                "c_type": "gboolean"
+            },
+            {
+                "name": "reduction",
+                "c_type": "TorchNNLossReductionMode",
+                "cpp_type": "torch::nn::TripletMarginWithDistanceLossOptions::reduction_t",
+                "meta": {
+                    "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
+                    "convert_pipeline": [
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "UnflattenOptions",
+        "cpp": "torch::nn::UnflattenOptions",
+        "cpp_constructor": {
+            "args": [
+                "dim", "sizes"
+            ]
+        },
+        "opts": [
+            {
+                "name": "dim",
+                "c_type": "int64_t",
+                "cpp_type": "int64_t"
+            },
+            {
+                "name": "dimname",
+                "c_type": "char *",
+                "cpp_type": "std::string"
+            },
+            {
+                "name": "sizes",
+                "cpp_type": "std::vector <int64_t>",
+                "c_type": "int64_t *",
+                "meta": {
+                    "length": "size_length",
+                    "type": "int64_t",
+                    "convert_pipeline": [
+                        "torch_g_array_to_vector <{meta[type]}> ({name}, {meta[length]})"
+                    ]
+                }
+            },
+            {
+                "name": "namedshape",
+                "c_type": "TorchNNNamedshapeElement *",
+                "cpp_type": "std::vector<std::pair<std::string, int64_t>>>",
+                "meta": {
+                    "length": "namedshape_length",
+                    "type": "TorchNNNamedshapeElement",
+                    "convert_pipeline": [
+                        "torch_nn_namedshape_array_to_real_namedshape ({name}, {name}->len)"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "UnfoldOptions",
+        "cpp": "torch::nn::UnfoldOptions",
+        "cpp_constructor": {
+            "args": ["kernel_size"]
+        },
+        "opts": [
+            {
+                "name": "kernel_size",
+                "c_type": "int64_t *",
+                "cpp_type": "c10::ExpandingArray <2>",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "dilation",
+                "c_type": "int64_t *",
+                "cpp_type": "c10::ExpandingArray <2>",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "padding",
+                "c_type": "int64_t *",
+                "cpp_type": "c10::ExpandingArray <2>",
+                "meta": {
+                    "length": 2
+                }
+            },
+            {
+                "name": "stride",
+                "c_type": "int64_t *",
+                "cpp_type": "c10::ExpandingArray <2>",
+                "meta": {
+                    "length": 2
+                }
+            }
+        ]
+    },
+    {
+        "name": "UpsampleOptions",
+        "cpp": "torch::nn::UpsampleOptions",
+        "opts": [
+            {
+                "name": "size",
+                "c_type": "int64_t *",
+                "cpp_type": "c10::optional <std::vector <int64_t>>",
+                "meta": {
+                    "length": "size_length",
+                    "type": "int64_t",
+                    "convert_pipeline": [
+                        "torch_g_array_to_vector <{meta[type]}> ({name}, {meta[length]})"
+                    ]
+                }
+            },
+            {
+                "name": "scale_factor",
+                "c_type": "double *",
+                "cpp_type": "std::vector <double>",
+                "meta": {
+                    "length": "scale_factor_length",
+                    "type": "double",
+                    "convert_pipeline": [
+                        "torch_g_array_to_vector <{meta[type]}> ({name}, {meta[length]})"
+                    ]
+                }
+            },
+            {
+                "name": "mode",
+                "c_type": "TorchNNUpsampleMode",
+                "cpp_type": "torch::nn::UpsampleOptions::mode_t",
+                "meta": {
+                    "convert_pipeline": [
+                        "torch_nn_upsample_mode_to_real_upsample_mode ({name})"
+                    ]
+                }
+            },
+            {
+                "name": "align_corners",
+                "cpp_type": "c10::optional <bool>",
+                "c_type": "gboolean *"
+            }
+        ]
+    }
+]
