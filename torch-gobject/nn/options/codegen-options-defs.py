@@ -65,6 +65,7 @@ STORAGE = {
 ACCESS_FUNCS = {
     "GArray *": "&(g_array_index ({name}, {element_type}, 0))",
     "GPtrArray *": "static_cast <{element_type} *> ({name}->pdata)",
+    "TorchCallbackData *": "{name}->callback",
 }
 C_TYPE_TO_INTROSPECTION_TYPE = {"int64_t": "gint64"}
 
