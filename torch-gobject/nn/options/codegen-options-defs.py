@@ -185,12 +185,25 @@ def maybe_yield_opt_to_array_constructor_arg(meta):
             yield ("size_t", length)
 
 
+def maybe_yield_opt_to_callback_constructor_arg(meta):
+    func_data_ptr = meta.get("func_data_ptr", None)
+
+    if func_data_ptr is not None:
+        yield ("gpointer", func_data_ptr)
+
+    func_data_ptr_destroy = meta.get("func_data_ptr_destroy", None)
+
+    if func_data_ptr_destroy is not None:
+        yield ("GDestroyNotify", func_data_ptr_destroy)
+
+
 def opts_to_constructor_args(opts):
     for opt_info in opts:
         yield (opt_info["c_type"], opt_info["name"])
 
         meta = opt_info.get("meta", {})
         yield from maybe_yield_opt_to_array_constructor_arg(meta)
+        yield from maybe_yield_opt_to_callback_constructor_arg(meta)
 
 
 def print_opt_struct_header(opt_struct):
