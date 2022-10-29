@@ -408,8 +408,8 @@ def generate_source(options):
 def access_underlying(variable, opt_info):
     if opt_info["c_type"] in STORAGE:
         storage_info = STORAGE[opt_info["c_type"]]
-        return ACCESS_FUNCS.get(storage_info["container"], lambda x, t: x)(
-            variable, storage_info["element_type"]
+        return ACCESS_FUNCS.get(storage_info["container"], variable).format(
+            name=variable, element_type=storage_info["element_type"]
         )
 
     return variable
