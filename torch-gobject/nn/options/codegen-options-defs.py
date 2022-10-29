@@ -362,6 +362,7 @@ def print_header(opts):
 def generate_header(options):
     print("#include <torch-gobject/torch-optional-value.h>")
     print("#include <torch-gobject/torch-tensor.h>")
+    print("#include <torch-gobject/torch-callback-data.h>")
     print("#include <torch-gobject/nn/options/torch-nn-conv-padding-mode.h>")
     print("#include <torch-gobject/nn/options/torch-nn-conv-padding-options.h>")
     print("#include <torch-gobject/nn/options/torch-nn-embedding-bag-mode.h>")
@@ -391,6 +392,7 @@ def print_source(opts):
 
 def generate_source(options):
     print("#include <gio/gio.h>")
+    print("#include <torch-gobject/torch-callback-data-internal.h>")
     print("#include <torch-gobject/torch-tensor.h>")
     print("#include <torch-gobject/torch-tensor-internal.h>")
     print("#include <torch-gobject/torch-optional-value.h>")
