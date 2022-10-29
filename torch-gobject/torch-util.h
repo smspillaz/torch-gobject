@@ -63,8 +63,23 @@ namespace
     return c10::optional <T> (*ptr);
   }
 
+  namespace internal
+  {
+    template <typename T>
+    struct ValueConversion
+    {
+      typedef T Type;
+    };
+
+    template <>
+    struct ValueConversion<gboolean>
+    {
+      typedef bool Type;
+    };
+  }
+
   template <typename T>
-  c10::optional <T>
+  c10::optional <typename internal::ValueConversion<T>::Type>
   torch_optional_value_to_c10_optional (TorchOptionalValue *value, T (*getter)(TorchOptionalValue *))
   {
     if (value == nullptr)
