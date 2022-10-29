@@ -245,21 +245,30 @@ def print_opt_struct_header(opt_struct):
     copy = f"{snake_name}_copy"
 
     print("")
+    print("/**")
+    print(
+        " * "
+        + (
+            "\n * ".join(
+                [f"{struct_name}:"]
+                + [
+                    format_struct_member_annotation(opt_info)
+                    for opt_info in opt_struct["opts"]
+                ]
+            )
+        )
+    )
+    print(" */")
     print("typedef struct {")
     for opt_info in opt_struct["opts"]:
-        storage_type = (
-            STORAGE[opt_info["c_type"]]["container"]
+        storage_info = STORAGE.get(opt_info["c_type"])
+        storage_c_type = (
+            storage_info["container"]
             if opt_info["c_type"] in STORAGE
             else opt_info["c_type"]
         )
-        storage_element_type = (
-            f"/*< (element-type {C_TYPE_TO_INTROSPECTION_TYPE[STORAGE[opt_info['c_type']]['element_type']]}) >*/"
-            if opt_info["c_type"] in STORAGE
-            else ""
-        )
-        if storage_element_type:
-            print(indent(storage_element_type, 2))
-        print(indent(f"{storage_type} {opt_info['name']};", 2))
+
+        print(indent(f"{storage_c_type} {opt_info['name']};", 2))
     print(f"}} {struct_name};")
     print("")
 
