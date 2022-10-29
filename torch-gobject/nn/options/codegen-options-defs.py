@@ -106,7 +106,13 @@ def convert_c_to_cpp(opt_info, name):
         else opt_info["c_type"]
     )
     meta = (
-        {"type": STORAGE[opt_info["c_type"]]["element_type"]}
+        {
+            **opt_info.get("meta", {}),
+            "type": STORAGE[opt_info["c_type"]]["element_type"],
+            "length": ACCESS_LENGTH_FUNCS[
+                STORAGE[opt_info["c_type"]]["container"]
+            ].format(name=name),
+        }
         if opt_info["c_type"] in STORAGE
         else opt_info.get("meta", {})
     )
