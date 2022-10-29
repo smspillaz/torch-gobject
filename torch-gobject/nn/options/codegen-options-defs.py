@@ -24,27 +24,22 @@ def indent(text, indent):
 
 
 CONVERSIONS = {
-    "GArray *": lambda name, meta: "torch_array_ref_from_garray <{type}> ({name})".format(
-        type=meta["type"], name=name
-    ),
-    "TorchTensor *": lambda name, meta: "torch_tensor_get_real_tensor ({name})".format(
-        name=name
-    ),
-    "TorchOptionalValue *": lambda name, meta: "torch_optional_value_to_c10_optional ({name}, torch_optional_value_get_{type})".format(
-        type=meta["type"], name=name
-    ),
-    "TorchNNConvPaddingOptions *": lambda name, meta: "torch_nn_conv_padding_options_to_real_padding_t <{dims}> ({name})".format(
-        dims=meta["dims"], name=name
-    ),
-    "TorchNNEmbeddingBagMode": lambda name, meta: "torch_nn_embedding_bag_mode_to_real_embedding_bag_mode ({name})".format(
-        name=name
-    ),
-    "TorchNNGridSampleMode": lambda name, meta: "torch_nn_grid_sample_mode_to_real_grid_sample_mode ({name})".format(
-        name=name
-    ),
-    "TorchNNGridSamplePaddingMode": lambda name, meta: "torch_nn_grid_sample_padding_mode_to_real_grid_sample_padding_mode ({name})".format(
-        name=name
-    ),
+    "GArray *": lambda name, meta: f"torch_array_ref_from_garray <{meta['type']}> ({name})",
+    "TorchTensor *": lambda name, meta: f"torch_tensor_get_real_tensor ({name})",
+    "TorchOptionalValue *": lambda name, meta: f"torch_optional_value_to_c10_optional ({name}, torch_optional_value_get_{meta['type'].lower()})",
+    "TorchNNConvPaddingOptions *": lambda name, meta: f"torch_nn_conv_padding_options_to_real_padding_t <{meta['dims']}> ({name})",
+    "TorchNNConvPaddingMode": lambda name, meta: f"torch_nn_conv_padding_mode_to_real_conv_padding_mode ({name})",
+    "TorchNNEmbeddingBagMode": lambda name, meta: f"torch_nn_embedding_bag_mode_to_real_embedding_bag_mode ({name})",
+    "TorchNNGridSampleMode": lambda name, meta: f"torch_nn_grid_sample_mode_to_real_grid_sample_mode ({name})",
+    "TorchNNGridSamplePaddingMode": lambda name, meta: f"torch_nn_grid_sample_padding_mode_to_real_grid_sample_padding_mode ({name})",
+    "TorchNNInterpolateMode": lambda name, meta: f"torch_nn_interpolate_mode_to_real_interpolate_mode ({name})",
+    "TorchNNAnyModuleCastable *": lambda name, meta: f"torch_nn_any_module_castable_to_real_any_module ({name})",
+    "TorchNNPadMode": lambda name, meta: f"torch_nn_pad_mode_to_real_pad_mode ({name})",
+    "TorchNNRNNNonlinearityType": lambda name, meta: f"torch_nn_rnn_nonlinearity_type_to_real_rnn_nonlinearity_type ({name})",
+    "TorchNNNamedshapeType": lambda name, meta: f"torch_nn_namedshape_array_to_real_namedshape ({name}, {name}->len)",
+    "TorchNNTransformerDecoderLayer *": lambda name, meta: f"torch_nn_transformer_decoder_layer_to_real_transformer_decoder_layer ({name})",
+    "TorchNNTransformerEncoderLayer *": lambda name, meta: f"torch_nn_transformer_encoder_layer_to_real_transformer_encoder_layer ({name})",
+    "TorchNNUpsampleMode": lambda name, meta: f"torch_nn_upsample_mode_to_real_upsample_mode ({name})",
 }
 
 STORAGE = {
