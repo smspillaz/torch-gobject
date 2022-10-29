@@ -62,6 +62,10 @@ STORAGE = {
         "copy_func": "g_array_copy ({name})",
     },
 }
+GOBJECT_CONVERSIONS = {
+    "torch::Tensor const &": lambda name, meta: f"torch_tensor_new_from_real_tensor ({name})"
+}
+
 ACCESS_FUNCS = {
     "GArray *": "&(g_array_index ({name}, {element_type}, 0))",
     "GPtrArray *": "static_cast <{element_type} *> ({name}->pdata)",
