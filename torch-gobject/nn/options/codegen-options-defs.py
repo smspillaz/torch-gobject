@@ -273,7 +273,12 @@ def print_opt_struct_header(opt_struct):
     print("")
 
     formatted_args = ", ".join(
-        [f"{opt_info['c_type']} {opt_info['name']}" for opt_info in opt_struct["opts"]]
+        # type and name
+        list(
+            map(
+                lambda x: f"{x[0]} {x[1]}", opts_to_constructor_args(opt_struct["opts"])
+            )
+        )
     )
     print(f"{struct_name} * {constructor} ({formatted_args});")
     print(f"{struct_name} * {copy} ({struct_name} *opts);")
