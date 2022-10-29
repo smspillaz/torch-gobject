@@ -57,6 +57,7 @@ torch_gobject_toplevel_generated_headers = [
 ]
 torch_gobject_toplevel_headers = files([
   'torch-allocator.h',
+  'torch-callback-data.h',
   'torch-device.h',
   'torch-dimname.h',
   'torch-generator.h',
@@ -71,6 +72,7 @@ torch_gobject_toplevel_headers = files([
 ]) + torch_gobject_toplevel_enums_headers
 torch_gobject_toplevel_introspectable_sources = files([
   'torch-allocator.cpp',
+  'torch-callback-data.cpp',
   'torch-device.cpp',
   'torch-device-type.cpp',
   'torch-dimname.cpp',
@@ -89,6 +91,7 @@ torch_gobject_toplevel_introspectable_sources = files([
   'torch-tensor-options.cpp'
 ]) + [torch_gobject_aten_generated_source]
 torch_gobject_toplevel_private_headers = files([
+  'torch-callback-data-internal.h',
   'torch-device-internal.h',
   'torch-device-type-internal.h',
   'torch-dimname-internal.h',
