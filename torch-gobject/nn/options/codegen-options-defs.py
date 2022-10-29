@@ -67,7 +67,11 @@ ACCESS_FUNCS = {
     "GPtrArray *": "static_cast <{element_type} *> ({name}->pdata)",
     "TorchCallbackData *": "{name}->callback",
 }
-C_TYPE_TO_INTROSPECTION_TYPE = {"int64_t": "gint64"}
+C_TYPE_TO_INTROSPECTION_TYPE = {
+    "double": "gdouble",
+    "int64_t": "gint64",
+    "TorchNNNamedshapeElement": "TorchNNNamedshapeElement",
+}
 
 COPY_G_OBJECT_REF = "g_object_ref"
 COPY_TORCH_OPTIONAL_VALUE_COPY = "torch_optional_value_copy"
