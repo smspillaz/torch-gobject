@@ -569,13 +569,41 @@ def print_opt_struct_introspectable_source(opt_struct):
     print(" */")
     print(f"{struct_name} * {copy} ({struct_name} *opts)")
     print("{")
-    print(
-        indent(
-            f"return {constructor} "
-            f"({', '.join([access_underlying('opts->{}'.format(opt_info['name']), opt_info) for opt_info in opt_struct['opts']])});",
-            2,
-        )
-    )
+    print(indent(f"{struct_name} *new_opts = g_new0({struct_name}, 1);", 2))
+    # Here we have to be a bit more careful than just re-calling the constructor
+    # since we need to take care of closure arguments and copying arrays etc
+    for opt_info in opt_struct["opts"]:
+        storage_info = STORAGE.get(opt_info["c_type"])
+
+        if storage_info is None:
+            if "func_data_ptr" in opt_info.get("meta", {}):
+                # This is a closure, we need to create a TorchCallbackData
+                # to store the callback pointer, func_data_ptr and func_data_destroy_ptr
+                storage_info = {
+                    "copy_func": f"torch_callback_data_ref (opts->{opt_info['name']});"
+                }
+
+        # We have a custom storage container, so we need to wrap
+        # the value into the container first
+        if storage_info is not None:
+            print(
+                indent(
+                    f"new_opts->{opt_info['name']} = {storage_info['copy_func'].format(name='opts->' + opt_info['name'])};",
+                    2,
+                )
+            )
+        elif opt_info["c_type"] in COPY_FUNCS:
+            print(
+                indent(
+                    f"new_opts->{opt_info['name']} = opts->{opt_info['name']} != NULL ? {COPY_FUNCS[opt_info['c_type']]} (opts->{opt_info['name']}) : NULL;",
+                    2,
+                )
+            )
+        else:
+            print(
+                indent(f"new_opts->{opt_info['name']} = opts->{opt_info['name']};", 2)
+            )
+    print(indent("return new_opts;", 2))
     print("}")
     print("")
     print("/**")
