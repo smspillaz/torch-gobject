@@ -415,23 +415,31 @@ def access_underlying(variable, opt_info):
     return variable
 
 
-def make_array_annotation(opt_info):
+def make_array_arg_annotation(opt_info):
     if "*" not in opt_info["c_type"]:
         return ""
 
-    if opt_info.get("meta", {}).get("length", None) is None:
-        return ""
+    length_parameter = opt_info.get("meta", {}).get("length", None)
 
-    return f" (array fixed-size={opt_info['meta']['length']})"
+    if length_parameter is not None:
+        try:
+            int_length = int(length_parameter)
+            return f" (array fixed-size={int_length})"
+        except ValueError:
+            return f" (array length={length_parameter})"
+
+    return ""
 
 
 def format_arg_annotation(opt_info):
     transfer = " (transfer none)" if "*" in opt_info["c_type"] else ""
-    array_length = make_array_annotation(opt_info)
+    array_length = make_array_arg_annotation(opt_info)
     nullable = " (nullable)" if "*" in opt_info["c_type"] else ""
 
     annotations = (
-        f"{transfer}{array_length}{nullable}: " if (transfer or array_length) else " "
+        f"{transfer}{array_length}{nullable}: "
+        if (transfer or array_length)
+        else " "
     )
 
     return "@{name}:{annotations}A #{c_type}".format(
