@@ -30,7 +30,7 @@ G_BEGIN_DECLS
 typedef struct _TorchNNConvPaddingOptions TorchNNConvPaddingOptions;
 
 GType torch_nn_conv_padding_options_get_type (void);
-#define TORCH_TYPE_NN_CONV_PADDING_OPTIONS (torch_nn_conv_padding_options_get_type())
+#define TORCH_TYPE_NN_CONV_PADDING_OPTIONS (torch_nn_conv_padding_options_get_type ())
 
 TorchNNConvPaddingOptions * torch_nn_conv_padding_options_new (TorchNNConvPaddingType padding_type, int64_t *padding_config, size_t padding_config_length);
 
