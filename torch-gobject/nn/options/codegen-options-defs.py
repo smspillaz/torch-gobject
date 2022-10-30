@@ -468,7 +468,7 @@ def make_closure_annotation(opt_info):
 
     func_data_ptr = opt_info.get("meta", {}).get("func_data_ptr", None)
     if func_data_ptr is not None:
-        annotations.append(f"(closure {func_data_ptr})")
+        annotations.append(f"(scope notified)")
 
     func_data_destroy = opt_info.get("meta", {}).get("func_data_destroy", None)
     if func_data_destroy is not None:
