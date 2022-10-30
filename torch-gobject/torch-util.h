@@ -80,6 +80,23 @@ namespace
     return torch_c_array_to_vector <T> (reinterpret_cast <T *> (array->data), array->len);
   }
 
+  template <typename T, typename C>
+  std::vector <C>
+  torch_c_array_to_vector_convert (T *c_array, size_t length)
+  {
+    std::vector <C> vec (length);
+    std::transform (c_array, (c_array + length), vec.begin (), [](T x) { return static_cast <C> (x); });
+
+    return vec;
+  }
+
+  template <typename T, typename C>
+  std::vector <C>
+  torch_g_array_to_vector_convert (GArray *array, size_t length)
+  {
+    return torch_c_array_to_vector_convert <T, C> (reinterpret_cast <T *> (array->data), array->len);
+  }
+
   namespace internal
   {
     template <typename T>
