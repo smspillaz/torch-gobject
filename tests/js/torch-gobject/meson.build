@@ -63,6 +63,8 @@ tests_environment.prepend('GI_TYPELIB_PATH', library_paths)
 tests_environment.prepend('LD_LIBRARY_PATH', library_paths)
 tests_environment.prepend('DYLD_LIBRARY_PATH', library_paths)
 
+subdir('nn')
+
 if jasmine.found()
   foreach test_file : javascript_tests
     test(test_file,
