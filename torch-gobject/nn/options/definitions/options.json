@@ -588,7 +588,7 @@
                 "c_type": "double *",
                 "meta": {
                     "length": "scale_factor_length",
-                    "type": "int64_t",
+                    "type": "double",
                     "convert_pipeline": [
                         "torch_g_array_to_vector <{meta[type]}> ({name}, {meta[length]})"
                     ]
