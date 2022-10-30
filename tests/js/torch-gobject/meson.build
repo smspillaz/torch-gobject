@@ -18,6 +18,31 @@
 # with torch-gobject; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+# We need to also build the resources
+torch_gobject_tests_resources_lib_introspectable_sources = files([
+  'init.c',
+  'init.h'
+])
+torch_gobject_tests_resources_lib_sources = torch_gobject_tests_resources_lib_introspectable_sources + torch_gobject_resources
+torch_gobject_tests_resources_lib = shared_library(
+  'torch-gobject-tests-resources',
+  torch_gobject_tests_resources_lib_sources,
+  dependencies: [ gio, glib, gobject ],
+  install: false
+)
+torch_gobject_tests_resources_typelib  = gnome.generate_gir(
+  torch_gobject_tests_resources_lib,
+  extra_args: ['--warn-all'],
+  identifier_prefix: 'TorchGObjectTestsResources',
+  includes: ['GLib-2.0', 'GObject-2.0'],
+  install: false,
+  namespace: 'TorchGObjectTestsResources',
+  nsversion: '0',
+  sources: torch_gobject_tests_resources_lib_introspectable_sources,
+  symbol_prefix: 'torch_gobject_tests_resources',
+  fatal_warnings: true,
+)[1]
+
 javascript_tests = [
   'testDevice.js',
   'testDimname.js',
