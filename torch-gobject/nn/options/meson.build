@@ -110,3 +110,14 @@ install_headers(
   torch_gobject_nn_options_headers,
   subdir: torch_gobject_nn_options_headers_subdir
 )
+
+gnome = import('gnome')
+
+generated_options_gresources = gnome.compile_resources(
+  'torch_gobject_generated_options_tests_resources',
+  'torch-gobject-generated-options-tests-resources.gresources.xml',
+  build_by_default: true,
+  c_name: 'torch_gobject_tests_resources'
+)
+
+torch_gobject_resources += generated_options_gresources
