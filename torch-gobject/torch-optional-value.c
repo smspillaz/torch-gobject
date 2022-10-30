@@ -86,7 +86,7 @@ torch_optional_value_new_int32_t (int32_t value)
 {
     TorchOptionalValue *optional_value = g_new0 (TorchOptionalValue, 1);
     g_value_init (&optional_value->internal_value, G_TYPE_INT);
-    g_value_set_int64 (&optional_value->internal_value, value);
+    g_value_set_int (&optional_value->internal_value, value);
 
     return optional_value;
 }
