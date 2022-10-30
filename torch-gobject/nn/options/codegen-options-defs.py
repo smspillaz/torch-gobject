@@ -121,28 +121,27 @@ def convert_callback_to_cpp(opt_info, name):
         + opt_rv_cpp_type
     )
     convert_arg_lines = [
-        f"{oa['c_type']} c_{oa['name']} = {convert_cpp_to_c(oa, oa['name'])};"
+        (
+            f"g_autoptr ({oa['c_type'].strip('*').strip()})"
+            if "*" in oa['c_type']
+            else oa['c_type']
+        ) + f" c_{oa['name']} = {convert_cpp_to_c(oa, oa['name'])};"
         for oa in opt_info_args
     ]
     call_func_line_args = ", ".join([f"c_{oa['name']}" for oa in opt_info_args])
-    rv_storage_type = (
-        f"g_autoptr ({opt_rv_c_type.strip('*').strip()})"
-        if "*" in opt_rv_c_type
-        else opt_rv_c_type
-    )
     call_func_part = f"{callback_temporary_variable} ({call_func_line_args})"
     call_func_line = (
-        f"{rv_storage_type} rv = {call_func_part};"
-        if rv_storage_type != "void"
+        f"{opt_rv_c_type} rv = {call_func_part};"
+        if opt_rv_c_type != "void"
         else f"{call_func_part};"
     )
     convert_rv_part = (
         convert_c_to_cpp(opt_info["meta"]["return"], "rv")
-        if rv_storage_type != "void"
+        if opt_rv_c_type != "void"
         else ""
     )
     return_line = (
-        f"return {convert_rv_part};" if rv_storage_type != "void" else "return;"
+        f"return {convert_rv_part};" if opt_rv_c_type != "void" else "return;"
     )
 
     return "\n".join(
