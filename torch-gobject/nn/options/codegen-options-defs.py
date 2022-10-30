@@ -365,6 +365,7 @@ def generate_header(options):
     print("#include <torch-gobject/torch-callback-data.h>")
     print("#include <torch-gobject/nn/torch-nn-any-module-castable.h>")
     print("#include <torch-gobject/nn/torch-nn-any-module.h>")
+    print("#include <torch-gobject/nn/torch-nn-distance-function.h>")
     print("#include <torch-gobject/nn/torch-nn-transformer-decoder-layer.h>")
     print("#include <torch-gobject/nn/torch-nn-transformer-encoder-layer.h>")
     print("#include <torch-gobject/nn/torch-nn-module-base.h>")
@@ -383,9 +384,6 @@ def generate_header(options):
     print('#include "torch-enums.h"')
     print("")
     print("G_BEGIN_DECLS")
-    print(
-        "typedef TorchTensor * (*TorchNNDistanceFunction) (TorchTensor const *first, TorchTensor const *second, gpointer data);"
-    )
 
     print_header(options)
 
