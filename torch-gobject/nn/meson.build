@@ -25,6 +25,7 @@ subdir('options')
 torch_gobject_nn_headers = files([
   'torch-nn-any-module.h',
   'torch-nn-any-module-castable.h',
+  'torch-nn-distance-function.h',
   'torch-nn-transformer-decoder-layer.h',
   'torch-nn-transformer-encoder-layer.h',
   'torch-nn-module-base.h'
