@@ -485,7 +485,7 @@ def format_arg_annotation(opt_info):
 
     annotations = (
         f"{transfer}{array_length}{closure}{nullable}: "
-        if (transfer or array_length)
+        if any((transfer, array_length, closure, nullable))
         else " "
     )
 
