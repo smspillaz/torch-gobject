@@ -29,16 +29,16 @@ torch_callback_data_unref (TorchCallbackData *callback_data)
 {
   g_assert (callback_data->ref_count > 0);
 
-  if (--callback_data == 0)
+  if (--callback_data->ref_count == 0)
     {
       if (callback_data->user_data != NULL && callback_data->user_data_destroy != NULL)
         {
           callback_data->user_data_destroy (callback_data->user_data);
           callback_data->user_data = NULL;
         }
-    }
 
-  g_free (callback_data);
+      g_free (callback_data);
+    }
 }
 
 TorchCallbackData *
