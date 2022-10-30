@@ -25,7 +25,7 @@ def indent(text, indent):
 
 
 CONVERSIONS = {
-    "GArray *": lambda name, meta: f"torch_array_ref_from_garray <{meta['type']}> ({name})",
+    "GArray *": lambda name, meta: f"torch_array_ref_from_garray <{meta['convert_type']}> ({name})",
     "TorchTensor *": lambda name, meta: f"torch_tensor_get_real_tensor ({name})",
     "TorchOptionalValue *": lambda name, meta: f"torch_optional_value_to_c10_optional ({name}, torch_optional_value_get_{meta['type'].lower()})",
     "TorchNNConvPaddingOptions *": lambda name, meta: f"torch_nn_conv_padding_options_to_real_padding_t <{meta['dims']}> ({name})",
@@ -166,8 +166,9 @@ def convert_c_to_cpp(opt_info, name):
     )
     meta = (
         {
-            **opt_info.get("meta", {}),
             "type": STORAGE[opt_info["c_type"]]["element_type"],
+            "convert_type": STORAGE[opt_info["c_type"]]["element_type"],
+            **opt_info.get("meta", {}),
             "length": ACCESS_LENGTH_FUNCS[
                 STORAGE[opt_info["c_type"]]["container"]
             ].format(name=name),
