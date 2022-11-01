@@ -28,4 +28,5 @@ jobs:
         action: test
         directory: build
         options: --verbose
+        meson-version: 0.55.3
       
