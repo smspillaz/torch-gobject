@@ -274,7 +274,8 @@ namespace
   }
 
   template <typename T>
-  T torch_convert_to_gobject (T const &real)
+  typename torch::gobject::ReverseConversionTrait<T>::gobject_type
+  torch_convert_to_gobject (T const &real)
   {
     return torch::gobject::ReverseConversionTraitConverter<T>::from (real);
   }
