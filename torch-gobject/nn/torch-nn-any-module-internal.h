@@ -23,6 +23,7 @@
 #pragma once
 
 #include <torch-gobject/nn/torch-nn-any-module.h>
+#include <torch-gobject/torch-util.h>
 #include <torch/torch.h>
 
 TorchNNAnyModule * torch_nn_any_module_new_from_real_any_module (torch::nn::AnyModule const &real_module);
@@ -33,4 +34,24 @@ TorchNNAnyModule * torch_nn_any_module_convert_from_real_module (T const &real_m
   return torch_nn_any_module_new_from_real_any_module (torch::nn::AnyModule (real_module));
 }
 
-torch::nn::AnyModule const & torch_nn_any_module_to_real_any_module (TorchNNAnyModule *any_module);
+torch::nn::AnyModule & torch_nn_any_module_to_real_any_module (TorchNNAnyModule *any_module);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchNNAnyModule *>
+    {
+      typedef torch::nn::AnyModule & real_type;
+      static constexpr auto from = torch_nn_any_module_to_real_any_module;
+      static constexpr auto to = torch_nn_any_module_new_from_real_any_module;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::nn::AnyModule>
+    {
+      typedef TorchNNAnyModule * gobject_type;
+    };
+  }
+}

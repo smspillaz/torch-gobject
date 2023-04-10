@@ -23,9 +23,29 @@
 #pragma once
 
 #include <torch-gobject/nn/torch-nn-transformer-encoder-layer.h>
-
+#include <torch-gobject/torch-util.h>
 #include <torch/torch.h>
 
 torch::nn::TransformerEncoderLayer & torch_nn_transformer_encoder_layer_to_real_transformer_encoder_layer (TorchNNTransformerEncoderLayer *mod);
 
 TorchNNTransformerEncoderLayer * torch_nn_transformer_encoder_layer_new_from_real_transformer_encoder_layer (torch::nn::TransformerEncoderLayer const &allocator);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchNNTransformerEncoderLayer *>
+    {
+      typedef torch::nn::TransformerEncoderLayer & real_type;
+      static constexpr auto from = torch_nn_transformer_encoder_layer_to_real_transformer_encoder_layer;
+      static constexpr auto to = torch_nn_transformer_encoder_layer_new_from_real_transformer_encoder_layer;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::nn::TransformerEncoderLayer>
+    {
+      typedef TorchNNTransformerEncoderLayer * gobject_type;
+    };
+  }
+}

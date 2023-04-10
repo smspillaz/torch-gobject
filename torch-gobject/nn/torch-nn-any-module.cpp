@@ -40,7 +40,7 @@ typedef struct _TorchNNAnyModulePrivate
 G_DEFINE_TYPE_WITH_PRIVATE (TorchNNAnyModule, torch_nn_any_module, TORCH_TYPE_NN_MODULE_BASE)
 #define TORCH_NN_ANY_MODULE_GET_PRIVATE(x) static_cast <TorchNNAnyModulePrivate *> (torch_nn_any_module_get_instance_private ((x)))
 
-torch::nn::AnyModule const &
+torch::nn::AnyModule &
 torch_nn_any_module_to_real_any_module (TorchNNAnyModule *nn_module)
 {
   TorchNNAnyModulePrivate *priv = TORCH_NN_ANY_MODULE_GET_PRIVATE (nn_module);
