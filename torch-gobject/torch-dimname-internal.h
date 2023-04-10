@@ -40,7 +40,7 @@ namespace torch
   namespace gobject
   {
     template<>
-    struct ConversionTrait<TorchDimname>
+    struct ConversionTrait<TorchDimname *>
     {
       typedef at::Dimname real_type;
       static constexpr auto from = torch_dimname_get_real_dimname;
