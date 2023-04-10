@@ -101,6 +101,54 @@ namespace
   }
 
   template <typename T>
+  typename torch::gobject::ConversionTrait<T>::real_type
+  torch_convert_to_real (T gobject_type)
+  {
+    return torch::gobject::ConversionTrait<T>::func (gobject_type);
+  }
+
+  namespace internal {
+    template <typename InternalType, typename ConversionFunc>
+    GPtrArray * object_ptr_array_from_object_array_ref (c10::ArrayRef<InternalType> const &array, ConversionFunc &&conv)
+    {
+      g_autoptr (GPtrArray) ptr_array = g_ptr_array_new_with_free_func (g_object_unref);
+
+      for (auto const &object: array)
+        g_ptr_array_add (ptr_array, conv (object));
+
+      return static_cast <GPtrArray *> (g_steal_pointer (&ptr_array));
+    }
+
+    template <typename InternalType, typename LibraryType, typename ConversionFunc>
+    std::vector<InternalType> object_vector_from_object_ptr_array (GPtrArray *ptr_array, ConversionFunc &&conv)
+    {
+      std::vector <InternalType> array;
+
+      for (size_t i = 0; i < ptr_array->len; ++i)
+        array.push_back(conv (static_cast <LibraryType> (g_ptr_array_index (ptr_array, i))));
+
+      return array;
+    }
+  }
+
+  template <typename T>
+  std::vector<typename torch::gobject::ConversionTrait<T>::real_type>
+  torch_convert_to_real (GPtrArray *array)
+  {
+    return internal::object_vector_from_object_ptr_array <T, typename torch::gobject::ConversionTrait<T>::real_type> (
+      array,
+      torch_convert_to_real<T>
+    );
+  }
+
+  template <typename T>
+  std::vector<T>
+  torch_convert_to_real (GArray *array)
+  {
+    return torch_c_array_to_vector <T> (reinterpret_cast <T *> (array->data), array->len);
+  }
+
+  template <typename T>
   std::vector <T>
   torch_g_array_to_vector (GArray *array, size_t length)
   {
