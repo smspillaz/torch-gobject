@@ -85,5 +85,7 @@ namespace {
           0
         );
       }
+
+    throw std::logic_error("Invalid padding type specified");
   }
 }
