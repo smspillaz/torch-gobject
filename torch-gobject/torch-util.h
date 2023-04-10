@@ -102,9 +102,9 @@ namespace
 
   template <typename T>
   typename torch::gobject::ConversionTrait<T>::real_type
-  torch_convert_to_real (T gobject_type)
+  torch_convert_to_real (T gobject)
   {
-    return torch::gobject::ConversionTrait<T>::func (gobject_type);
+    return torch::gobject::ConversionTrait<T>::from (gobject);
   }
 
   namespace internal {
