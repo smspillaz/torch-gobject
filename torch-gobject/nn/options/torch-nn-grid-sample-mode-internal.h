@@ -30,4 +30,4 @@ torch::nn::functional::GridSampleFuncOptions::mode_t
 torch_nn_grid_sample_mode_to_real_grid_sample_mode (TorchNNGridSampleMode mode);
 
 TorchNNGridSampleMode
-torch_nn_grid_sample_mode_new_from_real_grid_sample_mode (torch::nn::functional::GridSampleFuncOptions::mode_t const &mode);
+torch_nn_grid_sample_mode_from_real_grid_sample_mode (torch::nn::functional::GridSampleFuncOptions::mode_t const &mode);
