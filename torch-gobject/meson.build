@@ -24,14 +24,16 @@ cpp = meson.get_compiler('cpp')
 
 api_version = '0'
 torch_gobject_headers_subdir = 'torch-gobject'
+torch_gobject_codegen_dir = join_paths(meson.current_source_dir(), 'codegen')
 
 python_installation = python.find_installation(required: true, modules: ['yaml'])
+torch_gobject_aten_codegen_prog = join_paths(torch_gobject_codegen_dir, 'codegen-aten.py')
 torch_gobject_aten_generated_source = custom_target('gen-torch-aten-src',
-                                                    input : ['codegen.py'],
+                                                    input : [torch_gobject_aten_codegen_prog],
                                                     output : ['torch-tensor-generated.cpp'],
                                                     command : [python_installation, '@INPUT@', '--output', '@OUTPUT0@', '/usr/local/share/ATen/Declarations.yaml'])
 torch_gobject_aten_generated_header = custom_target('gen-torch-aten-header',
-                                                    input : ['codegen.py'],
+                                                    input : [torch_gobject_aten_codegen_prog],
                                                     output : ['torch-tensor-generated.h'],
                                                     command : [python_installation, '@INPUT@', '--header', '--output', '@OUTPUT0@', '/usr/local/share/ATen/Declarations.yaml'],
                                                     install: true,
