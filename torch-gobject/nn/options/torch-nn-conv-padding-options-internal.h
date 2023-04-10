@@ -63,7 +63,7 @@ namespace {
         auto array = c10::get <torch::ExpandingArray <D>> (padding_opts);
         return torch_nn_conv_padding_options_new (
           TORCH_NN_CONV_PADDING_TYPE_SPECIFIED,
-          array.values().data(),
+          array->data(),
           array.size()
         );
       }
