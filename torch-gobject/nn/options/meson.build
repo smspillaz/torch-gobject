@@ -27,16 +27,19 @@ torch_gobject_nn_options_generated_header = custom_target('gen-torch-nn-options-
                                                           output : ['torch-nn-options-generated.h'],
                                                           command : [python_installation, '@INPUT@', '--header', '--output', '@OUTPUT0@'],
                                                           install: true,
-                                                          install_dir: get_option('includedir') / torch_gobject_headers_subdir)
+                                                          install_dir: get_option('includedir') / torch_gobject_headers_subdir,
+                                                          depend_files : torch_gobject_codegen_lib_files)
 
 torch_gobject_nn_options_generated_source = custom_target('gen-torch-nn-options-source',
                                                           input : files([torch_gobject_nn_options_codegen_prog, torch_nn_options_defs]),
                                                           output : ['torch-nn-options-generated.cpp'],
-                                                          command : [python_installation, '@INPUT@', '--source', '--output', '@OUTPUT0@'])
+                                                          command : [python_installation, '@INPUT@', '--source', '--output', '@OUTPUT0@'],
+                                                          depend_files : torch_gobject_codegen_lib_files)
 torch_gobject_nn_options_generated_introspectable_source = custom_target('gen-torch-nn-options-introspectable-source',
                                                           input : files([torch_gobject_nn_options_codegen_prog, torch_nn_options_defs]),
                                                           output : ['torch-nn-options-generated-introspectable.cpp'],
-                                                          command : [python_installation, '@INPUT@', '--introspectable-source', '--output', '@OUTPUT0@'])
+                                                          command : [python_installation, '@INPUT@', '--introspectable-source', '--output', '@OUTPUT0@'],
+                                                          depend_files : torch_gobject_codegen_lib_files)
 
 
 torch_gobject_nn_options_enums_headers = files([

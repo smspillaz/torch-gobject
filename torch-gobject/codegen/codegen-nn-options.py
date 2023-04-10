@@ -7,96 +7,20 @@ import sys
 
 from copy import copy
 
-_RE_CAMEL_CASE1 = re.compile(r"([A-Z]+)([A-Z\d][a-z])")
-_RE_CAMEL_CASE2 = re.compile(r"([a-z])([A-Z\d])")
-
-
-def camel_case_to_snake_case(camel_cased):
-    camel_cased = _RE_CAMEL_CASE1.sub(r"\1_\2", camel_cased)
-    camel_cased = _RE_CAMEL_CASE2.sub(r"\1_\2", camel_cased)
-    camel_cased = camel_cased.replace("-", "_")
-
-    return camel_cased.upper()
-
-
-def indent(text, indent):
-    pad = " " * indent
-    return "\n".join([pad + line for line in text.splitlines()])
-
-
-CONVERSIONS = {
-    "GArray *": lambda name, meta: f"torch_array_ref_from_garray <{meta['convert_type']}> ({name})",
-    "TorchTensor *": lambda name, meta: f"torch_tensor_get_real_tensor ({name})",
-    "TorchOptionalValue *": lambda name, meta: f"torch_optional_value_to_c10_optional ({name}, torch_optional_value_get_{meta['type'].lower()})",
-    "TorchNNConvPaddingOptions *": lambda name, meta: f"torch_nn_conv_padding_options_to_real_padding_t <{meta['dims']}> ({name})",
-    "TorchNNConvPaddingMode": lambda name, meta: f"torch_nn_conv_padding_mode_to_real_conv_padding_mode ({name})",
-    "TorchNNEmbeddingBagMode": lambda name, meta: f"torch_nn_embedding_bag_mode_to_real_embedding_bag_mode ({name})",
-    "TorchNNGridSampleMode": lambda name, meta: f"torch_nn_grid_sample_mode_to_real_grid_sample_mode ({name})",
-    "TorchNNGridSamplePaddingMode": lambda name, meta: f"torch_nn_grid_sample_padding_mode_to_real_grid_sample_padding_mode ({name})",
-    "TorchNNInterpolateMode": lambda name, meta: f"torch_nn_interpolate_mode_to_real_interpolate_mode ({name})",
-    "TorchNNAnyModuleCastable *": lambda name, meta: f"torch_nn_any_module_castable_to_real_any_module ({name})",
-    "TorchNNPadMode": lambda name, meta: f"torch_nn_pad_mode_to_real_pad_mode ({name})",
-    "TorchNNRNNNonlinearityType": lambda name, meta: f"torch_nn_rnn_nonlinearity_type_to_real_rnn_nonlinearity_type ({name})",
-    "TorchNNNamedshapeType": lambda name, meta: f"torch_nn_namedshape_array_to_real_namedshape ({name}, {name}->len)",
-    "TorchNNTransformerDecoderLayer *": lambda name, meta: f"torch_nn_transformer_decoder_layer_to_real_transformer_decoder_layer ({name})",
-    "TorchNNTransformerEncoderLayer *": lambda name, meta: f"torch_nn_transformer_encoder_layer_to_real_transformer_encoder_layer ({name})",
-    "TorchNNUpsampleMode": lambda name, meta: f"torch_nn_upsample_mode_to_real_upsample_mode ({name})",
-}
-
-STORAGE = {
-    "int64_t *": {
-        "container": "GArray *",
-        "element_type": "int64_t",
-        "convert_func": "torch_new_g_array_from_c_array ({name}, {meta[length]})",
-        "copy_func": "g_array_copy ({name})",
-    },
-    "double *": {
-        "container": "GArray *",
-        "element_type": "double",
-        "convert_func": "torch_new_g_array_from_c_array ({name}, {meta[length]})",
-        "copy_func": "g_array_copy ({name})",
-    },
-    "TorchNNNamedshapeElement *": {
-        "container": "GArray *",
-        "element_type": "TorchNNNamedshapeElement",
-        "convert_func": "torch_new_g_array_from_c_array ({name}, {meta[length]})",
-        "copy_func": "g_array_copy ({name})",
-    },
-}
-GOBJECT_CONVERSIONS = {
-    "torch::Tensor const &": lambda name, meta: f"torch_tensor_new_from_real_tensor ({name})"
-}
-
-ACCESS_FUNCS = {
-    "GArray *": "&(g_array_index ({name}, {element_type}, 0))",
-    "GPtrArray *": "static_cast <{element_type} *> ({name}->pdata)",
-    "TorchCallbackData *": "{name}->callback",
-}
-ACCESS_LENGTH_FUNCS = {"GArray *": "{name}->len", "GPtrArray *": "{name}->len"}
-C_TYPE_TO_INTROSPECTION_TYPE = {
-    "double": "gdouble",
-    "int64_t": "gint64",
-    "TorchNNNamedshapeElement": "TorchNNNamedshapeElement",
-}
-
-COPY_G_OBJECT_REF = "g_object_ref"
-COPY_TORCH_OPTIONAL_VALUE_COPY = "torch_optional_value_copy"
-COPY_FUNCS = {
-    "GArray *": "g_array_ref",
-    "TorchTensor *": COPY_G_OBJECT_REF,
-    "TorchOptionalValue *": COPY_TORCH_OPTIONAL_VALUE_COPY,
-    "TorchNNConvPaddingOptions *": "torch_nn_conv_padding_options_copy",
-}
-
-DESTROY_G_OBJECT_UNREF = "g_object_unref"
-DESTROY_TORCH_OPTIONAL_VALUE_FREE = "torch_optional_value_free"
-DESTROY_FUNCS = {
-    "GArray *": "g_array_unref",
-    "TorchTensor *": DESTROY_G_OBJECT_UNREF,
-    "TorchOptionalValue *": DESTROY_TORCH_OPTIONAL_VALUE_FREE,
-    "TorchNNConvPaddingOptions *": "torch_nn_conv_padding_options_free",
-    "TorchCallbackData *": "torch_callback_data_unref",
-}
+from common import (
+    ACCESS_FUNCS,
+    ACCESS_LENGTH_FUNCS,
+    C_TYPE_TO_INTROSPECTION_TYPE,
+    CONVERSIONS,
+    COPY_FUNCS,
+    DESTROY_FUNCS,
+    GOBJECT_CONVERSIONS,
+    STORAGE,
+    _RE_CAMEL_CASE1,
+    _RE_CAMEL_CASE2,
+    camel_case_to_snake_case,
+    indent
+)
 
 
 def convert_cpp_to_c(opt_info, name):

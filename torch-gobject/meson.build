@@ -25,19 +25,27 @@ cpp = meson.get_compiler('cpp')
 api_version = '0'
 torch_gobject_headers_subdir = 'torch-gobject'
 torch_gobject_codegen_dir = join_paths(meson.current_source_dir(), 'codegen')
+torch_gobject_codegen_lib_files = files([
+  join_paths(torch_gobject_codegen_dir, 'common.py')
+])
+
+aten_declarations_path = '/usr/local/share/ATen/Declarations.yaml'
+aten_declarations_files = files([aten_declarations_path])
 
 python_installation = python.find_installation(required: true, modules: ['yaml'])
 torch_gobject_aten_codegen_prog = join_paths(torch_gobject_codegen_dir, 'codegen-aten.py')
 torch_gobject_aten_generated_source = custom_target('gen-torch-aten-src',
                                                     input : [torch_gobject_aten_codegen_prog],
                                                     output : ['torch-tensor-generated.cpp'],
-                                                    command : [python_installation, '@INPUT@', '--output', '@OUTPUT0@', '/usr/local/share/ATen/Declarations.yaml'])
+                                                    command : [python_installation, '@INPUT@', '--output', '@OUTPUT0@', aten_declarations_path],
+                                                    depend_files : torch_gobject_codegen_lib_files + aten_declarations_files)
 torch_gobject_aten_generated_header = custom_target('gen-torch-aten-header',
                                                     input : [torch_gobject_aten_codegen_prog],
                                                     output : ['torch-tensor-generated.h'],
-                                                    command : [python_installation, '@INPUT@', '--header', '--output', '@OUTPUT0@', '/usr/local/share/ATen/Declarations.yaml'],
+                                                    command : [python_installation, '@INPUT@', '--header', '--output', '@OUTPUT0@', aten_declarations_path],
                                                     install: true,
-                                                    install_dir: get_option('includedir') / torch_gobject_headers_subdir)
+                                                    install_dir: get_option('includedir') / torch_gobject_headers_subdir,
+                                                    depend_files : torch_gobject_codegen_lib_files + aten_declarations_files)
 
 torch_gobject_toplevel_enums_headers = files([
   'torch-device-type.h',
