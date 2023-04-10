@@ -73,6 +73,43 @@ torch_index_get_real_index (TorchIndex *index)
     }
 }
 
+TorchIndex *
+torch_index_new_from_real_index (torch::indexing::TensorIndex const &real_index)
+{
+  if (real_index.is_none ())
+    {
+      return torch_index_new_none ();
+    }
+
+  if (real_index.is_ellipsis ())
+    {
+      return torch_index_new_ellipsis ();
+    }
+
+  if (real_index.is_integer ())
+    {
+      return torch_index_new_int (real_index.integer ());
+    }
+
+  if (real_index.is_boolean ())
+    {
+      return torch_index_new_boolean (real_index.boolean ());
+    }
+
+  if (real_index.is_slice ())
+    {
+      return torch_index_new_slice (torch_slice_new_from_real_slice (real_index.slice ()));
+    }
+
+  if (real_index.is_tensor ())
+    {
+      g_autoptr (TorchTensor) tensor = torch_tensor_new_from_real_tensor (real_index.tensor ());
+      return torch_index_new_tensor (tensor);
+    }
+
+  throw std::runtime_error ("Don't know how to handle index type");
+}
+
 static TorchIndex *
 torch_index_new (TorchTensorIndexType index_type)
 {

@@ -28,3 +28,4 @@
 
 torch::indexing::TensorIndex torch_index_get_real_index (TorchIndex *index);
 
+TorchIndex * torch_index_new_from_real_index (torch::indexing::TensorIndex const &real_index);
