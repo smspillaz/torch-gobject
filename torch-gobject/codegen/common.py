@@ -47,16 +47,16 @@ TYPE_MAPPING = {
     "at::Device": {
         "name": "TorchDevice *",
         "convert_native_qualifiers": "&",
-        "convert_native_func": lambda a: "torch_device_get_real_device ({a})".format(a=a),
+        "convert_native_func": lambda a: "torch_convert_to_real ({a})".format(a=a),
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
-        "convert_gobject_func": lambda a: "torch_device_new_from_real_device ({a})".format(a=a),
+        "convert_gobject_func": lambda a: "torch_convert_to_gobject ({a})".format(a=a),
     },
     "at::Dimname": {
         "name": "TorchDimname *",
         "convert_native_qualifiers": "&",
-        "convert_native_func": lambda a: "torch_dimname_get_real_dimname ({a})".format(a=a),
+        "convert_native_func": lambda a: "torch_convert_to_real ({a})".format(a=a),
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
-        "convert_gobject_func": lambda a: "torch_dimname_new_from_real_dimname ({a})".format(a=a),
+        "convert_gobject_func": lambda a: "torch_convert_to_gobject ({a})".format(a=a),
     },
     "at::DimnameList": {
         "name": "GPtrArray *",
@@ -71,16 +71,16 @@ TYPE_MAPPING = {
     "at::Generator": {
         "name": "TorchGenerator *",
         "convert_native_qualifiers": "&",
-        "convert_native_func": lambda a: "torch_generator_get_real_generator ({a})".format(a=a),
+        "convert_native_func": lambda a: "torch_convert_to_real ({a})".format(a=a),
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
-        "convert_gobject_func": lambda a: "torch_generator_new_from_real_generator ({a})".format(a=a),
+        "convert_gobject_func": lambda a: "torch_convert_to_gobject ({a})".format(a=a),
     },
     "at::MemoryFormat": {
         "name": "TorchMemoryFormat",
         "convert_native_qualifiers": "",
-        "convert_native_func": lambda a: "torch_memory_format_get_real_memory_format ({a})".format(a=a),
+        "convert_native_func": lambda a: "torch_convert_to_real ({a})".format(a=a),
         "convert_gobject_prefix": lambda a: a,
-        "convert_gobject_func": lambda a: "torch_memory_format_from_real_memory_format ({a})".format(a=a),
+        "convert_gobject_func": lambda a: "torch_convert_to_gobject ({a})".format(a=a),
     },
     "at::Scalar": {
         "name": "GValue *",
@@ -99,16 +99,16 @@ TYPE_MAPPING = {
     "at::Storage": {
         "name": "TorchStorage *",
         "convert_native_qualifiers": "&",
-        "convert_native_func": lambda a: "torch_storage_get_real_storage ({a})".format(a=a),
+        "convert_native_func": lambda a: "torch_convert_to_real ({a})".format(a=a),
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
-        "convert_gobject_func": lambda a: "torch_storage_new_from_real_storage ({a})".format(a=a),
+        "convert_gobject_func": lambda a: "torch_convert_to_gobject ({a})".format(a=a),
     },
     "at::Tensor": {
         "name": "TorchTensor *",
         "convert_native_qualifiers": "&",
-        "convert_native_func": lambda a: "torch_tensor_get_real_tensor ({a})".format(a=a),
+        "convert_native_func": lambda a: "torch_convert_to_real ({a})".format(a=a),
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
-        "convert_gobject_func": lambda a: "torch_tensor_new_from_real_tensor ({a})".format(a=a),
+        "convert_gobject_func": lambda a: "torch_convert_to_gobject ({a})".format(a=a),
     },
     "at::TensorList": {
         "name": "GPtrArray *",
@@ -123,9 +123,9 @@ TYPE_MAPPING = {
     "at::TensorOptions": {
         "name": "TorchTensorOptions *",
         "convert_native_qualifiers": "&",
-        "convert_native_func": lambda a: "torch_tensor_options_get_real_tensor_options ({a})".format(a=a),
+        "convert_native_func": lambda a: "torch_convert_to_real ({a})".format(a=a),
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
-        "convert_gobject_func": lambda a: "torch_tensor_options_new_from_real_tensor_options ({a})".format(a=a),
+        "convert_gobject_func": lambda a: "torch_convert_to_gobject ({a})".format(a=a),
     },
     "bool": {
         "name": "gboolean",
