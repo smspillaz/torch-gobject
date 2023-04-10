@@ -29,10 +29,27 @@ G_BEGIN_DECLS
 
 typedef struct _TorchNNConvPaddingOptions TorchNNConvPaddingOptions;
 
+typedef struct _TorchNNConvPaddingOptions1D TorchNNConvPaddingOptions1D;
+typedef struct _TorchNNConvPaddingOptions2D TorchNNConvPaddingOptions2D;
+typedef struct _TorchNNConvPaddingOptions3D TorchNNConvPaddingOptions3D;
+
+
 GType torch_nn_conv_padding_options_get_type (void);
 #define TORCH_TYPE_NN_CONV_PADDING_OPTIONS (torch_nn_conv_padding_options_get_type ())
 
+GType torch_nn_conv_padding_options_1d_get_type (void);
+#define TORCH_TYPE_NN_CONV_PADDING_OPTIONS_1D (torch_nn_conv_padding_options_1d_get_type ())
+
+GType torch_nn_conv_padding_options_2d_get_type (void);
+#define TORCH_TYPE_NN_CONV_PADDING_OPTIONS_2D (torch_nn_conv_padding_options_2d_get_type ())
+
+GType torch_nn_conv_padding_options_3d_get_type (void);
+#define TORCH_TYPE_NN_CONV_PADDING_OPTIONS_3D (torch_nn_conv_padding_options_3d_get_type ())
+
 TorchNNConvPaddingOptions * torch_nn_conv_padding_options_new (TorchNNConvPaddingType padding_type, int64_t *padding_config, size_t padding_config_length);
+TorchNNConvPaddingOptions1D * torch_nn_conv_padding_options_1d_new (TorchNNConvPaddingType padding_type, int64_t *padding_config);
+TorchNNConvPaddingOptions2D * torch_nn_conv_padding_options_2d_new (TorchNNConvPaddingType padding_type, int64_t *padding_config);
+TorchNNConvPaddingOptions3D * torch_nn_conv_padding_options_3d_new (TorchNNConvPaddingType padding_type, int64_t *padding_config);
 
 TorchNNConvPaddingOptions * torch_nn_conv_padding_options_copy (TorchNNConvPaddingOptions *opts);
 

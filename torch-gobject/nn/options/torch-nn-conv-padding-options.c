@@ -28,6 +28,18 @@ struct _TorchNNConvPaddingOptions {
   GArray                 *padding_config;
 };
 
+struct _TorchNNConvPaddingOptions1D {
+  TorchNNConvPaddingOptions base;
+};
+
+struct _TorchNNConvPaddingOptions2D {
+  TorchNNConvPaddingOptions base;
+};
+
+struct _TorchNNConvPaddingOptions3D {
+  TorchNNConvPaddingOptions base;
+};
+
 /**
  * torch_nn_conv_padding_options_new:
  * @padding_type: A #TorchNNConvPaddingType , either %TORCH_NN_CONV_PADDING_TYPE_SPECIFIED
@@ -54,6 +66,51 @@ torch_nn_conv_padding_options_new (TorchNNConvPaddingType  padding_type,
   opts->padding_config = g_array_insert_vals (opts->padding_config, 0, padding_config, padding_config_length);
 
   return g_steal_pointer (&opts);
+}
+
+/**
+ * torch_nn_conv_padding_options_1d_new:
+ * @padding_type: A #TorchNNConvPaddingType , either %TORCH_NN_CONV_PADDING_TYPE_SPECIFIED
+ *                where @padding_config is set or another value.
+ * @padding_config: (array fixed-size=1): The padding configuration array
+ *
+ * Returns: (transfer full): A new #TorchNNConvPaddingOptions1D
+ */
+TorchNNConvPaddingOptions1D *
+torch_nn_conv_padding_options_1d_new (TorchNNConvPaddingType  padding_type,
+                                      int64_t                *padding_config)
+{
+  return (TorchNNConvPaddingOptions1D *) torch_nn_conv_padding_options_new (padding_type, padding_config, 1);
+}
+
+/**
+ * torch_nn_conv_padding_options_2d_new:
+ * @padding_type: A #TorchNNConvPaddingType , either %TORCH_NN_CONV_PADDING_TYPE_SPECIFIED
+ *                where @padding_config is set or another value.
+ * @padding_config: (array fixed-size=2): The padding configuration array
+ *
+ * Returns: (transfer full): A new #TorchNNConvPaddingOptions2D
+ */
+TorchNNConvPaddingOptions2D *
+torch_nn_conv_padding_options_2d_new (TorchNNConvPaddingType  padding_type,
+                                      int64_t                *padding_config)
+{
+  return (TorchNNConvPaddingOptions2D *) torch_nn_conv_padding_options_new (padding_type, padding_config, 2);
+}
+
+/**
+ * torch_nn_conv_padding_options_3d_new:
+ * @padding_type: A #TorchNNConvPaddingType , either %TORCH_NN_CONV_PADDING_TYPE_SPECIFIED
+ *                where @padding_config is set or another value.
+ * @padding_config: (array fixed-size=1): The padding configuration array
+ *
+ * Returns: (transfer full): A new #TorchNNConvPaddingOptions3D
+ */
+TorchNNConvPaddingOptions3D *
+torch_nn_conv_padding_options_3d_new (TorchNNConvPaddingType  padding_type,
+                                      int64_t                *padding_config)
+{
+  return (TorchNNConvPaddingOptions3D *) torch_nn_conv_padding_options_new (padding_type, padding_config, 3);
 }
 
 /**
@@ -86,6 +143,21 @@ torch_nn_conv_padding_options_free (TorchNNConvPaddingOptions *opts)
 
 G_DEFINE_BOXED_TYPE (TorchNNConvPaddingOptions,
                      torch_nn_conv_padding_options,
+                     (GBoxedCopyFunc) torch_nn_conv_padding_options_copy,
+                     (GBoxedFreeFunc) torch_nn_conv_padding_options_free)
+
+G_DEFINE_BOXED_TYPE (TorchNNConvPaddingOptions1D,
+                     torch_nn_conv_padding_options_1d,
+                     (GBoxedCopyFunc) torch_nn_conv_padding_options_copy,
+                     (GBoxedFreeFunc) torch_nn_conv_padding_options_free)
+
+G_DEFINE_BOXED_TYPE (TorchNNConvPaddingOptions2D,
+                     torch_nn_conv_padding_options_2d,
+                     (GBoxedCopyFunc) torch_nn_conv_padding_options_copy,
+                     (GBoxedFreeFunc) torch_nn_conv_padding_options_free)
+
+G_DEFINE_BOXED_TYPE (TorchNNConvPaddingOptions3D,
+                     torch_nn_conv_padding_options_3d,
                      (GBoxedCopyFunc) torch_nn_conv_padding_options_copy,
                      (GBoxedFreeFunc) torch_nn_conv_padding_options_free)
 
