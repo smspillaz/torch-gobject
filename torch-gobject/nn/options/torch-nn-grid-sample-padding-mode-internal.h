@@ -28,3 +28,6 @@
 
 torch::nn::functional::GridSampleFuncOptions::padding_mode_t
 torch_nn_grid_sample_padding_mode_to_real_grid_sample_padding_mode (TorchNNGridSamplePaddingMode mode);
+
+TorchNNGridSamplePaddingMode
+torch_nn_grid_sample_mode_padding_new_from_real_grid_sample_padding_mode (torch::nn::functional::GridSampleFuncOptions::padding_mode_t mode);

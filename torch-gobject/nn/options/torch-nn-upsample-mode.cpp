@@ -25,13 +25,7 @@
 #include <torch-gobject/nn/options/torch-nn-upsample-mode-internal.h>
 #include <torch-gobject/nn/options/torch-nn-upsample-mode.h>
 
-c10::variant<
-  torch::enumtype::kNearest,
-  torch::enumtype::kLinear,
-  torch::enumtype::kBilinear,
-  torch::enumtype::kBicubic,
-  torch::enumtype::kTrilinear
->
+torch::gobject::nn::UpsampleMode
 torch_nn_upsample_mode_to_real_upsample_mode (TorchNNUpsampleMode mode)
 {
   switch (mode)
@@ -49,4 +43,30 @@ torch_nn_upsample_mode_to_real_upsample_mode (TorchNNUpsampleMode mode)
       default:
         throw std::logic_error("Invalid upsample mode");
     }
+}
+
+TorchNNUpsampleMode
+torch_nn_upsample_mode_from_real_upsample_mode (torch::gobject::nn::UpsampleMode const &mode)
+{
+  if (c10::get_if<torch::enumtype::kNearest> (&mode)) {
+    return TORCH_NN_UPSAMPLE_MODE_NEAREST;
+  }
+
+  if (c10::get_if<torch::enumtype::kLinear> (&mode)) {
+    return TORCH_NN_UPSAMPLE_MODE_LINEAR;
+  }
+
+  if (c10::get_if<torch::enumtype::kBilinear> (&mode)) {
+    return TORCH_NN_UPSAMPLE_MODE_BILINEAR;
+  }
+
+  if (c10::get_if<torch::enumtype::kBicubic> (&mode)) {
+    return TORCH_NN_UPSAMPLE_MODE_BICUBIC;
+  }
+
+  if (c10::get_if<torch::enumtype::kTrilinear> (&mode)) {
+    return TORCH_NN_UPSAMPLE_MODE_TRILINEAR;
+  }
+
+  throw std::logic_error ("Invalid upsample mode");
 }

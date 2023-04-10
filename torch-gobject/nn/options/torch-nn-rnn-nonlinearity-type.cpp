@@ -36,3 +36,17 @@ torch_nn_rnn_nonlinearity_type_to_real_rnn_nonlinearity_type (TorchNNRNNNonlinea
         throw std::logic_error("Invalid RNN nonlinearity type");
     }
 }
+
+TorchNNRNNNonlinearityType
+torch_nn_rnn_nonlinearity_type_from_real_rnn_nonlinearity_type (torch::nn::RNNCellOptions::nonlinearity_t const &mode)
+{
+  if (c10::get_if<torch::enumtype::kReLU> (&mode)) {
+    return TORCH_NN_RNN_NONLINEARITY_TYPE_RELU;
+  }
+
+  if (c10::get_if<torch::enumtype::kTanh> (&mode)) {
+    return TORCH_NN_RNN_NONLINEARITY_TYPE_TANH;
+  }
+
+  throw std::logic_error ("Invalid RNN nonlinearity type");
+}

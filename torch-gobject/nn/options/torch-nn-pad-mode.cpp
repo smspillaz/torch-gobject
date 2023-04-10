@@ -40,3 +40,25 @@ torch_nn_pad_mode_to_real_pad_mode (TorchNNPadMode mode)
         throw std::logic_error("Invalid pad mode");
     }
 }
+
+TorchNNPadMode
+torch_nn_pad_mode_from_real_pad_mode (torch::nn::functional::PadFuncOptions::mode_t const &mode)
+{
+  if (c10::get_if<torch::enumtype::kConstant> (&mode)) {
+    return TORCH_NN_PAD_MODE_CONSTANT;
+  }
+
+  if (c10::get_if<torch::enumtype::kReflect> (&mode)) {
+    return TORCH_NN_PAD_MODE_REFLECT;
+  }
+
+  if (c10::get_if<torch::enumtype::kReplicate> (&mode)) {
+    return TORCH_NN_PAD_MODE_REPLICATE;
+  }
+
+  if (c10::get_if<torch::enumtype::kCircular> (&mode)) {
+    return TORCH_NN_PAD_MODE_CIRCULAR;
+  }
+
+  throw std::logic_error ("Invalid pad mode");
+}

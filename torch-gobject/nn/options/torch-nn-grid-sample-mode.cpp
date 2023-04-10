@@ -38,3 +38,17 @@ torch_nn_grid_sample_mode_to_real_grid_sample_mode (TorchNNGridSampleMode mode)
         throw std::logic_error("Invalid grid sample mode");
     }
 }
+
+TorchNNGridSampleMode
+torch_nn_grid_sample_mode_new_from_real_grid_sample_mode (torch::nn::functional::GridSampleFuncOptions::mode_t mode)
+{
+  if (c10::get_if<torch::enumtype::kBilinear> (&mode)) {
+    return TORCH_NN_GRID_SAMPLE_MODE_BILINEAR;
+  }
+
+  if (c10::get_if<torch::enumtype::kNearest> (&mode)) {
+    return TORCH_NN_GRID_SAMPLE_MODE_NEAREST;
+  }
+
+  throw std::logic_error ("Invalid grid sample mode");
+}

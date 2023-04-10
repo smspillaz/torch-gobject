@@ -28,3 +28,6 @@
 
 torch::nn::functional::PadFuncOptions::mode_t
 torch_nn_pad_mode_to_real_pad_mode (TorchNNPadMode mode);
+
+TorchNNPadMode
+torch_nn_pad_mode_from_real_pad_mode (torch::nn::functional::PadFuncOptions::mode_t const &mode);

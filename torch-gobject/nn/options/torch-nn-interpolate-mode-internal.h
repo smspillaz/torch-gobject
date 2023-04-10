@@ -28,3 +28,6 @@
 
 torch::nn::functional::InterpolateFuncOptions::mode_t
 torch_nn_interpolate_mode_to_real_interpolate_mode (TorchNNInterpolateMode mode);
+
+TorchNNInterpolateMode
+torch_nn_interpolate_mode_from_real_interpolate_mode (torch::nn::functional::InterpolateFuncOptions::mode_t const &mode);

@@ -40,3 +40,21 @@ torch_nn_grid_sample_padding_mode_to_real_grid_sample_padding_mode (TorchNNGridS
         throw std::logic_error("Invalid grid sample padding mode");
     }
 }
+
+TorchNNGridSamplePaddingMode
+torch_nn_grid_sample_mode_padding_new_from_real_grid_sample_padding_mode (torch::nn::functional::GridSampleFuncOptions::padding_mode_t const &mode)
+{
+  if (c10::get_if<torch::enumtype::kZeros> (&mode)) {
+    return TORCH_NN_GRID_SAMPLE_PADDING_MODE_ZEROS;
+  }
+
+  if (c10::get_if<torch::enumtype::kBorder> (&mode)) {
+    return TORCH_NN_GRID_SAMPLE_PADDING_MODE_BORDER;
+  }
+
+  if (c10::get_if<torch::enumtype::kReflection> (&mode)) {
+    return TORCH_NN_GRID_SAMPLE_PADDING_MODE_REFLECTION;
+  }
+
+  throw std::logic_error ("Invalid grid sample padding mode");
+}

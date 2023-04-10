@@ -24,3 +24,6 @@
 #include <torch-gobject/nn/options/torch-nn-namedshape-element.h>
 
 torch::nn::UnflattenOptions::namedshape_t torch_nn_namedshape_array_to_real_namedshape (GArray *array);
+
+GArray *
+torch_nn_namedshape_array_new_from_real_namedshape (torch::nn::UnflattenOptions::namedshape_t const &real_namedshape);

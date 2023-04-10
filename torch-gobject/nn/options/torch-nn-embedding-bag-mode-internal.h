@@ -28,3 +28,6 @@
 
 torch::nn::EmbeddingBagMode
 torch_nn_embedding_bag_mode_to_real_embedding_bag_mode (TorchNNEmbeddingBagMode mode);
+
+TorchNNEmbeddingBagMode
+torch_nn_embedding_bag_mode_from_real_embedding_bag_mode (torch::nn::EmbeddingBagMode const &mode);

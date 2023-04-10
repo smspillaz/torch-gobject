@@ -35,3 +35,22 @@ torch_nn_namedshape_array_to_real_namedshape (GArray *array)
 
   return real_namedshape;
 }
+
+/* Not exactly safe - the real namedshape needs to outlive this one */
+GArray *
+torch_nn_namedshape_array_new_from_real_namedshape (torch::nn::UnflattenOptions::namedshape_t const &real_namedshape)
+{
+  GArray *array = g_array_sized_new (false, true, sizeof (TorchNNNamedshapeElement), real_namedshape.size ());
+  TorchNNNamedshapeElement *array_data = reinterpret_cast <TorchNNNamedshapeElement *> (array->data);
+
+  for (auto const &pair : real_namedshape)
+    {
+      array_data->name = pair.first.c_str ();
+      array_data->dim = pair.second;
+
+      ++array_data;
+    }
+
+  array->len = real_namedshape.size ();
+  return array;
+}

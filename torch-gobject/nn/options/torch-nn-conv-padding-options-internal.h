@@ -54,4 +54,36 @@ namespace {
           throw std::logic_error("Invalid padding type specified");
       }
   }
+
+  template <int D>
+  TorchNNConvPaddingOptions * torch_nn_conv_padding_options_new_from_real_conv_padding_options (typename torch::nn::ConvOptions <D>::padding_t const &padding_opts)
+  {
+    if (c10::get_if <torch::ExpandingArray <D>> (&padding_opts))
+      {
+        auto array = c10::get <torch::ExpandingArray <D>> (padding_opts);
+        return torch_nn_conv_padding_options_new (
+          TORCH_NN_CONV_PADDING_TYPE_SPECIFIED,
+          array.values().data(),
+          array.size()
+        );
+      }
+
+    if (c10::get_if <torch::enumtype::kValid> (&padding_opts))
+      {
+        return torch_nn_conv_padding_options_new (
+          TORCH_NN_CONV_PADDING_TYPE_VALID,
+          nullptr,
+          0
+        );
+      }
+
+    if (c10::get_if <torch::enumtype::kSame> (&padding_opts))
+      {
+        return torch_nn_conv_padding_options_new (
+          TORCH_NN_CONV_PADDING_TYPE_SAME,
+          nullptr,
+          0
+        );
+      }
+  }
 }

@@ -36,3 +36,17 @@ torch_nn_transformer_activation_type_to_real_transformer_activation_type (TorchN
         throw std::logic_error("Invalid Transformer activation type");
     }
 }
+
+TorchNNTransformerActivationType
+torch_nn_transformer_activation_type_from_real_transformer_activation_type (torch::nn::activation_t const &mode)
+{
+  if (c10::get_if<torch::enumtype::kReLU> (&mode)) {
+    return TORCH_NN_TRANSFORMER_ACTIVATION_TYPE_RELU;
+  }
+
+  if (c10::get_if<torch::enumtype::kGELU> (&mode)) {
+    return TORCH_NN_TRANSFORMER_ACTIVATION_TYPE_GELU;
+  }
+
+  throw std::logic_error ("Invalid Transformer activation type");
+}

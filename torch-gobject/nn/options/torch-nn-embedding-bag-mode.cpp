@@ -39,3 +39,21 @@ torch_nn_embedding_bag_mode_to_real_embedding_bag_mode (TorchNNEmbeddingBagMode 
         throw std::logic_error("Invalid embedding bag mode");
     }
 }
+
+TorchNNEmbeddingBagMode
+torch_nn_embedding_bag_mode_from_real_embedding_bag_mode (torch::nn::EmbeddingBagMode const &mode)
+{
+  if (c10::get_if<torch::enumtype::kSum> (&mode)) {
+    return TORCH_NN_EMBEDDING_BAG_MODE_SUM;
+  }
+
+  if (c10::get_if<torch::enumtype::kMean> (&mode)) {
+    return TORCH_NN_EMBEDDING_BAG_MODE_MEAN;
+  }
+
+  if (c10::get_if<torch::enumtype::kMax> (&mode)) {
+    return TORCH_NN_EMBEDDING_BAG_MODE_MAX;
+  }
+
+  throw std::logic_error ("Invalid embedding bag mode");
+}

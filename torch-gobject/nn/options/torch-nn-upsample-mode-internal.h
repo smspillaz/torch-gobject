@@ -26,11 +26,22 @@
 #include <torch/nn/options/upsampling.h>
 #include <torch-gobject/nn/options/torch-nn-upsample-mode.h>
 
-c10::variant<
-  torch::enumtype::kNearest,
-  torch::enumtype::kLinear,
-  torch::enumtype::kBilinear,
-  torch::enumtype::kBicubic,
-  torch::enumtype::kTrilinear
->
+namespace torch {
+  namespace gobject {
+    namespace nn {
+      typedef c10::variant<
+        torch::enumtype::kNearest,
+        torch::enumtype::kLinear,
+        torch::enumtype::kBilinear,
+        torch::enumtype::kBicubic,
+        torch::enumtype::kTrilinear
+      > UpsampleMode;
+    }
+  }
+}
+
+torch::gobject::nn::UpsampleMode
 torch_nn_upsample_mode_to_real_upsample_mode (TorchNNUpsampleMode mode);
+
+TorchNNUpsampleMode
+torch_nn_upsample_mode_from_real_upsample_mode (torch::gobject::nn::UpsampleMode const &mode);

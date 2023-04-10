@@ -27,3 +27,6 @@
 
 torch::nn::detail::conv_padding_mode_t
 torch_nn_conv_padding_mode_to_real_conv_padding_mode (TorchNNConvPaddingMode mode);
+
+TorchNNConvPaddingMode
+torch_nn_conv_padding_mode_from_real_conv_padding_mode (torch::nn::detail::conv_padding_mode_t const &mode);

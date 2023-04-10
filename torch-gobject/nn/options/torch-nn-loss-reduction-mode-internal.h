@@ -41,3 +41,20 @@ VariantType torch_nn_loss_reduction_mode_to_real_loss_reduction_mode (TorchNNLos
         throw std::logic_error("Invalid loss reduction mode");
     }
 }
+
+template <typename VariantType>
+TorchNNLossReductionMode
+torch_nn_loss_reduction_mode_from_real_loss_reduction_mode (VariantType const &mode)
+{
+  if (c10::get_if<torch::enumtype::kMean> (&mode)) {
+    return TORCH_NN_LOSS_REDUCTION_MODE_MEAN;
+  }
+
+  if (c10::get_if<torch::enumtype::kSum> (&mode)) {
+    return TORCH_NN_LOSS_REDUCTION_MODE_SUM;
+  }
+
+  if (c10::get_if<torch::enumtype::kNone> (&mode)) {
+    return TORCH_NN_LOSS_REDUCTION_MODE_NONE;
+  }
+}

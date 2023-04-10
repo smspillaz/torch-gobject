@@ -40,3 +40,25 @@ torch_nn_conv_padding_mode_to_real_conv_padding_mode (TorchNNConvPaddingMode mod
           throw std::logic_error ("Invalid conv padding type");
       }
 }
+
+TorchNNConvPaddingMode
+torch_nn_conv_padding_mode_from_real_conv_padding_mode (torch::nn::detail::conv_padding_mode_t const &mode)
+{
+  if (c10::get_if<torch::enumtype::kZeros> (&mode)) {
+    return TORCH_NN_CONV_PADDING_MODE_ZEROS;
+  }
+
+  if (c10::get_if<torch::enumtype::kReflect> (&mode)) {
+    return TORCH_NN_CONV_PADDING_MODE_REFLECT;
+  }
+
+  if (c10::get_if<torch::enumtype::kReplicate> (&mode)) {
+    return TORCH_NN_CONV_PADDING_MODE_REPLICATE;
+  }
+
+  if (c10::get_if<torch::enumtype::kCircular> (&mode)) {
+    return TORCH_NN_CONV_PADDING_MODE_CIRCULAR;
+  }
+
+  throw std::logic_error ("Invalid conv padding type");
+}

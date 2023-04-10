@@ -48,3 +48,37 @@ torch_nn_interpolate_mode_to_real_interpolate_mode (TorchNNInterpolateMode mode)
         throw std::logic_error("Invalid interpolate mode");
     }
 }
+
+TorchNNInterpolateMode
+torch_nn_interpolate_mode_from_real_interpolate_mode (torch::nn::functional::InterpolateFuncOptions::mode_t const &mode)
+{
+  if (c10::get_if<torch::enumtype::kNearest> (&mode)) {
+    return TORCH_NN_INTERPOLATE_MODE_NEAREST;
+  }
+
+  if (c10::get_if<torch::enumtype::kLinear> (&mode)) {
+    return TORCH_NN_INTERPOLATE_MODE_LINEAR;
+  }
+
+  if (c10::get_if<torch::enumtype::kBilinear> (&mode)) {
+    return TORCH_NN_INTERPOLATE_MODE_BILINEAR;
+  }
+
+  if (c10::get_if<torch::enumtype::kBicubic> (&mode)) {
+    return TORCH_NN_INTERPOLATE_MODE_BICUBIC;
+  }
+
+  if (c10::get_if<torch::enumtype::kTrilinear> (&mode)) {
+    return TORCH_NN_INTERPOLATE_MODE_TRILINEAR;
+  }
+
+  if (c10::get_if<torch::enumtype::kArea> (&mode)) {
+    return TORCH_NN_INTERPOLATE_MODE_AREA;
+  }
+
+  if (c10::get_if<torch::enumtype::kNearestExact> (&mode)) {
+    return TORCH_NN_INTERPOLATE_MODE_NEAREST_EXACT;
+  }
+
+  throw std::logic_error ("Invalid interpolate mode");
+}
