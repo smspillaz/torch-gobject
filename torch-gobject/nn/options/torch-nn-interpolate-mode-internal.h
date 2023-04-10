@@ -24,6 +24,7 @@
 #pragma once
 
 #include <torch/nn/options/upsampling.h>
+#include <torch-gobject/torch-util.h>
 #include <torch-gobject/nn/options/torch-nn-interpolate-mode.h>
 
 torch::nn::functional::InterpolateFuncOptions::mode_t
@@ -31,3 +32,23 @@ torch_nn_interpolate_mode_to_real_interpolate_mode (TorchNNInterpolateMode mode)
 
 TorchNNInterpolateMode
 torch_nn_interpolate_mode_from_real_interpolate_mode (torch::nn::functional::InterpolateFuncOptions::mode_t const &mode);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchNNInterpolateMode>
+    {
+      typedef torch::nn::functional::InterpolateFuncOptions::mode_t real_type;
+      static constexpr auto from = torch_nn_interpolate_mode_to_real_interpolate_mode;
+      static constexpr auto to = torch_nn_interpolate_mode_from_real_interpolate_mode;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::nn::functional::InterpolateFuncOptions::mode_t>
+    {
+      typedef TorchNNInterpolateMode gobject_type;
+    };
+  }
+}

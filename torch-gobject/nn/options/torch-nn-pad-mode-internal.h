@@ -24,6 +24,7 @@
 #pragma once
 
 #include <torch/nn/options/padding.h>
+#include <torch-gobject/torch-util.h>
 #include <torch-gobject/nn/options/torch-nn-pad-mode.h>
 
 torch::nn::functional::PadFuncOptions::mode_t
@@ -31,3 +32,23 @@ torch_nn_pad_mode_to_real_pad_mode (TorchNNPadMode mode);
 
 TorchNNPadMode
 torch_nn_pad_mode_from_real_pad_mode (torch::nn::functional::PadFuncOptions::mode_t const &mode);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchNNPadMode>
+    {
+      typedef torch::nn::functional::PadFuncOptions::mode_t real_type;
+      static constexpr auto from = torch_nn_pad_mode_to_real_pad_mode;
+      static constexpr auto to = torch_nn_pad_mode_from_real_pad_mode;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::nn::functional::PadFuncOptions::mode_t>
+    {
+      typedef TorchNNPadMode gobject_type;
+    };
+  }
+}

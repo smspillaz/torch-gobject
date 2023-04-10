@@ -24,6 +24,7 @@
 #pragma once
 
 #include <torch/nn/options/embedding.h>
+#include <torch-gobject/torch-util.h>
 #include <torch-gobject/nn/options/torch-nn-embedding-bag-mode.h>
 
 torch::nn::EmbeddingBagMode
@@ -31,3 +32,23 @@ torch_nn_embedding_bag_mode_to_real_embedding_bag_mode (TorchNNEmbeddingBagMode 
 
 TorchNNEmbeddingBagMode
 torch_nn_embedding_bag_mode_from_real_embedding_bag_mode (torch::nn::EmbeddingBagMode const &mode);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchNNEmbeddingBagMode>
+    {
+      typedef torch::nn::EmbeddingBagMode real_type;
+      static constexpr auto from = torch_nn_embedding_bag_mode_to_real_embedding_bag_mode;
+      static constexpr auto to = torch_nn_embedding_bag_mode_from_real_embedding_bag_mode;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::nn::EmbeddingBagMode>
+    {
+      typedef TorchNNEmbeddingBagMode gobject_type;
+    };
+  }
+}

@@ -24,6 +24,7 @@
 #pragma once
 
 #include <torch/enum.h>
+#include <torch-gobject/torch-util.h>
 #include <torch-gobject/nn/options/torch-nn-loss-reduction-mode.h>
 
 namespace
@@ -103,4 +104,37 @@ torch_nn_loss_reduction_mode_from_real_loss_reduction_mode (InLossVariantCaster 
   }
 
   throw std::logic_error("Invalid loss reduction mode");
+}
+
+namespace torch
+{
+  namespace gobject
+  {
+    template <>
+    struct ConversionTrait<TorchNNLossReductionMode>
+    {
+      typedef OutLossVariantCaster real_type;
+
+      /* With variants we might want to cast the output of this function
+       *
+       * we want this to be compatible with both:
+       * - c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>
+       * - c10::variant<torch::enumtype::kNone, torch::enumtype::kBatchMean, torch::enumtype::kMean, torch::enumtype::kSum>
+       */
+      static constexpr auto from = torch_nn_loss_reduction_mode_to_real_loss_reduction_mode;
+      static constexpr auto to = torch_nn_loss_reduction_mode_from_real_loss_reduction_mode;
+    };
+
+    template<>
+    struct ReverseConversionTrait<ExpandedLossVariantType>
+    {
+      typedef TorchNNLossReductionMode gobject_type;
+    };
+
+    template<>
+    struct ReverseConversionTrait<LossVariantType>
+    {
+      typedef TorchNNLossReductionMode gobject_type;
+    };
+  }
 }

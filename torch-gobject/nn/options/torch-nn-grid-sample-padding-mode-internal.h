@@ -24,6 +24,7 @@
 #pragma once
 
 #include <torch/nn/options/vision.h>
+#include <torch-gobject/torch-util.h>
 #include <torch-gobject/nn/options/torch-nn-grid-sample-padding-mode.h>
 
 torch::nn::functional::GridSampleFuncOptions::padding_mode_t
@@ -31,3 +32,23 @@ torch_nn_grid_sample_padding_mode_to_real_grid_sample_padding_mode (TorchNNGridS
 
 TorchNNGridSamplePaddingMode
 torch_nn_grid_sample_mode_padding_from_real_grid_sample_padding_mode (torch::nn::functional::GridSampleFuncOptions::padding_mode_t const &mode);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchNNGridSamplePaddingMode>
+    {
+      typedef torch::nn::functional::GridSampleFuncOptions::padding_mode_t real_type;
+      static constexpr auto from = torch_nn_grid_sample_padding_mode_to_real_grid_sample_padding_mode;
+      static constexpr auto to = torch_nn_grid_sample_mode_padding_from_real_grid_sample_padding_mode;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::nn::functional::GridSampleFuncOptions::padding_mode_t>
+    {
+      typedef TorchNNGridSamplePaddingMode gobject_type;
+    };
+  }
+}

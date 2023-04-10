@@ -89,3 +89,51 @@ namespace {
     throw std::logic_error("Invalid padding type specified");
   }
 }
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchNNConvPaddingOptions1D *>
+    {
+      typedef torch::nn::ConvOptions <1>::padding_t real_type;
+      static constexpr auto from = torch_nn_conv_padding_options_to_real_padding_t <1>;
+      static constexpr auto to = torch_nn_conv_padding_options_new_from_real_conv_padding_options <1>;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::nn::ConvOptions <1>::padding_t>
+    {
+      typedef TorchNNConvPaddingOptions1D * gobject_type;
+    };
+
+    template<>
+    struct ConversionTrait<TorchNNConvPaddingOptions2D *>
+    {
+      typedef torch::nn::ConvOptions <2>::padding_t real_type;
+      static constexpr auto from = torch_nn_conv_padding_options_to_real_padding_t <2>;
+      static constexpr auto to = torch_nn_conv_padding_options_new_from_real_conv_padding_options <2>;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::nn::ConvOptions <2>::padding_t>
+    {
+      typedef TorchNNConvPaddingOptions1D * gobject_type;
+    };
+
+    template<>
+    struct ConversionTrait<TorchNNConvPaddingOptions3D *>
+    {
+      typedef torch::nn::ConvOptions <3>::padding_t real_type;
+      static constexpr auto from = torch_nn_conv_padding_options_to_real_padding_t <3>;
+      static constexpr auto to = torch_nn_conv_padding_options_new_from_real_conv_padding_options <3>;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::nn::ConvOptions <3>::padding_t>
+    {
+      typedef TorchNNConvPaddingOptions3D * gobject_type;
+    };
+  }
+}

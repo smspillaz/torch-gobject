@@ -24,7 +24,31 @@
 #pragma once
 
 #include <torch/nn/options/rnn.h>
+#include <torch-gobject/torch-util.h>
 #include <torch-gobject/nn/options/torch-nn-rnn-nonlinearity-type.h>
 
 torch::nn::RNNCellOptions::nonlinearity_t
 torch_nn_rnn_nonlinearity_type_to_real_rnn_nonlinearity_type (TorchNNRNNNonlinearityType mode);
+
+TorchNNRNNNonlinearityType
+torch_nn_rnn_nonlinearity_type_from_real_rnn_nonlinearity_type (torch::nn::RNNCellOptions::nonlinearity_t const &mode);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchNNRNNNonlinearityType>
+    {
+      typedef torch::nn::RNNCellOptions::nonlinearity_t real_type;
+      static constexpr auto from = torch_nn_rnn_nonlinearity_type_to_real_rnn_nonlinearity_type;
+      static constexpr auto to = torch_nn_rnn_nonlinearity_type_from_real_rnn_nonlinearity_type;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::nn::RNNCellOptions::nonlinearity_t>
+    {
+      typedef TorchNNRNNNonlinearityType gobject_type;
+    };
+  }
+}

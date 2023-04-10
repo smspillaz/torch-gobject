@@ -24,7 +24,31 @@
 #pragma once
 
 #include <torch/nn/options/transformer.h>
+#include <torch-gobject/torch-util.h>
 #include <torch-gobject/nn/options/torch-nn-transformer-activation-type.h>
 
 torch::nn::activation_t
 torch_nn_transformer_activation_type_to_real_transformer_activation_type (TorchNNTransformerActivationType mode);
+
+TorchNNTransformerActivationType
+torch_nn_transformer_activation_type_from_real_transformer_activation_type (torch::nn::activation_t const &mode);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchNNTransformerActivationType>
+    {
+      typedef torch::nn::activation_t real_type;
+      static constexpr auto from = torch_nn_transformer_activation_type_to_real_transformer_activation_type;
+      static constexpr auto to = torch_nn_transformer_activation_type_from_real_transformer_activation_type;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::nn::activation_t>
+    {
+      typedef TorchNNTransformerActivationType gobject_type;
+    };
+  }
+}

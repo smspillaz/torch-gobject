@@ -24,6 +24,7 @@
 #pragma once
 
 #include <torch/nn/options/vision.h>
+#include <torch-gobject/torch-util.h>
 #include <torch-gobject/nn/options/torch-nn-grid-sample-mode.h>
 
 torch::nn::functional::GridSampleFuncOptions::mode_t
@@ -31,3 +32,23 @@ torch_nn_grid_sample_mode_to_real_grid_sample_mode (TorchNNGridSampleMode mode);
 
 TorchNNGridSampleMode
 torch_nn_grid_sample_mode_from_real_grid_sample_mode (torch::nn::functional::GridSampleFuncOptions::mode_t const &mode);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchNNGridSampleMode>
+    {
+      typedef torch::nn::functional::GridSampleFuncOptions::mode_t real_type;
+      static constexpr auto from = torch_nn_grid_sample_mode_to_real_grid_sample_mode;
+      static constexpr auto to = torch_nn_grid_sample_mode_from_real_grid_sample_mode;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::nn::functional::GridSampleFuncOptions::mode_t>
+    {
+      typedef TorchNNGridSampleMode gobject_type;
+    };
+  }
+}

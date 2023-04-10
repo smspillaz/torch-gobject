@@ -24,6 +24,7 @@
 #pragma once
 
 #include <torch/nn/options/upsampling.h>
+#include <torch-gobject/torch-util.h>
 #include <torch-gobject/nn/options/torch-nn-upsample-mode.h>
 
 namespace torch {
@@ -45,3 +46,23 @@ torch_nn_upsample_mode_to_real_upsample_mode (TorchNNUpsampleMode mode);
 
 TorchNNUpsampleMode
 torch_nn_upsample_mode_from_real_upsample_mode (torch::gobject::nn::UpsampleMode const &mode);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchNNUpsampleMode>
+    {
+      typedef torch::gobject::nn::UpsampleMode real_type;
+      static constexpr auto from = torch_nn_upsample_mode_to_real_upsample_mode;
+      static constexpr auto to = torch_nn_upsample_mode_from_real_upsample_mode;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::gobject::nn::UpsampleMode>
+    {
+      typedef TorchNNUpsampleMode gobject_type;
+    };
+  }
+}

@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <torch-gobject/torch-util.h>
 #include <torch/nn/options/conv.h>
 
 torch::nn::detail::conv_padding_mode_t
@@ -30,3 +31,23 @@ torch_nn_conv_padding_mode_to_real_conv_padding_mode (TorchNNConvPaddingMode mod
 
 TorchNNConvPaddingMode
 torch_nn_conv_padding_mode_from_real_conv_padding_mode (torch::nn::detail::conv_padding_mode_t const &mode);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchNNConvPaddingMode>
+    {
+      typedef torch::nn::detail::conv_padding_mode_t real_type;
+      static constexpr auto from = torch_nn_conv_padding_mode_to_real_conv_padding_mode;
+      static constexpr auto to = torch_nn_conv_padding_mode_from_real_conv_padding_mode;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::nn::detail::conv_padding_mode_t>
+    {
+      typedef TorchNNConvPaddingMode gobject_type;
+    };
+  }
+}
