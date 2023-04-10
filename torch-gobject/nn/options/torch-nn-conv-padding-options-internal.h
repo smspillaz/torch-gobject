@@ -32,8 +32,32 @@
 
 namespace {
   template <int D>
-  typename torch::nn::ConvOptions <D>::padding_t torch_nn_conv_padding_options_to_real_padding_t (TorchNNConvPaddingOptions *opts)
+  struct PaddingOptionsCStruct
   {
+  };
+
+  template<>
+  struct PaddingOptionsCStruct<1>
+  {
+    typedef TorchNNConvPaddingOptions1D type;
+  };
+
+  template<>
+  struct PaddingOptionsCStruct<2>
+  {
+    typedef TorchNNConvPaddingOptions2D type;
+  };
+
+  template<>
+  struct PaddingOptionsCStruct<3>
+  {
+    typedef TorchNNConvPaddingOptions3D type;
+  };
+
+  template <int D>
+  typename torch::nn::ConvOptions <D>::padding_t torch_nn_conv_padding_options_to_real_padding_t (typename PaddingOptionsCStruct<D>::type *specified_opts)
+  {
+    TorchNNConvPaddingOptions *opts = reinterpret_cast<TorchNNConvPaddingOptions *>(specified_opts);
     TorchNNConvPaddingType padding_type = torch_nn_conv_padding_options_get_padding_type (opts);
 
     switch (padding_type)
@@ -56,34 +80,34 @@ namespace {
   }
 
   template <int D>
-  TorchNNConvPaddingOptions * torch_nn_conv_padding_options_new_from_real_conv_padding_options (typename torch::nn::ConvOptions <D>::padding_t const &padding_opts)
+  typename PaddingOptionsCStruct<D>::type * torch_nn_conv_padding_options_new_from_real_conv_padding_options (typename torch::nn::ConvOptions <D>::padding_t const &padding_opts)
   {
     if (c10::get_if <torch::ExpandingArray <D>> (&padding_opts))
       {
         auto array = c10::get <torch::ExpandingArray <D>> (padding_opts);
-        return torch_nn_conv_padding_options_new (
+        return reinterpret_cast<typename PaddingOptionsCStruct<D>::type *> (torch_nn_conv_padding_options_new (
           TORCH_NN_CONV_PADDING_TYPE_SPECIFIED,
           array->data(),
           array.size()
-        );
+        ));
       }
 
     if (c10::get_if <torch::enumtype::kValid> (&padding_opts))
       {
-        return torch_nn_conv_padding_options_new (
+        return reinterpret_cast<typename PaddingOptionsCStruct<D>::type *> (torch_nn_conv_padding_options_new (
           TORCH_NN_CONV_PADDING_TYPE_VALID,
           nullptr,
           0
-        );
+        ));
       }
 
     if (c10::get_if <torch::enumtype::kSame> (&padding_opts))
       {
-        return torch_nn_conv_padding_options_new (
+        return reinterpret_cast<typename PaddingOptionsCStruct<D>::type *> (torch_nn_conv_padding_options_new (
           TORCH_NN_CONV_PADDING_TYPE_SAME,
           nullptr,
           0
-        );
+        ));
       }
 
     throw std::logic_error("Invalid padding type specified");
