@@ -51,6 +51,16 @@ torch_slice_get_real_slice (TorchSlice *slice)
   return torch::indexing::Slice (slice->start, slice->stop, slice->step);
 }
 
+TorchSlice *
+torch_slice_new_from_real_slice (torch::indexing::Slice const &slice)
+{
+  return torch_slice_new (
+    slice.start().expect_int(),
+    slice.stop().expect_int(),
+    slice.step().expect_int()
+  );
+}
+
 /**
  * torch_slice_new:
  * @start: The starting position

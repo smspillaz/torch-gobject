@@ -28,3 +28,4 @@
 
 torch::indexing::Slice torch_slice_get_real_slice (TorchSlice *slice);
 
+TorchSlice * torch_slice_new_from_real_slice (torch::indexing::Slice const &slice);
