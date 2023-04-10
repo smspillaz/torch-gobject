@@ -273,6 +273,26 @@ namespace
     return static_cast <GPtrArray *> (g_steal_pointer (&array));
   }
 
+  template <typename T>
+  T torch_convert_to_gobject (T const &real)
+  {
+    return torch::gobject::ReverseConversionTraitConverter<T>::from (real);
+  }
+
+  template <typename T, typename RealIterable>
+  GPtrArray *
+  torch_new_g_ptr_array_from_real_iterable (RealIterable &&iterable)
+  {
+    g_autoptr (GPtrArray) ptr_array = g_ptr_array_new_with_free_func (static_cast <GDestroyNotify> (g_object_unref));
+
+    for (auto const &item : iterable)
+      {
+        g_ptr_array_add(ptr_array, torch_convert_to_gobject (item));
+      }
+
+    return static_cast <GPtrArray *> (g_steal_pointer (&ptr_array));
+  }
+
   template <typename ErrorEnum>
   unsigned int set_error_from_exception (std::exception const  &exception,
                                          GQuark                 domain,
