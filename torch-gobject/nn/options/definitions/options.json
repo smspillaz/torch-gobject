@@ -1323,7 +1323,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             }
@@ -1345,7 +1345,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             },
@@ -1897,7 +1897,7 @@
                 "meta": {
                     "variant_type": "torch::nn::CosineEmbeddingLossOptions::reduction_t",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             }
@@ -1940,7 +1940,7 @@
                 "meta": {
                     "variant_type": "torch::nn::CrossEntropyLossOptions::reduction_t",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             },
@@ -1996,7 +1996,7 @@
                 "meta": {
                     "variant_type": "torch::nn::CTCLossOptions::reduction_t",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             },
@@ -2619,7 +2619,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             }
@@ -2636,7 +2636,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             },
@@ -2694,7 +2694,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kBatchMean, torch::enumtype::kSum, torch::enumtype::kMean>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             },
@@ -2716,7 +2716,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             }
@@ -3044,7 +3044,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             }
@@ -3310,7 +3310,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             }
@@ -3379,7 +3379,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             }
@@ -3401,7 +3401,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             }
@@ -3433,7 +3433,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             }
@@ -3460,7 +3460,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             }
@@ -3540,7 +3540,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             }
@@ -3819,7 +3819,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             },
@@ -3841,7 +3841,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             }
@@ -4154,7 +4154,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             }
@@ -4206,7 +4206,7 @@
                 "meta": {
                     "variant_type": "c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum>",
                     "convert_pipeline": [
-                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode <{meta[variant_type]}> ({name})"
+                        "torch_nn_loss_reduction_mode_to_real_loss_reduction_mode ({name})"
                     ]
                 }
             }

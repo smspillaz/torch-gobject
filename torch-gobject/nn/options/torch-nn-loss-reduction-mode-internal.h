@@ -26,26 +26,70 @@
 #include <torch/enum.h>
 #include <torch-gobject/nn/options/torch-nn-loss-reduction-mode.h>
 
-template <typename VariantType>
-VariantType torch_nn_loss_reduction_mode_to_real_loss_reduction_mode (TorchNNLossReductionMode mode)
+namespace
+{
+  /* This is probably not the best place for this helper to live,
+   * but it fits for now. */
+  template <class... Args>
+  struct VariantCaster
+  {
+    VariantCaster(c10::variant<Args...> &&v) :
+      v(v)
+    {
+    }
+
+    /* We can also accept another variant if it can be casted into our variant type */
+    template <class... FromArgs>
+    VariantCaster(c10::variant<FromArgs...> &&v) :
+      v(variant_cast(std::forward(v)))
+    {
+    }
+
+    c10::variant<Args...> v;
+
+    template <class... ToArgs>
+    operator c10::variant<ToArgs...>() const
+    {
+      return c10::visit([](auto&& arg) -> c10::variant<ToArgs...> { return arg ; }, v);
+    }
+  };
+
+  template <class... Args>
+  auto variant_cast(c10::variant<Args...> const & v) -> VariantCaster<Args...>
+  {
+    return {v};
+  }
+
+  /* The LossVariantType is the true return type, the LossVariantCaster can "decay" into any
+   * other variant type which is a superset of this type. */
+  typedef c10::variant<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum> LossVariantType;
+  typedef c10::variant<torch::enumtype::kNone, torch::enumtype::kBatchMean, torch::enumtype::kMean, torch::enumtype::kSum> ExpandedLossVariantType;
+
+  typedef VariantCaster<torch::enumtype::kNone, torch::enumtype::kBatchMean, torch::enumtype::kMean, torch::enumtype::kSum> InLossVariantCaster;
+  typedef VariantCaster<torch::enumtype::kNone, torch::enumtype::kMean, torch::enumtype::kSum> OutLossVariantCaster;
+}
+
+OutLossVariantCaster
+torch_nn_loss_reduction_mode_to_real_loss_reduction_mode (TorchNNLossReductionMode mode)
 {
     switch (mode)
     {
       case TORCH_NN_LOSS_REDUCTION_MODE_MEAN:
-        return torch::enumtype::kMean();
+        return OutLossVariantCaster(LossVariantType(torch::enumtype::kMean()));
       case TORCH_NN_LOSS_REDUCTION_MODE_SUM:
-        return torch::enumtype::kSum();
+        return OutLossVariantCaster(LossVariantType(torch::enumtype::kSum()));
       case TORCH_NN_LOSS_REDUCTION_MODE_NONE:
-        return torch::enumtype::kNone();
+        return OutLossVariantCaster(LossVariantType(torch::enumtype::kNone()));
       default:
         throw std::logic_error("Invalid loss reduction mode");
     }
 }
 
-template <typename VariantType>
 TorchNNLossReductionMode
-torch_nn_loss_reduction_mode_from_real_loss_reduction_mode (VariantType const &mode)
+torch_nn_loss_reduction_mode_from_real_loss_reduction_mode (InLossVariantCaster &&caster)
 {
+  ExpandedLossVariantType mode(caster);
+
   if (c10::get_if<torch::enumtype::kMean> (&mode)) {
     return TORCH_NN_LOSS_REDUCTION_MODE_MEAN;
   }
