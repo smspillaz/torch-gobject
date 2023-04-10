@@ -23,9 +23,30 @@
 #pragma once
 
 #include <torch-gobject/torch-device-type.h>
+#include <torch-gobject/torch-util.h>
 
 #include <torch/torch.h>
 
 c10::DeviceType torch_device_type_get_real_device_type (TorchDeviceType device_type);
 
 TorchDeviceType torch_device_type_from_real_device_type (c10::DeviceType device_type);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchDeviceType>
+    {
+      typedef c10::DeviceType real_type;
+      static constexpr auto from = torch_device_type_get_real_device_type;
+      static constexpr auto to = torch_device_type_from_real_device_type;
+    };
+
+    template<>
+    struct ReverseConversionTrait<c10::DeviceType>
+    {
+      typedef TorchDeviceType gobject_type;
+    };
+  }
+}

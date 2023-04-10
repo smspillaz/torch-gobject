@@ -23,6 +23,7 @@
 #pragma once
 
 #include <torch-gobject/torch-storage.h>
+#include <torch-gobject/torch-util.h>
 
 #include <torch/torch.h>
 
@@ -31,3 +32,23 @@ c10::Storage & torch_storage_get_real_storage (TorchStorage *storage);
 TorchStorage * torch_storage_new_from_real_storage (c10::Storage const &storage);
 
 gboolean torch_storage_init_internal (TorchStorage *storage, GError **error);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchStorage *>
+    {
+      typedef c10::Storage & real_type;
+      static constexpr auto from = torch_storage_get_real_storage;
+      static constexpr auto to = torch_storage_new_from_real_storage;
+    };
+
+    template<>
+    struct ReverseConversionTrait<c10::Storage>
+    {
+      typedef TorchStorage * gobject_type;
+    };
+  }
+}

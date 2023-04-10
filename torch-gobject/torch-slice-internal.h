@@ -23,9 +23,30 @@
 #pragma once
 
 #include <torch-gobject/torch-slice.h>
+#include <torch-gobject/torch-util.h>
 
 #include <torch/torch.h>
 
 torch::indexing::Slice torch_slice_get_real_slice (TorchSlice *slice);
 
 TorchSlice * torch_slice_new_from_real_slice (torch::indexing::Slice const &slice);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchSlice *>
+    {
+      typedef torch::indexing::Slice real_type;
+      static constexpr auto from = torch_slice_get_real_slice;
+      static constexpr auto to = torch_slice_new_from_real_slice;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::indexing::Slice>
+    {
+      typedef TorchSlice * gobject_type;
+    };
+  }
+}

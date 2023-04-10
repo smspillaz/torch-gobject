@@ -23,9 +23,30 @@
 #pragma once
 
 #include <torch-gobject/torch-tensor-options.h>
+#include <torch-gobject/torch-util.h>
 
 #include <torch/torch.h>
 
 c10::TensorOptions & torch_tensor_options_get_real_tensor_options (TorchTensorOptions *tensor_options);
 
 TorchTensorOptions * torch_tensor_options_new_from_real_tensor_options (c10::TensorOptions const &tensor_options);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchTensorOptions *>
+    {
+      typedef c10::TensorOptions & real_type;
+      static constexpr auto from = torch_tensor_options_get_real_tensor_options;
+      static constexpr auto to = torch_tensor_options_new_from_real_tensor_options;
+    };
+
+    template<>
+    struct ReverseConversionTrait<c10::TensorOptions>
+    {
+      typedef TorchTensorOptions * gobject_type;
+    };
+  }
+}

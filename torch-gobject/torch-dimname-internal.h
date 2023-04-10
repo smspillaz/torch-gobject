@@ -24,6 +24,7 @@
 
 #include <glib-object.h>
 #include <torch-gobject/torch-dimname.h>
+#include <torch-gobject/torch-util.h>
 
 #include <ATen/core/Dimname.h>
 
@@ -33,3 +34,23 @@ TorchDimname * torch_dimname_new_from_real_dimname (const at::Dimname &dimname_r
 
 gboolean torch_dimname_init_internal (TorchDimname  *dimname,
                                       GError       **error);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchDimname>
+    {
+      typedef at::Dimname real_type;
+      static constexpr auto from = torch_dimname_get_real_dimname;
+      static constexpr auto to = torch_dimname_new_from_real_dimname;
+    };
+
+    template<>
+    struct ReverseConversionTrait<at::Dimname>
+    {
+      typedef TorchDimname * gobject_type;
+    };
+  }
+}

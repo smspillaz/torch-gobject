@@ -23,9 +23,30 @@
 #pragma once
 
 #include <torch-gobject/torch-allocator.h>
+#include <torch-gobject/torch-util.h>
 
 #include <torch/torch.h>
 
 c10::Allocator & torch_allocator_get_real_allocator (TorchAllocator *allocator);
 
 TorchAllocator * torch_allocator_new_from_real_allocator (c10::Allocator const &allocator);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchAllocator *>
+    {
+      typedef c10::Allocator & real_type;
+      static constexpr auto from = torch_allocator_get_real_allocator;
+      static constexpr auto to = torch_allocator_new_from_real_allocator;
+    };
+
+    template<>
+    struct ReverseConversionTrait<c10::Allocator>
+    {
+      typedef TorchAllocator * gobject_type;
+    };
+  }
+}

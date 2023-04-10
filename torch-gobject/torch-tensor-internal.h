@@ -23,6 +23,7 @@
 #pragma once
 
 #include <torch-gobject/torch-tensor.h>
+#include <torch-gobject/torch-util.h>
 
 #include <torch/torch.h>
 
@@ -32,3 +33,23 @@ TorchTensor * torch_tensor_new_from_real_tensor (torch::Tensor const &tensor);
 
 gboolean torch_tensor_init_internal (TorchTensor  *tensor,
                                      GError      **error);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchTensor *>
+    {
+      typedef torch::Tensor & real_type;
+      static constexpr auto from = torch_tensor_get_real_tensor;
+      static constexpr auto to = torch_tensor_new_from_real_tensor;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::Tensor>
+    {
+      typedef TorchTensor * gobject_type;
+    };
+  }
+}

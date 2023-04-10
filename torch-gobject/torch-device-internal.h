@@ -23,6 +23,7 @@
 #pragma once
 
 #include <torch-gobject/torch-device.h>
+#include <torch-gobject/torch-util.h>
 
 #include <torch/torch.h>
 
@@ -32,3 +33,23 @@ TorchDevice * torch_device_new_from_real_device (c10::Device const &device);
 
 gboolean torch_device_init_internal (TorchDevice  *device,
                                      GError      **error);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchDevice *>
+    {
+      typedef c10::Device & real_type;
+      static constexpr auto from = torch_device_get_real_device;
+      static constexpr auto to = torch_device_new_from_real_device;
+    };
+
+    template<>
+    struct ReverseConversionTrait<c10::Device>
+    {
+      typedef TorchDevice * gobject_type;
+    };
+  }
+}

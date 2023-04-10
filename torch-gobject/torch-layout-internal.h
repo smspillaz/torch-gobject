@@ -23,9 +23,30 @@
 #pragma once
 
 #include <torch-gobject/torch-layout.h>
+#include <torch-gobject/torch-util.h>
 
 #include <torch/torch.h>
 
 c10::Layout torch_layout_get_real_layout (TorchLayout layout);
 
 TorchLayout torch_layout_from_real_layout (c10::Layout layout);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchLayout>
+    {
+      typedef c10::Layout real_type;
+      static constexpr auto from = torch_layout_get_real_layout;
+      static constexpr auto to = torch_layout_from_real_layout;
+    };
+
+    template<>
+    struct ReverseConversionTrait<c10::Layout>
+    {
+      typedef TorchLayout gobject_type;
+    };
+  }
+}

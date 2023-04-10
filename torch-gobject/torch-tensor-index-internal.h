@@ -23,9 +23,30 @@
 #pragma once
 
 #include <torch-gobject/torch-tensor-index.h>
+#include <torch-gobject/torch-util.h>
 
 #include <torch/torch.h>
 
 torch::indexing::TensorIndex torch_index_get_real_index (TorchIndex *index);
 
 TorchIndex * torch_index_new_from_real_index (torch::indexing::TensorIndex const &real_index);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchIndex *>
+    {
+      typedef torch::indexing::TensorIndex real_type;
+      static constexpr auto from = torch_index_get_real_index;
+      static constexpr auto to = torch_index_new_from_real_index;
+    };
+
+    template<>
+    struct ReverseConversionTrait<torch::indexing::TensorIndex>
+    {
+      typedef TorchIndex * gobject_type;
+    };
+  }
+}

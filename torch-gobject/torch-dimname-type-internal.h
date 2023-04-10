@@ -23,6 +23,8 @@
 #pragma once
 
 #include <torch-gobject/torch-dimname-type.h>
+#include <torch-gobject/torch-util.h>
+
 #include <ATen/core/Dimname.h>
 
 #include <torch/torch.h>
@@ -30,3 +32,23 @@
 at::NameType torch_dimname_type_get_real_type (TorchDimnameType type);
 
 TorchDimnameType torch_dimname_type_from_real_type (at::NameType type);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchDimnameType>
+    {
+      typedef at::NameType real_type;
+      static constexpr auto func = torch_dimname_type_get_real_type;
+      static constexpr auto to = torch_dimname_type_from_real_type;
+    };
+
+    template<>
+    struct ReverseConversionTrait<at::NameType>
+    {
+      typedef TorchDimnameType gobject_type;
+    };
+  }
+}

@@ -23,9 +23,30 @@
 #pragma once
 
 #include <torch-gobject/torch-memory-format.h>
+#include <torch-gobject/torch-util.h>
 
 #include <torch/torch.h>
 
 c10::MemoryFormat torch_memory_format_get_real_memory_format (TorchMemoryFormat memory_format);
 
 TorchMemoryFormat torch_memory_format_from_real_memory_format (c10::MemoryFormat memory_format);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchMemoryFormat>
+    {
+      typedef c10::MemoryFormat real_type;
+      static constexpr auto from = torch_memory_format_get_real_memory_format;
+      static constexpr auto to = torch_memory_format_from_real_memory_format;
+    };
+
+    template<>
+    struct ReverseConversionTrait<c10::MemoryFormat>
+    {
+      typedef TorchMemoryFormat gobject_type;
+    };
+  }
+}

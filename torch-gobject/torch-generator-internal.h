@@ -23,6 +23,7 @@
 #pragma once
 
 #include <torch-gobject/torch-generator.h>
+#include <torch-gobject/torch-util.h>
 
 #include <torch/torch.h>
 
@@ -32,3 +33,23 @@ TorchGenerator * torch_generator_new_from_real_generator (at::Generator const &g
 
 gboolean torch_generator_init_internal (TorchGenerator  *generator,
                                         GError         **error);
+
+namespace torch
+{
+  namespace gobject
+  {
+    template<>
+    struct ConversionTrait<TorchGenerator *>
+    {
+      typedef at::Generator & real_type;
+      static constexpr auto from = torch_generator_get_real_generator;
+      static constexpr auto to = torch_generator_new_from_real_generator;
+    };
+
+    template<>
+    struct ReverseConversionTrait<at::Generator>
+    {
+      typedef TorchGenerator * gobject_type;
+    };
+  }
+}
