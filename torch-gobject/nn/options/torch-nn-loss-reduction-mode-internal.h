@@ -101,4 +101,6 @@ torch_nn_loss_reduction_mode_from_real_loss_reduction_mode (InLossVariantCaster 
   if (c10::get_if<torch::enumtype::kNone> (&mode)) {
     return TORCH_NN_LOSS_REDUCTION_MODE_NONE;
   }
+
+  throw std::logic_error("Invalid loss reduction mode");
 }
