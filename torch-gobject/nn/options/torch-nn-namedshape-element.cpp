@@ -24,12 +24,12 @@
 #include <torch-gobject/nn/options/torch-nn-namedshape-element-internal.h>
 
 torch::nn::UnflattenOptions::namedshape_t
-torch_nn_namedshape_array_to_real_namedshape (GArray *array, size_t n)
+torch_nn_namedshape_array_to_real_namedshape (GArray *array)
 {
   TorchNNNamedshapeElement *array_data = reinterpret_cast <TorchNNNamedshapeElement *> (array->data);
   torch::nn::UnflattenOptions::namedshape_t real_namedshape;
 
-  for (size_t i = 0; i < n; ++i) {
+  for (size_t i = 0; i < array->len; ++i) {
     real_namedshape.emplace_back (std::pair <std::string, int> (array_data[i].name, array_data[i].dim));
   }
 

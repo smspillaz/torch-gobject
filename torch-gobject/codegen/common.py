@@ -197,7 +197,7 @@ CONVERSIONS = {
     "TorchNNAnyModuleCastable *": lambda name, meta: f"torch_nn_any_module_castable_to_real_any_module ({name})",
     "TorchNNPadMode": lambda name, meta: f"torch_nn_pad_mode_to_real_pad_mode ({name})",
     "TorchNNRNNNonlinearityType": lambda name, meta: f"torch_nn_rnn_nonlinearity_type_to_real_rnn_nonlinearity_type ({name})",
-    "TorchNNNamedshapeType": lambda name, meta: f"torch_nn_namedshape_array_to_real_namedshape ({name}, {name}->len)",
+    "TorchNNNamedshapeType": lambda name, meta: f"torch_nn_namedshape_array_to_real_namedshape ({name})",
     "TorchNNTransformerDecoderLayer *": lambda name, meta: f"torch_nn_transformer_decoder_layer_to_real_transformer_decoder_layer ({name})",
     "TorchNNTransformerEncoderLayer *": lambda name, meta: f"torch_nn_transformer_encoder_layer_to_real_transformer_encoder_layer ({name})",
     "TorchNNUpsampleMode": lambda name, meta: f"torch_nn_upsample_mode_to_real_upsample_mode ({name})",

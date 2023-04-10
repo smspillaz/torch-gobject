@@ -4251,7 +4251,7 @@
                     "length": "namedshape_length",
                     "type": "TorchNNNamedshapeElement",
                     "convert_pipeline": [
-                        "torch_nn_namedshape_array_to_real_namedshape ({name}, {name}->len)"
+                        "torch_nn_namedshape_array_to_real_namedshape ({name})"
                     ]
                 }
             }
