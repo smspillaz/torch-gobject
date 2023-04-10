@@ -36,6 +36,33 @@
 
 #include <torch-gobject/torch-optional-value.h>
 
+namespace torch
+{
+  namespace gobject
+  {
+    template<typename T>
+    struct ConversionTrait
+    {
+      typedef T real_type;
+      static T (*from) (T src);
+      static T (*to) (T src);
+    };
+
+    template<typename T>
+    struct ReverseConversionTrait
+    {
+      typedef T gobject_type;
+    };
+
+    template<typename T>
+    struct ReverseConversionTraitConverter
+    {
+      static constexpr auto from = ConversionTrait<typename ReverseConversionTrait<T>::gobject_type>::to;
+      static constexpr auto to = ConversionTrait<typename ReverseConversionTrait<T>::gobject_type>::from;
+    };
+  }
+}
+
 namespace
 {
   template <typename T>
