@@ -267,7 +267,7 @@ namespace
 
     while (*c_array != nullptr)
       {
-        g_ptr_array_add (copy (*c_array));
+        g_ptr_array_add (array, copy (*c_array));
       }
 
     return static_cast <GPtrArray *> (g_steal_pointer (&array));
