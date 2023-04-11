@@ -436,8 +436,7 @@ def determine_return_statement_operand(gobject_return_decl, name):
         return_statement_operand = "{}".format(name)
     elif gobject_return_decl["transfer"] == "full":
         return_statement_operand = "static_cast <{}> (g_steal_pointer (&{}))".format(
-            gobject_return_type,
-            name
+            gobject_return_type, name
         )
     else:
         assert "Section not reachable" and False
