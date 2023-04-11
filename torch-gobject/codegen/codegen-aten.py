@@ -464,61 +464,66 @@ def make_function_call(decl, gobject_decl):
         call = "{namespace}::{name} ({args});".format(
             namespace=determine_namespace(decl),
             name=decl["name"],
-            args=", ".join([
-                "real_" + a["name"] for a in decl["arguments"]
-            ])
+            args=", ".join(["real_" + a["name"] for a in decl["arguments"]]),
         )
     else:
         # It is a method, use the method-call syntax
         call = "{obj}.{name} ({args});".format(
             obj="real_" + decl["arguments"][0]["name"],
             name=decl["name"],
-            args=", ".join([
-                "real_" + a["name"] for a in decl["arguments"][1:]
-            ])
+            args=", ".join(["real_" + a["name"] for a in decl["arguments"][1:]]),
         )
 
     # Need to init the tensor first
     if "Tensor" in decl["method_of"]:
-        before_block = "\n".join([
-            "if (!torch_tensor_init_internal ({}, error))".format(
-                gobject_decl["arguments"][0]["name"]
-            ),
-            "  {",
-            "    {} rv = 0;".format(gobject_decl["returns"]["type"]),
-            "    return rv;",
-            "  }",
-        ])
+        before_block = "\n".join(
+            [
+                "if (!torch_tensor_init_internal ({}, error))".format(
+                    gobject_decl["arguments"][0]["name"]
+                ),
+                "  {",
+                "    {} rv = 0;".format(gobject_decl["returns"]["type"]),
+                "    return rv;",
+                "  }",
+            ]
+        )
 
     if decl["returns"]:
         assert len(gobject_decl["out-arguments"]) > 0
 
         if gobject_decl["returns"]["transfer"] == "self":
             assert len(gobject_decl["out-arguments"]) == 1
-            assert (gobject_decl["returns"]["type"] + " *") == gobject_decl["out-arguments"][0]["type"]
+            assert (gobject_decl["returns"]["type"] + " *") == gobject_decl[
+                "out-arguments"
+            ][0]["type"]
 
             convert_statement = ""
             return_statement = "return {};".format(gobject_decl["arguments"][0]["name"])
         else:
-            call = " ".join([
-                determine_real_function_call_return_type(decl["returns"]),
-                "real_rv",
-                "=",
-                call
-            ])
+            call = " ".join(
+                [
+                    determine_real_function_call_return_type(decl["returns"]),
+                    "real_rv",
+                    "=",
+                    call,
+                ]
+            )
 
             # This is a tuple return, so we need to unpack tuple arguments
             if len(gobject_decl["out-arguments"]) > 1:
-                convert_statement = "\n".join([
-                    unpack_real_rv_to_gobject_rv(return_decl,
-                                                 gobject_return_decl,
-                                                 "std::get<{}> (real_rv)".format(i),
-                                                 "gobject_rv{}".format(i))
-                    for i, (return_decl, gobject_return_decl) in enumerate(zip(
-                        decl["returns"],
-                        gobject_decl["out-arguments"]
-                    ))
-                ])
+                convert_statement = "\n".join(
+                    [
+                        unpack_real_rv_to_gobject_rv(
+                            return_decl,
+                            gobject_return_decl,
+                            "std::get<{}> (real_rv)".format(i),
+                            "gobject_rv{}".format(i),
+                        )
+                        for i, (return_decl, gobject_return_decl) in enumerate(
+                            zip(decl["returns"], gobject_decl["out-arguments"])
+                        )
+                    ]
+                )
 
                 assert not gobject_decl["return-rv-directly"]
             else:
@@ -531,67 +536,77 @@ def make_function_call(decl, gobject_decl):
                     gobject_decl["out-arguments"][0],
                     "real_rv",
                     "gobject_rv0",
-                    out_arg=True
+                    out_arg=True,
                 )
 
                 if gobject_decl["return-rv-directly"]:
-                    (gobject_decl["returns"]["type"] + " *") == gobject_decl["out-arguments"][0]["type"]
+                    (gobject_decl["returns"]["type"] + " *") == gobject_decl[
+                        "out-arguments"
+                    ][0]["type"]
                     return_statement = "return {};".format(
                         determine_return_statement_operand(
-                            gobject_decl["out-arguments"][0],
-                            "gobject_rv0"
+                            gobject_decl["out-arguments"][0], "gobject_rv0"
                         )
                     )
 
             if not gobject_decl["return-rv-directly"]:
-                return_assignments = "\n".join([
-                    "\n".join([
-                        "if ({arg} != NULL)".format(arg=out_arg["name"]),
-                        indent("*{arg} = {ro};".format(
-                            arg=out_arg["name"],
-                            ro=determine_return_statement_operand(
-                                out_arg,
-                                "gobject_rv{index}".format(index=index)
-                            )
-                        ), 2)
-                    ])
-                    for index, out_arg in enumerate(gobject_decl["out-arguments"])
-                ])
-                return_statement = "\n".join([
-                    return_assignments,
-                    "return TRUE;"
-                ])
+                return_assignments = "\n".join(
+                    [
+                        "\n".join(
+                            [
+                                "if ({arg} != NULL)".format(arg=out_arg["name"]),
+                                indent(
+                                    "*{arg} = {ro};".format(
+                                        arg=out_arg["name"],
+                                        ro=determine_return_statement_operand(
+                                            out_arg,
+                                            "gobject_rv{index}".format(index=index),
+                                        ),
+                                    ),
+                                    2,
+                                ),
+                            ]
+                        )
+                        for index, out_arg in enumerate(gobject_decl["out-arguments"])
+                    ]
+                )
+                return_statement = "\n".join([return_assignments, "return TRUE;"])
     else:
         convert_statement = ""
         return_statement = "return TRUE;"
 
-    call_and_return_try_catch_statement = "\n".join([
-        "try",
-        "  {",
-        indent(make_argument_marshallers(decl["arguments"], gobject_decl["arguments"]), 4),
-        "",
-        indent("\n".join([
-            call,
-            convert_statement,
-            return_statement
-        ]), 4),
-        "  }",
-        "catch (const std::exception &e)",
-        "  {",
-        indent("\n".join([
-            "g_set_error ({error_param_name}, G_IO_ERROR, G_IO_ERROR_FAILED, \"%s\", e.what ());".format(
-                error_param_name=gobject_decl["error-argument"]["name"]
+    call_and_return_try_catch_statement = "\n".join(
+        [
+            "try",
+            "  {",
+            indent(
+                make_argument_marshallers(decl["arguments"], gobject_decl["arguments"]),
+                4,
             ),
-            "{} rv = 0;".format(gobject_decl["returns"]["type"]),
-            "return rv;",
-        ]), 4),
-        "  }",
-    ])
+            "",
+            indent("\n".join([call, convert_statement, return_statement]), 4),
+            "  }",
+            "catch (const std::exception &e)",
+            "  {",
+            indent(
+                "\n".join(
+                    [
+                        'g_set_error ({error_param_name}, G_IO_ERROR, G_IO_ERROR_FAILED, "%s", e.what ());'.format(
+                            error_param_name=gobject_decl["error-argument"]["name"]
+                        ),
+                        "{} rv = 0;".format(gobject_decl["returns"]["type"]),
+                        "return rv;",
+                    ]
+                ),
+                4,
+            ),
+            "  }",
+        ]
+    )
 
-    return "\n".join([s for s in [
-        before_block,
-        call_and_return_try_catch_statement
-    ] if s])
+    return "\n".join(
+        [s for s in [before_block, call_and_return_try_catch_statement] if s]
+    )
 
 
 def indent(text, indent):
