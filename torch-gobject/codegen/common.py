@@ -369,17 +369,20 @@ def fmt_annotations(a):
 
 def fmt_arg_annotation(arg_annotations):
     annotations = fmt_annotations(arg_annotations)
+    desc = arg_annotations.get("desc", f"A #{arg_annotations['type']}")
 
-    return "@{name}{annotations}: A #{c_type}".format(
+    return "@{name}{annotations}: {desc}".format(
         name=arg_annotations["name"],
         c_type=arg_annotations["type"],
         annotations=annotations,
+        desc=desc
     )
 
 
 def fmt_return_annotation(return_info):
     annotations = fmt_annotations(return_info)
-    return f"Returns: {annotations}A #{return_info['type']}"
+    desc = return_info.get("desc", f"A #{return_info['type']}")
+    return f"Returns{annotations}: {desc}"
 
 
 def fmt_function_decl_header_comment(func_name, return_info, arg_infos):
