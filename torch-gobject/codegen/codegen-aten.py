@@ -368,22 +368,35 @@ def print_function_decl(decl):
 def make_argument_marshaller(argument, gobject_argument):
     arg_type = argument.get("api_dynamic_type", argument["dynamic_type"])
     unqualified_arg_type = unqualified_dynamic_type(arg_type)
-    wrapped_type = "c10::optional<{}>".format(unqualified_arg_type) if is_nullable(argument) else unqualified_arg_type
-    qualified_type = " ".join([wrapped_type, TYPE_MAPPING[unqualified_arg_type]["convert_native_qualifiers"]])
+    wrapped_type = (
+        "c10::optional<{}>".format(unqualified_arg_type)
+        if is_nullable(argument)
+        else unqualified_arg_type
+    )
+    qualified_type = " ".join(
+        [wrapped_type, TYPE_MAPPING[unqualified_arg_type]["convert_native_qualifiers"]]
+    )
 
-    return " ".join([
-        wrapped_type,
-        "real_" + argument["name"],
-        "=",
-        map_type_native_conv(argument)(argument["name"])
-    ]) + ";"
+    return (
+        " ".join(
+            [
+                wrapped_type,
+                "real_" + argument["name"],
+                "=",
+                map_type_native_conv(argument)(argument["name"]),
+            ]
+        )
+        + ";"
+    )
 
 
 def make_argument_marshallers(arguments, gobject_arguments):
-    return "\n".join([
-        make_argument_marshaller(argument, gobject_argument)
-        for argument, gobject_argument in zip(arguments, gobject_arguments)
-    ]);
+    return "\n".join(
+        [
+            make_argument_marshaller(argument, gobject_argument)
+            for argument, gobject_argument in zip(arguments, gobject_arguments)
+        ]
+    )
 
 
 def determine_real_function_call_return_type(return_decl):
