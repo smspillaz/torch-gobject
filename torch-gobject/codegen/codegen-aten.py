@@ -87,9 +87,12 @@ def map_type_native_conv(type_spec):
     unqualified = unqualified_dynamic_type(type_spec["dynamic_type"])
 
     if unqualified == "IntArrayRef" and type_spec.get("size", None):
-        return lambda a: "torch_array_ref_from_fixed_array({a}, {s})".format(a=a, s=type_spec["size"])
+        return lambda a: "torch_array_ref_from_fixed_array({a}, {s})".format(
+            a=a, s=type_spec["size"]
+        )
 
     return TYPE_MAPPING[unqualified]["convert_native_func"]
+
 
 def map_element_type(type_spec):
     unqualified = unqualified_dynamic_type(type_spec["dynamic_type"])
