@@ -401,21 +401,26 @@ def get_element_type_info(opt_info):
     return element_type
 
 
-def format_arg_annotation(opt_info):
-    annotations = fmt_annotations(
-        {
-            "type": opt_info["c_type"],
-            "transfer": "none" if "*" in opt_info["c_type"] else "",
-            "nullable": True if "*" in opt_info["c_type"] else False,
-            "size": get_array_length_param(opt_info),
-            "element-type": get_element_type_info(opt_info),
-            **get_closure_info(opt_info),
-        }
-    )
+def format_arg_annotation(arg_annotations):
+    annotations = fmt_annotations(arg_annotations)
 
     return "@{name}{annotations}: A #{c_type}".format(
-        name=opt_info["name"], c_type=opt_info["c_type"], annotations=annotations
+        name=arg_annotations["name"],
+        c_type=arg_annotations["type"],
+        annotations=annotations,
     )
+
+
+def get_arg_annotations(opt_info):
+    return {
+        "name": opt_info["name"],
+        "type": opt_info["c_type"],
+        "transfer": "none" if "*" in opt_info["c_type"] else "",
+        "nullable": True if "*" in opt_info["c_type"] else False,
+        "size": get_array_length_param(opt_info),
+        "element-type": get_element_type_info(opt_info),
+        **get_closure_info(opt_info),
+    }
 
 
 def opts_to_access_args(opts_struct_name, opts):
@@ -441,6 +446,27 @@ def opts_to_access_args(opts_struct_name, opts):
         yield access_underlying(struct_member, opt_info)
 
 
+def format_return_annotation(return_info):
+    annotations = fmt_annotations(return_info)
+    return f"Returns: {annotations}A #{return_info['type']}"
+
+
+def generate_function_decl_annotation(func_name, return_info, arg_infos):
+    return "\n".join(
+        [
+            "/**",
+            "\n * ".join(
+                [
+                    f"{func_name}:",
+                ]
+                + [format_arg_annotation(arg_info) for arg_info in arg_infos]
+                + (["", format_return_annotation(return_info)] if return_info else [])
+            ),
+            " */",
+        ]
+    )
+
+
 def print_opt_struct_introspectable_source(opt_struct):
     struct_name = f"Torch{opt_struct['name']}"
     snake_name = camel_case_to_snake_case(struct_name).lower()
@@ -456,23 +482,16 @@ def print_opt_struct_introspectable_source(opt_struct):
         # type and name
         list(map(lambda x: f"{x[0]} {x[1]}", constructor_args_infos))
     )
-    print("/**")
     print(
-        " * "
-        + (
-            "\n * ".join(
-                [f"{constructor}:"]
-                + [
-                    format_arg_annotation(
-                        {"name": name, "c_type": c_type, "meta": meta}
-                    )
-                    for c_type, name, meta in constructor_args_infos
-                ]
-                + ["", f"Returns: (transfer full): A new #{struct_name}"]
-            )
+        generate_function_decl_annotation(
+            constructor,
+            {"type": struct_name, "transfer": "full"},
+            [
+                get_arg_annotations({"name": name, "c_type": c_type, "meta": meta})
+                for c_type, name, meta in constructor_args_infos
+            ],
         )
     )
-    print(" */")
     print(f"{struct_name} * {constructor} ({formatted_args})")
     print("{")
     print(indent(f"{struct_name} *opts = g_new0({struct_name}, 1);", 2))
