@@ -438,13 +438,9 @@ def opts_to_access_args(opts_struct_name, opts):
         yield access_underlying(struct_member, opt_info)
 
 
-def print_opt_struct_introspectable_source(opt_struct):
-    struct_name = f"Torch{opt_struct['name']}"
-    snake_name = camel_case_to_snake_case(struct_name).lower()
-    constructor = f"{snake_name}_new"
-    destructor = f"{snake_name}_free"
-    copy = f"{snake_name}_copy"
-
+def print_opt_struct_introspectable_constructor_source(
+    constructor, struct_name, opt_struct
+):
     constructor_return_info = {"type": f"{struct_name} *", "transfer": "full"}
     constructor_arg_infos = [
         get_arg_annotations({"name": name, "c_type": c_type, "meta": meta})
@@ -493,6 +489,57 @@ def print_opt_struct_introspectable_source(opt_struct):
     print("}")
     print("")
 
+
+def print_opt_struct_introspectable_destructor_source(
+    destructor, struct_name, opt_struct
+):
+    destructor_return_info = {"type": "void"}
+    destructor_args = [
+        {
+            "name": "opts",
+            "type": f"{struct_name} *",
+            "transfer": "full",
+            "desc": f"The #{struct_name} to free.",
+        }
+    ]
+
+    print(
+        fmt_function_decl_header_comment(
+            destructor,
+            destructor_return_info,
+            destructor_args,
+        )
+    )
+    print(
+        fmt_gobject_func_fwd_decl(destructor, destructor_return_info, destructor_args)
+    )
+    print("{")
+    for opt_info in opt_struct["opts"]:
+        storage_info = STORAGE.get(opt_info["c_type"])
+        storage_c_type = (
+            storage_info["container"]
+            if opt_info["c_type"] in STORAGE
+            else opt_info["c_type"]
+        )
+
+        if "func_data_ptr" in opt_info.get("meta", {}):
+            # This is a closure, we need to create a TorchCallbackData
+            # to store the callback pointer, func_data_ptr and func_data_destroy_ptr
+            storage_c_type = "TorchCallbackData *"
+
+        if storage_c_type in DESTROY_FUNCS:
+            print(
+                indent(
+                    f"g_clear_pointer (&opts->{opt_info['name']}, {DESTROY_FUNCS[storage_c_type]});",
+                    2,
+                )
+            )
+    print(indent("g_clear_pointer ((gpointer **) &opts, g_free);", 2))
+    print("}")
+    print("")
+
+
+def print_opt_struct_introspectable_copy_source(copy, struct_name, opt_struct):
     copy_return_info = {
         "type": f"{struct_name} *",
         "transfer": "full",
@@ -561,50 +608,22 @@ def print_opt_struct_introspectable_source(opt_struct):
     print("}")
     print("")
 
-    destructor_return_info = {"type": "void"}
-    destructor_args = [
-        {
-            "name": "opts",
-            "type": f"{struct_name} *",
-            "transfer": "full",
-            "desc": f"The #{struct_name} to free.",
-        }
-    ]
 
-    print(
-        fmt_function_decl_header_comment(
-            destructor,
-            destructor_return_info,
-            destructor_args,
-        )
+def print_opt_struct_introspectable_source(opt_struct):
+    struct_name = f"Torch{opt_struct['name']}"
+    snake_name = camel_case_to_snake_case(struct_name).lower()
+    constructor = f"{snake_name}_new"
+    destructor = f"{snake_name}_free"
+    copy = f"{snake_name}_copy"
+
+    print_opt_struct_introspectable_constructor_source(
+        constructor, struct_name, opt_struct
     )
-    print(
-        fmt_gobject_func_fwd_decl(destructor, destructor_return_info, destructor_args)
+    print_opt_struct_introspectable_copy_source(copy, struct_name, opt_struct)
+    print_opt_struct_introspectable_destructor_source(
+        destructor, struct_name, opt_struct
     )
-    print("{")
-    for opt_info in opt_struct["opts"]:
-        storage_info = STORAGE.get(opt_info["c_type"])
-        storage_c_type = (
-            storage_info["container"]
-            if opt_info["c_type"] in STORAGE
-            else opt_info["c_type"]
-        )
 
-        if "func_data_ptr" in opt_info.get("meta", {}):
-            # This is a closure, we need to create a TorchCallbackData
-            # to store the callback pointer, func_data_ptr and func_data_destroy_ptr
-            storage_c_type = "TorchCallbackData *"
-
-        if storage_c_type in DESTROY_FUNCS:
-            print(
-                indent(
-                    f"g_clear_pointer (&opts->{opt_info['name']}, {DESTROY_FUNCS[storage_c_type]});",
-                    2,
-                )
-            )
-    print(indent("g_clear_pointer ((gpointer **) &opts, g_free);", 2))
-    print("}")
-    print("")
     print(
         f"G_DEFINE_BOXED_TYPE ({struct_name}, {snake_name}, (GBoxedCopyFunc) {copy}, (GBoxedFreeFunc) {destructor})"
     )
