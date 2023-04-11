@@ -129,7 +129,10 @@ def type_spec_to_gobject_type(type_spec):
 
 
 def determine_return_transfer_mode(func_decl, return_decl):
-    if (func_decl["schema_order_arguments"] and func_decl["schema_order_arguments"][0]["annotation"] == "a!"):
+    if (
+        func_decl["schema_order_arguments"]
+        and func_decl["schema_order_arguments"][0]["annotation"] == "a!"
+    ):
         assert len(func_decl["returns"]) == 1
         return "self"
     elif "*" not in map_type_name(return_decl):
