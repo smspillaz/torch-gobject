@@ -655,6 +655,7 @@ def print_header(declarations):
 
     print("G_END_DECLS")
 
+
 def print_source(declarations):
     print("#include <torch/torch.h>")
     print("#include <gio/gio.h>")
@@ -689,6 +690,7 @@ def print_source(declarations):
 
     for d in declarations:
         print_function_body(d)
+
 
 def main():
     parser = argparse.ArgumentParser()
