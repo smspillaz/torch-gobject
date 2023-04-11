@@ -630,11 +630,12 @@ def print_function_body(decl):
     str_list.append(make_gobject_decl_header(gobject_decl))
     str_list.append(make_gobject_decl_fwd_decl(gobject_decl))
     str_list.append("{")
-    str_list.append(indent(make_function_call(decl, gobject_decl), 4));
+    str_list.append(indent(make_function_call(decl, gobject_decl), 4))
     str_list.append("}")
 
     print("")
     print("\n".join(str_list))
+
 
 def print_header(declarations):
     print("#include <torch-gobject/torch-allocator.h>")
