@@ -373,8 +373,10 @@ def access_underlying(variable, opt_info):
 
 def get_closure_info(opt_info):
     return {
-        "scope": "notified" if opt_info.get("meta", {}).get("func_data_ptr", None) else None,
-        "destroy": opt_info.get("meta", {}).get("func_data_destroy")
+        "scope": "notified"
+        if opt_info.get("meta", {}).get("func_data_ptr", None)
+        else None,
+        "destroy": opt_info.get("meta", {}).get("func_data_destroy"),
     }
 
 
