@@ -63,11 +63,9 @@ def function_name(decl):
     if "Tensor" in decl["method_of"]:
         method = "tensor"
 
-    return "_".join([x for x in [
-        "torch",
-        method,
-        non_namespaced_function_name(decl)
-    ] if x])
+    return "_".join(
+        [x for x in ["torch", method, non_namespaced_function_name(decl)] if x]
+    )
 
 
 def unqualified_dynamic_type(type_spec):
