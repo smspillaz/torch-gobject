@@ -10,7 +10,15 @@ try:
 except ImportError:
     from yaml import Loader, Dumper
 
-from common import TYPE_MAPPING
+from common import (
+    TYPE_MAPPING,
+    fmt_out,
+    fmt_transfer,
+    fmt_element_type,
+    fmt_array_fixed_size,
+    fmt_nullable,
+    fmt_annotations
+)
 
 RENAME_LIST = {
     "set_data": "set_data_from_tensor"
@@ -217,38 +225,6 @@ def make_gobject_decl_fwd_decl(decl):
         ", ".join(arg_str_list),
         ")"
     ])
-
-
-def fmt_out(a):
-    return "(out)" if a.get("out", False) else ""
-
-
-def fmt_transfer(a):
-    return "(transfer {a})".format(a="none" if a["transfer"] == "self" else a["transfer"]) if a["transfer"] and a["type"].endswith("*") else ""
-
-
-def fmt_element_type(a):
-    return "(element-type {a})".format(a=a["element-type"].strip(" *")) if a["element-type"] else ""
-
-
-def fmt_array_fixed_size(a):
-    return "(array fixed-size={a[size]})".format(a=a) if a["size"] else ""
-
-
-def fmt_nullable(a):
-    return "(nullable)".format(a=a) if a["nullable"] and "*" in a["type"] else ""
-
-
-def fmt_annotations(a):
-    annotations_str = " ".join([x for x in [
-        fmt_out(a),
-        fmt_transfer(a),
-        fmt_element_type(a),
-        fmt_array_fixed_size(a),
-        fmt_nullable(a)
-    ] if x])
-
-    return ": {}".format(annotations_str) if annotations_str else ""
 
 
 def make_gobject_decl_header(decl):

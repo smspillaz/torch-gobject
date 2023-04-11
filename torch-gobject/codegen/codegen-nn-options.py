@@ -19,6 +19,7 @@ from common import (
     _RE_CAMEL_CASE1,
     _RE_CAMEL_CASE2,
     camel_case_to_snake_case,
+    fmt_annotations,
     indent
 )
 
@@ -371,49 +372,46 @@ def access_underlying(variable, opt_info):
     return variable
 
 
-def make_array_arg_annotation(opt_info):
+def get_closure_info(opt_info):
+    return {
+        "scope": "notified" if opt_info.get("meta", {}).get("func_data_ptr", None) else None,
+        "destroy": opt_info.get("meta", {}).get("func_data_destroy")
+    }
+
+
+def get_array_length_param(opt_info):
     if "*" not in opt_info["c_type"]:
-        return ""
+        return None
 
     length_parameter = opt_info.get("meta", {}).get("length", None)
 
     if length_parameter is not None:
         try:
             int_length = int(length_parameter)
-            return f" (array fixed-size={int_length})"
+            return int_length
         except ValueError:
-            return f" (array length={length_parameter})"
+            return length_parameter
 
-    return ""
+    return None
 
 
-def make_closure_annotation(opt_info):
-    annotations = []
+def get_element_type_info(opt_info):
+    element_type = opt_info.get("meta", {}).get("element_type", None)
 
-    func_data_ptr = opt_info.get("meta", {}).get("func_data_ptr", None)
-    if func_data_ptr is not None:
-        annotations.append(f"(scope notified)")
-
-    func_data_destroy = opt_info.get("meta", {}).get("func_data_destroy", None)
-    if func_data_destroy is not None:
-        annotations.append(f"(destroy {func_data_destroy})")
-
-    return "".join(annotations)
+    return element_type
 
 
 def format_arg_annotation(opt_info):
-    transfer = " (transfer none)" if "*" in opt_info["c_type"] else ""
-    array_length = make_array_arg_annotation(opt_info)
-    closure = make_closure_annotation(opt_info)
-    nullable = " (nullable)" if "*" in opt_info["c_type"] else ""
+    annotations = fmt_annotations({
+        "type": opt_info["c_type"],
+        "transfer": "none" if "*" in opt_info["c_type"] else "",
+        "nullable": True if "*" in opt_info["c_type"] else False,
+        "size": get_array_length_param(opt_info),
+        "element-type": get_element_type_info(opt_info),
+        **get_closure_info(opt_info)
+    })
 
-    annotations = (
-        f"{transfer}{array_length}{closure}{nullable}: "
-        if any((transfer, array_length, closure, nullable))
-        else " "
-    )
-
-    return "@{name}:{annotations}A #{c_type}".format(
+    return "@{name}{annotations}: A #{c_type}".format(
         name=opt_info["name"], c_type=opt_info["c_type"], annotations=annotations
     )
 

@@ -261,3 +261,71 @@ DESTROY_FUNCS = {
     "TorchNNConvPaddingOptions *": "torch_nn_conv_padding_options_free",
     "TorchCallbackData *": "torch_callback_data_unref",
 }
+
+def fmt_out(a):
+    return "(out)" if a.get("out", False) else ""
+
+
+def fmt_transfer(a):
+    return "(transfer {a})".format(a="none" if a["transfer"] == "self" else a["transfer"]) if a["transfer"] and a["type"].endswith("*") else ""
+
+
+def fmt_element_type(a):
+    return "(element-type {a})".format(a=a["element-type"].strip(" *")) if a["element-type"] else ""
+
+
+def fmt_array_fixed_size(a):
+    return "(array fixed-size={a[size]})".format(a=a) if a["size"] else ""
+
+
+def fmt_array_length_param(a):
+    return f"(array length={a['size']})"
+
+
+def fmt_array_length(a):
+    length_parameter = a.get("size", None)
+
+    if length_parameter is not None:
+        try:
+            int_length = int(length_parameter)
+            return fmt_array_fixed_size(a)
+        except ValueError:
+            return fmt_array_length_param(a)
+
+    return ""
+
+
+def fmt_callback_data_scope(a):
+    scope_param = a.get("scope", None)
+
+    if scope_param is not None:
+        return f"(scope {scope_param})"
+
+    return ""
+
+
+def fmt_callback_data_destroy(a):
+    destroy_param = a.get("destroy", None)
+
+    if destroy_param is not None:
+        return f"(destroy {scope_param})"
+
+    return ""
+
+
+def fmt_nullable(a):
+    return "(nullable)".format(a=a) if a["nullable"] and "*" in a["type"] else ""
+
+
+def fmt_annotations(a):
+    annotations_str = " ".join([x for x in [
+        fmt_out(a),
+        fmt_transfer(a),
+        fmt_element_type(a),
+        fmt_array_length(a),
+        fmt_callback_data_scope(a),
+        fmt_callback_data_destroy(a),
+        fmt_nullable(a)
+    ] if x])
+
+    return ": {}".format(annotations_str) if annotations_str else ""
