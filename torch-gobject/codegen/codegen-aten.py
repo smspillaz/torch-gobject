@@ -148,7 +148,7 @@ def make_gobject_decl(decl):
         type_spec_to_gobject_type(
             dict(
                 **return_decl,
-                transfer=determine_return_transfer_mode(decl, return_decl)
+                transfer=determine_return_transfer_mode(decl, return_decl),
             )
         )
         for return_decl in decl["returns"]
