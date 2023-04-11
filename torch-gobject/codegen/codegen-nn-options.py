@@ -189,30 +189,29 @@ def opts_to_constructor_args(opts):
         yield from maybe_yield_opt_to_callback_constructor_arg(meta)
 
 
-def make_array_struct_member_annotation(opt_info):
+def get_array_struct_member_element_type(opt_info):
     storage_type = (
         STORAGE[opt_info["c_type"]]["container"]
         if opt_info["c_type"] in STORAGE
         else opt_info["c_type"]
     )
     storage_element_type = (
-        f" (element-type {C_TYPE_TO_INTROSPECTION_TYPE[STORAGE[opt_info['c_type']]['element_type']]})"
+        C_TYPE_TO_INTROSPECTION_TYPE[STORAGE[opt_info["c_type"]]["element_type"]]
         if opt_info["c_type"] in STORAGE
-        else ""
+        else None
     )
 
     return storage_element_type
 
 
 def format_struct_member_annotation(opt_info):
-    transfer = " (transfer none)" if "*" in opt_info["c_type"] else ""
-    array_element_type = make_array_struct_member_annotation(opt_info)
-    nullable = " (nullable)" if "*" in opt_info["c_type"] else ""
-
-    annotations = (
-        f"{transfer}{array_element_type}{nullable}: "
-        if (transfer or array_element_type)
-        else " "
+    annotations = fmt_annotations(
+        {
+            "type": opt_info["c_type"],
+            "element-type": get_array_struct_member_element_type(opt_info),
+            "transfer": "none" if "*" in opt_info["c_type"] else None,
+            "nullable": True if "*" in opt_info["c_type"] else None,
+        }
     )
 
     return "@{name}:{annotations}A #{c_type}".format(
