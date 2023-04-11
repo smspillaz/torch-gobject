@@ -375,7 +375,7 @@ def fmt_arg_annotation(arg_annotations):
         name=arg_annotations["name"],
         c_type=arg_annotations["type"],
         annotations=annotations,
-        desc=desc
+        desc=desc,
     )
 
 
