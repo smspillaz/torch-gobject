@@ -445,13 +445,7 @@ def determine_return_statement_operand(gobject_return_decl, name):
 
 
 AT_NAMESPACE_ONLY = {
-    "normal": {
-        "overloads": [
-            "Tensor_float",
-            "float_Tensor",
-            "Tensor_Tensor"
-        ]
-    }
+    "normal": {"overloads": ["Tensor_float", "float_Tensor", "Tensor_Tensor"]}
 }
 
 
