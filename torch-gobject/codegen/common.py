@@ -23,16 +23,19 @@ def indent(text, indent):
     pad = " " * indent
     return "\n".join([pad + line for line in text.splitlines()])
 
+
 TYPE_MAPPING = {
     "at::ArrayRef<double>": {
         "name": "GArray *",
-        "meta": {
-            "type": "double"
-        },
+        "meta": {"type": "double"},
         "convert_native_qualifiers": "",
-        "convert_native_func": lambda a: "torch_array_ref_from_garray <double> ({a})".format(a=a),
+        "convert_native_func": lambda a: "torch_array_ref_from_garray <double> ({a})".format(
+            a=a
+        ),
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
-        "convert_gobject_func": lambda a: "torch_new_garray_from_array_ref <double> ({a})".format(a=a),
+        "convert_gobject_func": lambda a: "torch_new_garray_from_array_ref <double> ({a})".format(
+            a=a
+        ),
     },
     "at::IntArrayRef": {
         "name": "GArray *",
@@ -40,9 +43,13 @@ TYPE_MAPPING = {
             "type": "long",
         },
         "convert_native_qualifiers": "",
-        "convert_native_func": lambda a: "torch_array_ref_from_garray <long> ({a})".format(a=a),
+        "convert_native_func": lambda a: "torch_array_ref_from_garray <long> ({a})".format(
+            a=a
+        ),
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
-        "convert_gobject_func": lambda a: "torch_new_garray_from_array_ref <long> ({a})".format(a=a),
+        "convert_gobject_func": lambda a: "torch_new_garray_from_array_ref <long> ({a})".format(
+            a=a
+        ),
     },
     "at::Device": {
         "name": "TorchDevice *",
@@ -60,13 +67,15 @@ TYPE_MAPPING = {
     },
     "at::DimnameList": {
         "name": "GPtrArray *",
-        "meta": {
-            "type": "TorchDimname *"
-        },
+        "meta": {"type": "TorchDimname *"},
         "convert_native_qualifiers": "",
-        "convert_native_func": lambda a: "torch_dimname_list_from_dimname_ptr_array ({a})".format(a=a),
+        "convert_native_func": lambda a: "torch_dimname_list_from_dimname_ptr_array ({a})".format(
+            a=a
+        ),
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
-        "convert_gobject_func": lambda a: "torch_tensor_ptr_array_from_dimname_list ({a})".format(a=a),
+        "convert_gobject_func": lambda a: "torch_tensor_ptr_array_from_dimname_list ({a})".format(
+            a=a
+        ),
     },
     "at::Generator": {
         "name": "TorchGenerator *",
@@ -92,9 +101,13 @@ TYPE_MAPPING = {
     "at::ScalarType": {
         "name": "GType",
         "convert_native_qualifiers": "",
-        "convert_native_func": lambda a: "torch_scalar_type_from_gtype ({a})".format(a=a),
+        "convert_native_func": lambda a: "torch_scalar_type_from_gtype ({a})".format(
+            a=a
+        ),
         "convert_gobject_prefix": lambda a: a,
-        "convert_gobject_func": lambda a: "torch_gtype_from_scalar_type ({a})".format(a=a),
+        "convert_gobject_func": lambda a: "torch_gtype_from_scalar_type ({a})".format(
+            a=a
+        ),
     },
     "at::Storage": {
         "name": "TorchStorage *",
@@ -112,13 +125,15 @@ TYPE_MAPPING = {
     },
     "at::TensorList": {
         "name": "GPtrArray *",
-        "meta": {
-            "type": "TorchTensor *"
-        },
+        "meta": {"type": "TorchTensor *"},
         "convert_native_qualifiers": "",
-        "convert_native_func": lambda a: "torch_tensor_list_from_tensor_ptr_array ({a})".format(a=a),
+        "convert_native_func": lambda a: "torch_tensor_list_from_tensor_ptr_array ({a})".format(
+            a=a
+        ),
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
-        "convert_gobject_func": lambda a: "torch_tensor_ptr_array_from_tensor_list ({a})".format(a=a),
+        "convert_gobject_func": lambda a: "torch_tensor_ptr_array_from_tensor_list ({a})".format(
+            a=a
+        ),
     },
     "at::TensorOptions": {
         "name": "TorchTensorOptions *",
@@ -176,10 +191,14 @@ TYPE_MAPPING = {
             "nullable_elements": True,
         },
         "convert_native_qualifiers": "",
-        "convert_native_func": lambda a: "torch_optional_tensor_list_from_tensor_ptr_array ({a})".format(a=a),
+        "convert_native_func": lambda a: "torch_optional_tensor_list_from_tensor_ptr_array ({a})".format(
+            a=a
+        ),
         "convert_gobject_prefix": lambda a: "g_autoptr ({a})".format(a=a.strip("* ")),
-        "convert_gobject_func": lambda a: "torch_tensor_ptr_array_from_optional_tensor_list ({a})".format(a=a),
-    }
+        "convert_gobject_func": lambda a: "torch_tensor_ptr_array_from_optional_tensor_list ({a})".format(
+            a=a
+        ),
+    },
 }
 
 CONVERSIONS = {
