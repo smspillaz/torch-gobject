@@ -289,7 +289,7 @@ def fmt_out(a):
 def fmt_transfer(a):
     return (
         "(transfer {a})".format(a="none" if a["transfer"] == "self" else a["transfer"])
-        if a["transfer"] and a["type"].endswith("*")
+        if a.get("transfer", None) and a["type"].endswith("*")
         else ""
     )
 
