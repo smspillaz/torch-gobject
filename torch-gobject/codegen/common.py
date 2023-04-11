@@ -391,7 +391,7 @@ def fmt_function_decl_header_comment(func_name, return_info, arg_infos):
             "/**",
             "\n * ".join(
                 [
-                    f"{func_name}:",
+                    f" * {func_name}:",
                 ]
                 + [fmt_arg_annotation(arg_info) for arg_info in arg_infos]
                 + (["", fmt_return_annotation(return_info)] if return_info else [])
