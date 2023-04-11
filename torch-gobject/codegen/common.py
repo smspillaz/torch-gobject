@@ -342,7 +342,9 @@ def fmt_callback_data_destroy(a):
 
 
 def fmt_nullable(a):
-    return "(nullable)".format(a=a) if a["nullable"] and "*" in a["type"] else ""
+    return (
+        "(nullable)".format(a=a) if a.get("nullable", None) and "*" in a["type"] else ""
+    )
 
 
 def fmt_annotations(a):
