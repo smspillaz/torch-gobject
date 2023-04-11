@@ -499,21 +499,24 @@ def print_opt_struct_introspectable_source(opt_struct):
     print(indent("return opts;", 2))
     print("}")
     print("")
-    print("/**")
     print(
-        " * "
-        + (
-            "\n * ".join(
-                [
-                    f"{copy}:",
-                    f"@opts: (transfer none): The #{struct_name} to copy.",
-                    "",
-                    f"Returns: (transfer full): A new #{struct_name} which is a copy of @opts.",
-                ]
-            )
+        fmt_function_decl_header_comment(
+            copy,
+            {
+                "type": struct_name,
+                "transfer": "full",
+                "desc": f"A new #{struct_name} which is a copy of @opts",
+            },
+            [
+                {
+                    "name": "opts",
+                    "type": struct_name,
+                    "transfer": "none",
+                    "desc": f"The #{struct_name} to copy from.",
+                }
+            ],
         )
     )
-    print(" */")
     print(f"{struct_name} * {copy} ({struct_name} *opts)")
     print("{")
     print(indent(f"{struct_name} *new_opts = g_new0({struct_name}, 1);", 2))
@@ -553,19 +556,20 @@ def print_opt_struct_introspectable_source(opt_struct):
     print(indent("return new_opts;", 2))
     print("}")
     print("")
-    print("/**")
     print(
-        " * "
-        + (
-            "\n * ".join(
-                [
-                    f"{destructor}:",
-                    f"@opts: (transfer none): The #{struct_name} to free.",
-                ]
-            )
+        fmt_function_decl_header_comment(
+            destructor,
+            None,
+            [
+                {
+                    "name": "opts",
+                    "type": struct_name,
+                    "transfer": "none",
+                    "desc": f"The #{struct_name} to free.",
+                }
+            ],
         )
     )
-    print(" */")
     print(f"void {destructor} ({struct_name} *opts)")
     print("{")
     for opt_info in opt_struct["opts"]:
