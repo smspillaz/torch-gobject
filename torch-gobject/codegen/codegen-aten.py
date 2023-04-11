@@ -42,13 +42,19 @@ def non_namespaced_function_name(decl):
     if "overload_name" in decl:
         overload_name = decl["overload_name"].lower()
 
-    return "_".join([x for x in [
-        op,
-        RENAME_LIST.get(decl["name"], decl["name"]).strip("_"),
-        overload_name,
-        overload,
-        inplace
-    ] if x])
+    return "_".join(
+        [
+            x
+            for x in [
+                op,
+                RENAME_LIST.get(decl["name"], decl["name"]).strip("_"),
+                overload_name,
+                overload,
+                inplace,
+            ]
+            if x
+        ]
+    )
 
 
 def function_name(decl):
