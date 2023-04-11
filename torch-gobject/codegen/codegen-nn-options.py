@@ -464,7 +464,9 @@ def print_opt_struct_introspectable_source(opt_struct):
             "\n * ".join(
                 [f"{constructor}:"]
                 + [
-                    format_arg_annotation({"name": name, "c_type": c_type, "meta": meta})
+                    format_arg_annotation(
+                        {"name": name, "c_type": c_type, "meta": meta}
+                    )
                     for c_type, name, meta in constructor_args_infos
                 ]
                 + ["", f"Returns: (transfer full): A new #{struct_name}"]
