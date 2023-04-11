@@ -145,16 +145,17 @@ def make_gobject_decl(decl):
     is_method = "namespace" not in decl["method_of"]
     return_rv_directly = False
     returns_and_gobject_transfers = [
-        type_spec_to_gobject_type(dict(
-            **return_decl,
-            transfer=determine_return_transfer_mode(decl, return_decl)
-        ))
+        type_spec_to_gobject_type(
+            dict(
+                **return_decl,
+                transfer=determine_return_transfer_mode(decl, return_decl)
+            )
+        )
         for return_decl in decl["returns"]
     ]
 
     gobject_arguments = [
-        type_spec_to_gobject_type(dict(**a, transfer="none"))
-        for a in decl["arguments"]
+        type_spec_to_gobject_type(dict(**a, transfer="none")) for a in decl["arguments"]
     ]
 
     # If we return a single pointer-typed value
@@ -168,7 +169,7 @@ def make_gobject_decl(decl):
                 **returns_and_gobject_transfers[0],
                 "out": True,
                 "type": "{} *".format(returns_and_gobject_transfers[0]["type"]),
-                "nullable": True
+                "nullable": True,
             }
         ]
         return_rv_directly = True
@@ -179,14 +180,14 @@ def make_gobject_decl(decl):
             "size": None,
             "transfer": "none",
             "element-type": None,
-            "nullable": False
+            "nullable": False,
         }
         out_arguments = [
             {
                 **out_arg,
                 "out": True,
                 "type": "{} *".format(out_arg["type"]),
-                "nullable": True
+                "nullable": True,
             }
             for out_arg in returns_and_gobject_transfers
         ]
@@ -199,7 +200,7 @@ def make_gobject_decl(decl):
         "transfer": "full",
         "element-type": None,
         "out": True,
-        "size": None
+        "size": None,
     }
 
     return {
@@ -209,7 +210,7 @@ def make_gobject_decl(decl):
         "arguments": gobject_arguments,
         "out-arguments": out_arguments,
         "error-argument": error_argument,
-        "return-rv-directly": return_rv_directly
+        "return-rv-directly": return_rv_directly,
     }
 
 
@@ -227,44 +228,53 @@ def make_gobject_decl_fwd_decl(decl):
         decl["error-argument"]["type"] + " " + decl["error-argument"]["name"]
     )
 
-    return "".join([
-        decl["returns"]["type"] + " ",
-        decl["name"],
-        " (",
-        ", ".join(arg_str_list),
-        ")"
-    ])
+    return "".join(
+        [
+            decl["returns"]["type"] + " ",
+            decl["name"],
+            " (",
+            ", ".join(arg_str_list),
+            ")",
+        ]
+    )
 
 
 def make_gobject_decl_header(decl):
-    return "\n".join([
-        "/**",
-        " * " + decl["name"] + ":",
-    ] + [
-        " * @{a[name]}{annotations}: A #{a[type]}".format(
-            a=a,
-            annotations=fmt_annotations(a)
-        ) for a in decl["arguments"]
-    ] + [
-        " * @{a[name]}{annotations}: An out-param #{a[type]}".format(
-            a=a,
-            annotations=fmt_annotations(a)
+    return "\n".join(
+        [
+            "/**",
+            " * " + decl["name"] + ":",
+        ]
+        + [
+            " * @{a[name]}{annotations}: A #{a[type]}".format(
+                a=a, annotations=fmt_annotations(a)
+            )
+            for a in decl["arguments"]
+        ]
+        + [
+            " * @{a[name]}{annotations}: An out-param #{a[type]}".format(
+                a=a, annotations=fmt_annotations(a)
+            )
+            for a in (decl["out-arguments"] if not decl["return-rv-directly"] else [])
+        ]
+        + [
+            " * @{a[name]}{annotations}: An error-out #{a[type]}".format(
+                a=decl["error-argument"],
+                annotations=fmt_annotations(a=decl["error-argument"]),
+            )
+        ]
+        + [" *"]
+        + (
+            [
+                " * Returns{annotations}: A #{ret[type]}".format(
+                    ret=decl["returns"], annotations=fmt_annotations(decl["returns"])
+                )
+            ]
+            if decl["returns"]["type"] != "void"
+            else []
         )
-        for a in (
-            decl["out-arguments"] if not decl["return-rv-directly"] else []
-        )
-    ] + [
-        " * @{a[name]}{annotations}: An error-out #{a[type]}".format(
-            a=decl["error-argument"],
-            annotations=fmt_annotations(a=decl["error-argument"])
-        )
-    ] + [" *"] + (
-        [" * Returns{annotations}: A #{ret[type]}".format(
-            ret=decl["returns"],
-            annotations=fmt_annotations(decl["returns"])
-        )]
-        if decl["returns"]["type"] != "void" else []
-    ) + [" */"])
+        + [" */"]
+    )
 
 
 FUNCTION_BLACKLIST = (
