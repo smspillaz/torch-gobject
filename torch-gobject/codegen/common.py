@@ -399,3 +399,22 @@ def fmt_function_decl_header_comment(func_name, return_info, arg_infos):
             " */",
         ]
     )
+
+
+def fmt_gobject_func_fwd_decl(func_name, return_info, arg_infos):
+    return "".join(
+        [
+            return_info["type"],
+            " ",
+            func_name,
+            " ",
+            "(",
+            ", ".join(
+                [
+                    "".join([arg_info["type"], " ", arg_info["name"]])
+                    for arg_info in arg_infos
+                ]
+            ),
+            ")",
+        ]
+    )

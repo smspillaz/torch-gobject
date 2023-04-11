@@ -21,6 +21,7 @@ from common import (
     camel_case_to_snake_case,
     fmt_annotations,
     fmt_function_decl_header_comment,
+    fmt_gobject_func_fwd_decl,
     indent,
 )
 
@@ -444,25 +445,17 @@ def print_opt_struct_introspectable_source(opt_struct):
     destructor = f"{snake_name}_free"
     copy = f"{snake_name}_copy"
 
-    print("")
+    constructor_return_info = {"type": f"{struct_name} *", "transfer": "full"}
+    constructor_arg_infos = [
+        get_arg_annotations({"name": name, "c_type": c_type, "meta": meta})
+        for c_type, name, meta in opts_to_constructor_args(opt_struct["opts"])
+    ]
 
-    constructor_args_infos = list(opts_to_constructor_args(opt_struct["opts"]))
-
-    formatted_args = ", ".join(
-        # type and name
-        list(map(lambda x: f"{x[0]} {x[1]}", constructor_args_infos))
-    )
     print(
-        fmt_function_decl_header_comment(
-            constructor,
-            {"type": struct_name, "transfer": "full"},
-            [
-                get_arg_annotations({"name": name, "c_type": c_type, "meta": meta})
-                for c_type, name, meta in constructor_args_infos
-            ],
+        fmt_gobject_func_fwd_decl(
+            constructor, constructor_return_info, constructor_arg_infos
         )
     )
-    print(f"{struct_name} * {constructor} ({formatted_args})")
     print("{")
     print(indent(f"{struct_name} *opts = g_new0({struct_name}, 1);", 2))
     print("")
@@ -499,25 +492,36 @@ def print_opt_struct_introspectable_source(opt_struct):
     print(indent("return opts;", 2))
     print("}")
     print("")
+
+    copy_return_info = {
+        "type": f"{struct_name} *",
+        "transfer": "full",
+        "desc": f"A new #{struct_name} which is a copy of @opts",
+    }
+    copy_args = [
+        {
+            "name": "opts",
+            "type": f"{struct_name} *",
+            "transfer": "full",
+            "desc": f"The #{struct_name} to copy from.",
+        }
+    ]
+
     print(
         fmt_function_decl_header_comment(
             copy,
-            {
-                "type": struct_name,
-                "transfer": "full",
-                "desc": f"A new #{struct_name} which is a copy of @opts",
-            },
-            [
-                {
-                    "name": "opts",
-                    "type": struct_name,
-                    "transfer": "none",
-                    "desc": f"The #{struct_name} to copy from.",
-                }
-            ],
+            copy_return_info,
+            copy_args,
         )
     )
-    print(f"{struct_name} * {copy} ({struct_name} *opts)")
+    print(
+        fmt_gobject_func_fwd_decl(
+            copy,
+            copy_return_info,
+            copy_args,
+        )
+    )
+
     print("{")
     print(indent(f"{struct_name} *new_opts = g_new0({struct_name}, 1);", 2))
     # Here we have to be a bit more careful than just re-calling the constructor
@@ -556,21 +560,27 @@ def print_opt_struct_introspectable_source(opt_struct):
     print(indent("return new_opts;", 2))
     print("}")
     print("")
+
+    destructor_return_info = {"type": "void"}
+    destructor_args = [
+        {
+            "name": "opts",
+            "type": f"{struct_name} *",
+            "transfer": "full",
+            "desc": f"The #{struct_name} to free.",
+        }
+    ]
+
     print(
         fmt_function_decl_header_comment(
             destructor,
-            None,
-            [
-                {
-                    "name": "opts",
-                    "type": struct_name,
-                    "transfer": "none",
-                    "desc": f"The #{struct_name} to free.",
-                }
-            ],
+            destructor_return_info,
+            destructor_args,
         )
     )
-    print(f"void {destructor} ({struct_name} *opts)")
+    print(
+        fmt_gobject_func_fwd_decl(destructor, destructor_return_info, destructor_args)
+    )
     print("{")
     for opt_info in opt_struct["opts"]:
         storage_info = STORAGE.get(opt_info["c_type"])

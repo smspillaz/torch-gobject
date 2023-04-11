@@ -19,6 +19,7 @@ from common import (
     fmt_nullable,
     fmt_annotations,
     fmt_function_decl_header_comment,
+    fmt_gobject_func_fwd_decl,
 )
 
 RENAME_LIST = {"set_data": "set_data_from_tensor"}
@@ -216,27 +217,12 @@ def make_gobject_decl(decl):
 
 
 def make_gobject_decl_fwd_decl(decl):
-    arg_str_list = []
-
-    for a in decl["arguments"]:
-        arg_str_list.append(a["type"] + " " + a["name"])
-
-    if not decl["return-rv-directly"]:
-        for a in decl["out-arguments"]:
-            arg_str_list.append(a["type"] + " " + a["name"])
-
-    arg_str_list.append(
-        decl["error-argument"]["type"] + " " + decl["error-argument"]["name"]
-    )
-
-    return "".join(
-        [
-            decl["returns"]["type"] + " ",
-            decl["name"],
-            " (",
-            ", ".join(arg_str_list),
-            ")",
-        ]
+    return fmt_gobject_func_fwd_decl(
+        decl["name"],
+        decl["returns"],
+        decl["arguments"]
+        + (decl["out-arguments"] if not decl["return-rv-directly"] else [])
+        + [decl["error-argument"]],
     )
 
 
