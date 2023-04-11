@@ -281,16 +281,25 @@ DESTROY_FUNCS = {
     "TorchCallbackData *": "torch_callback_data_unref",
 }
 
+
 def fmt_out(a):
     return "(out)" if a.get("out", False) else ""
 
 
 def fmt_transfer(a):
-    return "(transfer {a})".format(a="none" if a["transfer"] == "self" else a["transfer"]) if a["transfer"] and a["type"].endswith("*") else ""
+    return (
+        "(transfer {a})".format(a="none" if a["transfer"] == "self" else a["transfer"])
+        if a["transfer"] and a["type"].endswith("*")
+        else ""
+    )
 
 
 def fmt_element_type(a):
-    return "(element-type {a})".format(a=a["element-type"].strip(" *")) if a["element-type"] else ""
+    return (
+        "(element-type {a})".format(a=a["element-type"].strip(" *"))
+        if a["element-type"]
+        else ""
+    )
 
 
 def fmt_array_fixed_size(a):
@@ -337,14 +346,20 @@ def fmt_nullable(a):
 
 
 def fmt_annotations(a):
-    annotations_str = " ".join([x for x in [
-        fmt_out(a),
-        fmt_transfer(a),
-        fmt_element_type(a),
-        fmt_array_length(a),
-        fmt_callback_data_scope(a),
-        fmt_callback_data_destroy(a),
-        fmt_nullable(a)
-    ] if x])
+    annotations_str = " ".join(
+        [
+            x
+            for x in [
+                fmt_out(a),
+                fmt_transfer(a),
+                fmt_element_type(a),
+                fmt_array_length(a),
+                fmt_callback_data_scope(a),
+                fmt_callback_data_destroy(a),
+                fmt_nullable(a),
+            ]
+            if x
+        ]
+    )
 
     return ": {}".format(annotations_str) if annotations_str else ""
