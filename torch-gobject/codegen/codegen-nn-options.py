@@ -403,14 +403,16 @@ def get_element_type_info(opt_info):
 
 
 def format_arg_annotation(opt_info):
-    annotations = fmt_annotations({
-        "type": opt_info["c_type"],
-        "transfer": "none" if "*" in opt_info["c_type"] else "",
-        "nullable": True if "*" in opt_info["c_type"] else False,
-        "size": get_array_length_param(opt_info),
-        "element-type": get_element_type_info(opt_info),
-        **get_closure_info(opt_info)
-    })
+    annotations = fmt_annotations(
+        {
+            "type": opt_info["c_type"],
+            "transfer": "none" if "*" in opt_info["c_type"] else "",
+            "nullable": True if "*" in opt_info["c_type"] else False,
+            "size": get_array_length_param(opt_info),
+            "element-type": get_element_type_info(opt_info),
+            **get_closure_info(opt_info),
+        }
+    )
 
     return "@{name}{annotations}: A #{c_type}".format(
         name=opt_info["name"], c_type=opt_info["c_type"], annotations=annotations
