@@ -18,6 +18,7 @@ from common import (
     fmt_array_fixed_size,
     fmt_nullable,
     fmt_annotations,
+    fmt_function_decl_header_comment,
 )
 
 RENAME_LIST = {"set_data": "set_data_from_tensor"}
@@ -240,40 +241,19 @@ def make_gobject_decl_fwd_decl(decl):
 
 
 def make_gobject_decl_header(decl):
-    return "\n".join(
-        [
-            "/**",
-            " * " + decl["name"] + ":",
-        ]
-        + [
-            " * @{a[name]}{annotations}: A #{a[type]}".format(
-                a=a, annotations=fmt_annotations(a)
-            )
-            for a in decl["arguments"]
-        ]
-        + [
-            " * @{a[name]}{annotations}: An out-param #{a[type]}".format(
-                a=a, annotations=fmt_annotations(a)
-            )
-            for a in (decl["out-arguments"] if not decl["return-rv-directly"] else [])
-        ]
-        + [
-            " * @{a[name]}{annotations}: An error-out #{a[type]}".format(
-                a=decl["error-argument"],
-                annotations=fmt_annotations(a=decl["error-argument"]),
-            )
-        ]
-        + [" *"]
+    return fmt_function_decl_header_comment(
+        decl["name"],
+        decl["returns"] if decl["returns"]["type"] != "void" else None,
+        decl["arguments"]
         + (
             [
-                " * Returns{annotations}: A #{ret[type]}".format(
-                    ret=decl["returns"], annotations=fmt_annotations(decl["returns"])
-                )
+                {**a, "desc": f"An out-param of #{a['type']}"}
+                for a in decl["out-arguments"]
             ]
-            if decl["returns"]["type"] != "void"
+            if not decl["return-rv-directly"]
             else []
         )
-        + [" */"]
+        + ([{**decl["error-argument"], "desc": "An error-out of #GError"}]),
     )
 
 
