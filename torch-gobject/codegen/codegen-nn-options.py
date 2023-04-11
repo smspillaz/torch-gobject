@@ -20,7 +20,7 @@ from common import (
     _RE_CAMEL_CASE2,
     camel_case_to_snake_case,
     fmt_annotations,
-    indent
+    indent,
 )
 
 
