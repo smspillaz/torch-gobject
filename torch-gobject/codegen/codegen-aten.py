@@ -611,10 +611,8 @@ def make_function_call(decl, gobject_decl):
 
 def indent(text, indent):
     pad = " " * indent
-    return "\n".join([
-        pad + line
-        for line in text.splitlines()
-    ])
+    return "\n".join([pad + line for line in text.splitlines()])
+
 
 def print_function_body(decl):
     str_list = []
