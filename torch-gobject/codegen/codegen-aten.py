@@ -124,7 +124,7 @@ def type_spec_to_gobject_type(type_spec):
         "element-type": map_element_type(type_spec),
         "size": type_spec.get("size", None),
         "nullable": map_nullable(type_spec),
-        "transfer": type_spec["transfer"]
+        "transfer": type_spec["transfer"],
     }
 
 
