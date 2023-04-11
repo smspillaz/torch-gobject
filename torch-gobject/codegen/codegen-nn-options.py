@@ -48,9 +48,10 @@ def convert_callback_to_cpp(opt_info, name):
     convert_arg_lines = [
         (
             f"g_autoptr ({oa['c_type'].strip('*').strip()})"
-            if "*" in oa['c_type']
-            else oa['c_type']
-        ) + f" c_{oa['name']} = {convert_cpp_to_c(oa, oa['name'])};"
+            if "*" in oa["c_type"]
+            else oa["c_type"]
+        )
+        + f" c_{oa['name']} = {convert_cpp_to_c(oa, oa['name'])};"
         for oa in opt_info_args
     ]
     call_func_line_args = ", ".join([f"c_{oa['name']}" for oa in opt_info_args])
@@ -65,9 +66,7 @@ def convert_callback_to_cpp(opt_info, name):
         if opt_rv_c_type != "void"
         else ""
     )
-    return_line = (
-        f"return {convert_rv_part};" if opt_rv_c_type != "void" else "return;"
-    )
+    return_line = f"return {convert_rv_part};" if opt_rv_c_type != "void" else "return;"
 
     return "\n".join(
         [
