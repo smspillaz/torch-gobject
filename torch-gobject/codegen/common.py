@@ -297,7 +297,7 @@ def fmt_transfer(a):
 def fmt_element_type(a):
     return (
         "(element-type {a})".format(a=a["element-type"].strip(" *"))
-        if a["element-type"]
+        if a.get("element-type", None)
         else ""
     )
 
