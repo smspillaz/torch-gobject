@@ -365,3 +365,34 @@ def fmt_annotations(a):
     )
 
     return ": {}".format(annotations_str) if annotations_str else ""
+
+
+def fmt_arg_annotation(arg_annotations):
+    annotations = fmt_annotations(arg_annotations)
+
+    return "@{name}{annotations}: A #{c_type}".format(
+        name=arg_annotations["name"],
+        c_type=arg_annotations["type"],
+        annotations=annotations,
+    )
+
+
+def fmt_return_annotation(return_info):
+    annotations = fmt_annotations(return_info)
+    return f"Returns: {annotations}A #{return_info['type']}"
+
+
+def fmt_function_decl_header_comment(func_name, return_info, arg_infos):
+    return "\n".join(
+        [
+            "/**",
+            "\n * ".join(
+                [
+                    f"{func_name}:",
+                ]
+                + [fmt_arg_annotation(arg_info) for arg_info in arg_infos]
+                + (["", fmt_return_annotation(return_info)] if return_info else [])
+            ),
+            " */",
+        ]
+    )

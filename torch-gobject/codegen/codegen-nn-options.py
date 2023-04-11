@@ -20,6 +20,7 @@ from common import (
     _RE_CAMEL_CASE2,
     camel_case_to_snake_case,
     fmt_annotations,
+    fmt_function_decl_header_comment,
     indent,
 )
 
@@ -401,16 +402,6 @@ def get_element_type_info(opt_info):
     return element_type
 
 
-def format_arg_annotation(arg_annotations):
-    annotations = fmt_annotations(arg_annotations)
-
-    return "@{name}{annotations}: A #{c_type}".format(
-        name=arg_annotations["name"],
-        c_type=arg_annotations["type"],
-        annotations=annotations,
-    )
-
-
 def get_arg_annotations(opt_info):
     return {
         "name": opt_info["name"],
@@ -446,27 +437,6 @@ def opts_to_access_args(opts_struct_name, opts):
         yield access_underlying(struct_member, opt_info)
 
 
-def format_return_annotation(return_info):
-    annotations = fmt_annotations(return_info)
-    return f"Returns: {annotations}A #{return_info['type']}"
-
-
-def generate_function_decl_annotation(func_name, return_info, arg_infos):
-    return "\n".join(
-        [
-            "/**",
-            "\n * ".join(
-                [
-                    f"{func_name}:",
-                ]
-                + [format_arg_annotation(arg_info) for arg_info in arg_infos]
-                + (["", format_return_annotation(return_info)] if return_info else [])
-            ),
-            " */",
-        ]
-    )
-
-
 def print_opt_struct_introspectable_source(opt_struct):
     struct_name = f"Torch{opt_struct['name']}"
     snake_name = camel_case_to_snake_case(struct_name).lower()
@@ -483,7 +453,7 @@ def print_opt_struct_introspectable_source(opt_struct):
         list(map(lambda x: f"{x[0]} {x[1]}", constructor_args_infos))
     )
     print(
-        generate_function_decl_annotation(
+        fmt_function_decl_header_comment(
             constructor,
             {"type": struct_name, "transfer": "full"},
             [
