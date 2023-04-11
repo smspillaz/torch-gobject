@@ -408,21 +408,24 @@ def determine_real_function_call_return_type(return_decl):
     return "std::tuple <{}>".format(", ".join([rd["type"] for rd in return_decl]))
 
 
-def unpack_real_rv_to_gobject_rv(return_decl,
-                                 gobject_return_decl,
-                                 real_rv_name,
-                                 gobject_rv_name,
-                                 out_arg=False):
+def unpack_real_rv_to_gobject_rv(
+    return_decl, gobject_return_decl, real_rv_name, gobject_rv_name, out_arg=False
+):
     return_type = return_decl["dynamic_type"]
     unqualified_return_type = unqualified_dynamic_type(return_type)
     gobject_return_type = gobject_return_decl["type"].removesuffix(" *")
 
-    return " ".join([
-        TYPE_MAPPING[unqualified_return_type]["convert_gobject_prefix"](gobject_return_type),
-        gobject_rv_name,
-        "=",
-        TYPE_MAPPING[unqualified_return_type]["convert_gobject_func"](real_rv_name) + ";"
-    ])
+    return " ".join(
+        [
+            TYPE_MAPPING[unqualified_return_type]["convert_gobject_prefix"](
+                gobject_return_type
+            ),
+            gobject_rv_name,
+            "=",
+            TYPE_MAPPING[unqualified_return_type]["convert_gobject_func"](real_rv_name)
+            + ";",
+        ]
+    )
 
 
 def determine_return_statement_operand(gobject_return_decl, name):
