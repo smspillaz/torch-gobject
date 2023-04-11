@@ -303,13 +303,24 @@ def is_skipped(decl):
 
     if decl["returns"]:
         for return_type_info in decl["returns"]:
-            if unqualified_dynamic_type(return_type_info["dynamic_type"]) not in TYPE_MAPPING:
-                print("Skipped", decl["name"], "- returns", return_type_info["dynamic_type"], file=sys.stderr)
+            if (
+                unqualified_dynamic_type(return_type_info["dynamic_type"])
+                not in TYPE_MAPPING
+            ):
+                print(
+                    "Skipped",
+                    decl["name"],
+                    "- returns",
+                    return_type_info["dynamic_type"],
+                    file=sys.stderr,
+                )
                 return True
 
     for a in decl["arguments"]:
         if unqualified_dynamic_type(a["dynamic_type"]) not in TYPE_MAPPING:
-            print("Skipped", decl["name"], "- takes", a["dynamic_type"], file=sys.stderr)
+            print(
+                "Skipped", decl["name"], "- takes", a["dynamic_type"], file=sys.stderr
+            )
             return True
 
 
