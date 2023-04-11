@@ -405,9 +405,7 @@ def determine_real_function_call_return_type(return_decl):
     if len(return_decl) == 1:
         return return_decl[0]["type"]
 
-    return "std::tuple <{}>".format(", ".join([
-        rd["type"] for rd in return_decl
-    ]))
+    return "std::tuple <{}>".format(", ".join([rd["type"] for rd in return_decl]))
 
 
 def unpack_real_rv_to_gobject_rv(return_decl,
