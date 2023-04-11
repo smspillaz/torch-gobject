@@ -17,12 +17,11 @@ from common import (
     fmt_element_type,
     fmt_array_fixed_size,
     fmt_nullable,
-    fmt_annotations
+    fmt_annotations,
 )
 
-RENAME_LIST = {
-    "set_data": "set_data_from_tensor"
-}
+RENAME_LIST = {"set_data": "set_data_from_tensor"}
+
 
 def non_namespaced_function_name(decl):
     inplace = ""
