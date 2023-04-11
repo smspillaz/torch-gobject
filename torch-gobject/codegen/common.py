@@ -380,6 +380,9 @@ def fmt_arg_annotation(arg_annotations):
 
 
 def fmt_return_annotation(return_info):
+    if return_info["type"] == "void":
+        return ""
+
     annotations = fmt_annotations(return_info)
     desc = return_info.get("desc", f"A #{return_info['type']}")
     return f"Returns{annotations}: {desc}"
