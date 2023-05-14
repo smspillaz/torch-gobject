@@ -216,7 +216,7 @@ def format_struct_member_annotation(opt_info):
         }
     )
 
-    return "@{name}:{annotations}A #{c_type}".format(
+    return "@{name}{annotations}: A #{c_type}".format(
         name=opt_info["name"], c_type=opt_info["c_type"], annotations=annotations
     )
 
