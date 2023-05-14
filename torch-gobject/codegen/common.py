@@ -421,3 +421,142 @@ def fmt_gobject_func_fwd_decl(func_name, return_info, arg_infos):
             ")",
         ]
     )
+
+
+def fmt_introspectable_struct_type_definition_source(
+    struct_name, sname_name, copy, destructor
+):
+    return f"G_DEFINE_BOXED_TYPE ({struct_name}, {snake_name}, (GBoxedCopyFunc) {copy}, (GBoxedFreeFunc) {destructor})"
+
+
+def fmt_introspectable_constructor_element_assignment(struct_var_name, struct_member):
+    storage_info = STORAGE.get(struct_member["c_type"])
+
+    if storage_info is None:
+        if "func_data_ptr" in struct_member.get("meta", {}):
+            # This is a closure, we need to create a TorchCallbackData
+            # to store the callback pointer, func_data_ptr and func_data_destroy_ptr
+            storage_info = {
+                "convert_func": f"torch_callback_data_new (reinterpret_cast<gpointer> ({struct_member['name']}), {struct_member['meta'].get('func_data_ptr', 'NULL')}, {struct_member['meta'].get('func_data_ptr_destroy', 'NULL')});"
+            }
+
+    # We have a custom storage container, so we need to wrap
+    # the value into the container first
+    if storage_info is not None:
+        return indent(
+            f"{struct_var_name}->{struct_member['name']} = {storage_info['convert_func'].format(name=struct_member['name'], meta=struct_member.get('meta', {}))};",
+            2,
+        )
+    elif struct_member["c_type"] in COPY_FUNCS:
+        return indent(
+            f"{struct_var_name}->{struct_member['name']} = {struct_member['name']} != NULL ? {COPY_FUNCS[struct_member['c_type']]} ({struct_member['name']}) : NULL;",
+            2,
+        )
+
+    return indent(
+        f"{struct_var_name}->{struct_member['name']} = {struct_member['name']};", 2
+    )
+
+
+def maybe_yield_opt_to_array_constructor_arg(meta):
+    length = meta.get("length", None)
+
+    if length is not None:
+        try:
+            int(length)
+        except ValueError:
+            yield ("size_t", length, {})
+
+
+def maybe_yield_opt_to_callback_constructor_arg(meta):
+    func_data_ptr = meta.get("func_data_ptr", None)
+
+    if func_data_ptr is not None:
+        yield ("gpointer", func_data_ptr, {})
+
+    func_data_ptr_destroy = meta.get("func_data_ptr_destroy", None)
+
+    if func_data_ptr_destroy is not None:
+        yield ("GDestroyNotify", func_data_ptr_destroy, {})
+
+
+def opts_to_constructor_args(opts):
+    for opt_info in opts:
+        yield (opt_info["c_type"], opt_info["name"], opt_info.get("meta", {}))
+
+        meta = opt_info.get("meta", {})
+        yield from maybe_yield_opt_to_array_constructor_arg(meta)
+        yield from maybe_yield_opt_to_callback_constructor_arg(meta)
+
+
+def get_closure_info(opt_info):
+    return {
+        "scope": "notified"
+        if opt_info.get("meta", {}).get("func_data_ptr", None)
+        else None,
+        "destroy": opt_info.get("meta", {}).get("func_data_destroy"),
+    }
+
+
+def get_array_length_param(opt_info):
+    if "*" not in opt_info["c_type"]:
+        return None
+
+    length_parameter = opt_info.get("meta", {}).get("length", None)
+
+    if length_parameter is not None:
+        try:
+            int_length = int(length_parameter)
+            return int_length
+        except ValueError:
+            return length_parameter
+
+    return None
+
+
+def get_element_type_info(opt_info):
+    element_type = opt_info.get("meta", {}).get("element_type", None)
+
+    return element_type
+
+
+def get_arg_annotations(opt_info):
+    return {
+        "name": opt_info["name"],
+        "type": opt_info["c_type"],
+        "transfer": "none" if "*" in opt_info["c_type"] else "",
+        "nullable": True if "*" in opt_info["c_type"] else False,
+        "size": get_array_length_param(opt_info),
+        "element-type": get_element_type_info(opt_info),
+        **get_closure_info(opt_info),
+    }
+
+
+def fmt_introspectable_struct_constructor_source(constructor, struct_name, struct_info):
+    constructor_return_info = {"type": f"{struct_name} *", "transfer": "full"}
+    constructor_arg_infos = [
+        get_arg_annotations({"name": name, "c_type": c_type, "meta": meta})
+        for c_type, name, meta in opts_to_constructor_args(struct_info["members"])
+    ]
+
+    return "\n".join(
+        [
+            fmt_function_decl_header_comment(
+                constructor, constructor_return_info, constructor_arg_infos
+            ),
+            fmt_gobject_func_fwd_decl(
+                constructor, constructor_return_info, constructor_arg_infos
+            ),
+            "{",
+            indent(f"{struct_name} *obj = g_new0({struct_name}, 1);", 2),
+            "",
+            *[
+                fmt_introspectable_constructor_element_assignment("obj", struct_member)
+                for struct_member in struct_info["members"]
+            ],
+            "",
+            indent("return obj;", 2),
+            "}",
+            "",
+        ]
+    )

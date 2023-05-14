@@ -22,6 +22,7 @@ from common import (
     fmt_annotations,
     fmt_function_decl_header_comment,
     fmt_gobject_func_fwd_decl,
+    fmt_introspectable_struct_constructor_source,
     indent,
 )
 
@@ -372,49 +373,6 @@ def access_underlying(variable, opt_info):
     return variable
 
 
-def get_closure_info(opt_info):
-    return {
-        "scope": "notified"
-        if opt_info.get("meta", {}).get("func_data_ptr", None)
-        else None,
-        "destroy": opt_info.get("meta", {}).get("func_data_destroy"),
-    }
-
-
-def get_array_length_param(opt_info):
-    if "*" not in opt_info["c_type"]:
-        return None
-
-    length_parameter = opt_info.get("meta", {}).get("length", None)
-
-    if length_parameter is not None:
-        try:
-            int_length = int(length_parameter)
-            return int_length
-        except ValueError:
-            return length_parameter
-
-    return None
-
-
-def get_element_type_info(opt_info):
-    element_type = opt_info.get("meta", {}).get("element_type", None)
-
-    return element_type
-
-
-def get_arg_annotations(opt_info):
-    return {
-        "name": opt_info["name"],
-        "type": opt_info["c_type"],
-        "transfer": "none" if "*" in opt_info["c_type"] else "",
-        "nullable": True if "*" in opt_info["c_type"] else False,
-        "size": get_array_length_param(opt_info),
-        "element-type": get_element_type_info(opt_info),
-        **get_closure_info(opt_info),
-    }
-
-
 def opts_to_access_args(opts_struct_name, opts):
     for opt_info in opts:
         opt_name = opt_info["name"]
@@ -441,53 +399,11 @@ def opts_to_access_args(opts_struct_name, opts):
 def print_opt_struct_introspectable_constructor_source(
     constructor, struct_name, opt_struct
 ):
-    constructor_return_info = {"type": f"{struct_name} *", "transfer": "full"}
-    constructor_arg_infos = [
-        get_arg_annotations({"name": name, "c_type": c_type, "meta": meta})
-        for c_type, name, meta in opts_to_constructor_args(opt_struct["opts"])
-    ]
-
     print(
-        fmt_gobject_func_fwd_decl(
-            constructor, constructor_return_info, constructor_arg_infos
+        fmt_introspectable_struct_constructor_source(
+            constructor, struct_name, {"members": opt_struct["opts"]}
         )
     )
-    print("{")
-    print(indent(f"{struct_name} *opts = g_new0({struct_name}, 1);", 2))
-    print("")
-    for opt_info in opt_struct["opts"]:
-        storage_info = STORAGE.get(opt_info["c_type"])
-
-        if storage_info is None:
-            if "func_data_ptr" in opt_info.get("meta", {}):
-                # This is a closure, we need to create a TorchCallbackData
-                # to store the callback pointer, func_data_ptr and func_data_destroy_ptr
-                storage_info = {
-                    "convert_func": f"torch_callback_data_new (reinterpret_cast<gpointer> ({opt_info['name']}), {opt_info['meta'].get('func_data_ptr', 'NULL')}, {opt_info['meta'].get('func_data_ptr_destroy', 'NULL')});"
-                }
-
-        # We have a custom storage container, so we need to wrap
-        # the value into the container first
-        if storage_info is not None:
-            print(
-                indent(
-                    f"opts->{opt_info['name']} = {storage_info['convert_func'].format(name=opt_info['name'], meta=opt_info.get('meta', {}))};",
-                    2,
-                )
-            )
-        elif opt_info["c_type"] in COPY_FUNCS:
-            print(
-                indent(
-                    f"opts->{opt_info['name']} = {opt_info['name']} != NULL ? {COPY_FUNCS[opt_info['c_type']]} ({opt_info['name']}) : NULL;",
-                    2,
-                )
-            )
-        else:
-            print(indent(f"opts->{opt_info['name']} = {opt_info['name']};", 2))
-    print("")
-    print(indent("return opts;", 2))
-    print("}")
-    print("")
 
 
 def print_opt_struct_introspectable_destructor_source(
