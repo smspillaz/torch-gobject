@@ -23,6 +23,7 @@ from common import (
     fmt_function_decl_header_comment,
     fmt_gobject_func_fwd_decl,
     fmt_introspectable_struct_constructor_source,
+    fmt_introspectable_struct_copy_source,
     indent,
 )
 
@@ -456,6 +457,16 @@ def print_opt_struct_introspectable_destructor_source(
 
 
 def print_opt_struct_introspectable_copy_source(copy, struct_name, opt_struct):
+    return print(
+        fmt_introspectable_struct_copy_source(
+            copy,
+            struct_name,
+            {
+                "members": opt_struct["opts"]
+            }
+        )
+    )
+
     copy_return_info = {
         "type": f"{struct_name} *",
         "transfer": "full",

@@ -560,3 +560,63 @@ def fmt_introspectable_struct_constructor_source(constructor, struct_name, struc
             "",
         ]
     )
+
+
+def fmt_introspectable_struct_copy_source(copy, struct_name, struct_info):
+    copy_return_info = {
+        "type": f"{struct_name} *",
+        "transfer": "full",
+        "desc": f"A new #{struct_name} which is a copy of @obj",
+    }
+    copy_args = [
+        {
+            "name": "obj",
+            "type": f"{struct_name} *",
+            "transfer": "full",
+            "desc": f"The #{struct_name} to copy from.",
+        }
+    ]
+
+    return "\n".join([
+        fmt_function_decl_header_comment(
+            copy,
+            copy_return_info,
+            copy_args,
+        ),
+        fmt_gobject_func_fwd_decl(
+            copy,
+            copy_return_info,
+            copy_args,
+        ),
+        "{",
+        indent(f"{struct_name} *new_obj = g_new0({struct_name}, 1);", 2),
+        *[
+            fmt_introspectable_copy_element_assignment("new_obj", "obj", struct_member)
+            for struct_member in struct_info["members"]
+        ],
+        indent("return new_obj;", 2),
+        "}"
+        ""
+    ])
+
+
+def fmt_introspectable_boxed_struct_source(struct_name, struct_info):
+    snake_name = camel_case_to_snake_case(struct_name).lower()
+    constructor = f"{snake_name}_new"
+    destructor = f"{snake_name}_free"
+    copy = f"{snake_name}_copy"
+
+    return "\n".join(
+        [
+            fmt_introspectable_struct_constructor_source(
+                constructor, struct_name, struct_info
+            ),
+            fmt_introspectable_struct_copy_source(copy, struct_name, struct_info),
+            fmt_introspectable_struct_destructor_source(
+                destructor, struct_name, struct_info
+            ),
+            fmt_introspectable_struct_type_definition_source(
+                struct_name, snake_name, copy, destructor
+            ),
+        ]
+    )
