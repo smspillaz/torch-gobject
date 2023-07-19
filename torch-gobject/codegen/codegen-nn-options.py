@@ -470,11 +470,11 @@ def print_opt_struct_introspectable_copy_source(copy, struct_name, opt_struct):
     copy_return_info = {
         "type": f"{struct_name} *",
         "transfer": "full",
-        "desc": f"A new #{struct_name} which is a copy of @opts",
+        "desc": f"A new #{struct_name} which is a copy of @old_struct",
     }
     copy_args = [
         {
-            "name": "opts",
+            "name": "old_struct",
             "type": f"{struct_name} *",
             "transfer": "full",
             "desc": f"The #{struct_name} to copy from.",
