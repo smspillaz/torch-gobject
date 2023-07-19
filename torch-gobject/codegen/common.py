@@ -458,6 +458,33 @@ def fmt_introspectable_constructor_element_assignment(struct_var_name, struct_me
     )
 
 
+def fmt_introspectable_copy_element_assignment(new_struct_var_name, old_struct_var_name, struct_member):
+    storage_info = STORAGE.get(struct_member["c_type"])
+
+    if storage_info is None:
+        if "func_data_ptr" in struct_member.get("meta", {}):
+            # This is a closure, we need to create a TorchCallbackData
+            # to store the callback pointer, func_data_ptr and func_data_destroy_ptr
+            storage_info = {
+                "copy_func": f"torch_callback_data_ref ({old_struct_var_name}->{struct_member['name']});"
+            }
+
+    # We have a custom storage container, so we need to wrap
+    # the value into the container first
+    if storage_info is not None:
+        return indent(
+            f"{new_struct_var_name}->{struct_member['name']} = {storage_info['copy_func'].format(name=f'{old_struct_var_name}->' + struct_member['name'])};",
+            2,
+        )
+    elif struct_member["c_type"] in COPY_FUNCS:
+        return indent(
+            f"{new_struct_var_name}->{struct_member['name']} = {old_struct_var_name}->{struct_member['name']} != NULL ? {COPY_FUNCS[struct_member['c_type']]} ({old_struct_var_name}->{struct_member['name']}) : NULL;",
+            2,
+        )
+
+    return indent(f"{new_struct_var_name}->{struct_member['name']} = {old_struct_var_name}->{struct_member['name']};", 2)
+
+
 def maybe_yield_opt_to_array_constructor_arg(meta):
     length = meta.get("length", None)
 
