@@ -186,7 +186,7 @@ torch_gobject_gir = gnome.generate_gir(
   nsversion: api_version,
   sources: introspection_sources,
   symbol_prefix: 'torch',
-  fatal_warnings: true,
+  fatal_warnings: true
 )[0]
 
 pkg = import('pkgconfig')
