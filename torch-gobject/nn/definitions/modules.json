@@ -1,0 +1,113 @@
+[
+    {
+        "name": "AdaptiveAvgPool1d",
+        "cpp": "torch::nn::AdaptiveAvgPool1d",
+        "constructor": {
+            "args": [
+                {
+                    "name": "options",
+                    "cpp_type": "torch::nn::AdaptiveAvgPoolOptions<torch::ExpandingArray<1>>",
+                    "c_type": "TorchNNAdaptiveAvgPoolNdOptions *",
+                    "meta": {
+                        "convert_pipeline": [
+                            "torch_adaptive_avg_pool_options_nd_struct_to_options ({name})"
+                        ]
+                    }
+                }
+            ]
+        },
+        "methods": [
+            {
+                "name": "forward",
+                "args": [
+                    {
+                        "name": "input",
+                        "cpp_type": "torch::Tensor",
+                        "c_type": "TorchTensor *"
+                    }
+                ],
+                "returns": [
+                    {
+                        "name": "out",
+                        "cpp_type": "torch::Tensor",
+                        "c_type": "TorchTensor *"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "AdaptiveAvgPool2d",
+        "cpp": "torch::nn::AdaptiveAvgPool2d",
+        "constructor": {
+            "args": [
+                {
+                    "name": "options",
+                    "cpp_type": "torch::nn::AdaptiveAvgPoolOptions<torch::ExpandingArray<2>>",
+                    "c_type": "TorchNNAdaptiveAvgPoolNdOptions *",
+                    "meta": {
+                        "convert_pipeline": [
+                            "torch_adaptive_avg_pool_options_nd_struct_to_options ({name})"
+                        ]
+                    }
+                }
+            ]
+        },
+        "methods": [
+            {
+                "name": "forward",
+                "args": [
+                    {
+                        "name": "input",
+                        "cpp_type": "torch::Tensor",
+                        "c_type": "TorchTensor *"
+                    }
+                ],
+                "returns": [
+                    {
+                        "name": "out",
+                        "cpp_type": "torch::Tensor",
+                        "c_type": "TorchTensor *"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "AdaptiveAvgPool3d",
+        "cpp": "torch::nn::AdaptiveAvgPool3d",
+        "constructor": {
+            "args": [
+                {
+                    "name": "options",
+                    "cpp_type": "torch::nn::AdaptiveAvgPoolOptions<torch::ExpandingArray<3>>",
+                    "c_type": "TorchNNAdaptiveAvgPoolNdOptions *",
+                    "meta": {
+                        "convert_pipeline": [
+                            "torch_adaptive_avg_pool_options_nd_struct_to_options ({name})"
+                        ]
+                    }
+                }
+            ]
+        },
+        "methods": [
+            {
+                "name": "forward",
+                "args": [
+                    {
+                        "name": "input",
+                        "cpp_type": "torch::Tensor",
+                        "c_type": "TorchTensor *"
+                    }
+                ],
+                "returns": [
+                    {
+                        "name": "out",
+                        "cpp_type": "torch::Tensor",
+                        "c_type": "TorchTensor *"
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -1,0 +1,65 @@
+[
+    {
+        "name": "adaptive_avg_pool_1d",
+        "cpp": "torch::nn::functional::adaptive_avg_pool1d",
+        "args": [
+            {
+                "name": "input",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "options",
+                "cpp_type": "torch::nn::AdaptiveAvgPoolOptions<torch::ExpandingArray<1>>",
+                "c_type": "TorchNNAdaptiveAvgPoolNdOptions *",
+                "meta": {
+                    "convert_pipeline": [
+                        "torch_adaptive_avg_pool_options_nd_struct_to_options ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "adaptive_avg_pool_2d",
+        "cpp": "torch::nn::functional::adaptive_avg_pool2d",
+        "args": [
+            {
+                "name": "input",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "options",
+                "cpp_type": "torch::nn::AdaptiveAvgPoolOptions<torch::ExpandingArray<2>>",
+                "c_type": "TorchNNAdaptiveAvgPoolNdOptions *",
+                "meta": {
+                    "convert_pipeline": [
+                        "torch_adaptive_avg_pool_options_nd_struct_to_options ({name})"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "adaptive_avg_pool_3d",
+        "cpp": "torch::nn::functional::adaptive_avg_pool3d",
+        "args": [
+            {
+                "name": "input",
+                "cpp_type": "torch::Tensor",
+                "c_type": "TorchTensor *"
+            },
+            {
+                "name": "options",
+                "cpp_type": "torch::nn::AdaptiveAvgPoolOptions<torch::ExpandingArray<3>>",
+                "c_type": "TorchNNAdaptiveAvgPoolNdOptions *",
+                "meta": {
+                    "convert_pipeline": [
+                        "torch_adaptive_avg_pool_options_nd_struct_to_options ({name})"
+                    ]
+                }
+            }
+        ]
+    }
+]
